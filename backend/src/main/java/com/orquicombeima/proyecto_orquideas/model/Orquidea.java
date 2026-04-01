@@ -22,7 +22,7 @@ public class Orquidea extends Producto {
     private String colorFlor;
 
     @Column(nullable = false)
-    private String tamano;
+    private String tamanio;
 
     @Column(name = "nivel_cuidado")
     private String nivelCuidado;
