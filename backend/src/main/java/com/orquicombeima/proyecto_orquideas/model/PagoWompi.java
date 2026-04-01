@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@Entity
 @Data
 @Table(name = "pago_wompi")
 @AllArgsConstructor

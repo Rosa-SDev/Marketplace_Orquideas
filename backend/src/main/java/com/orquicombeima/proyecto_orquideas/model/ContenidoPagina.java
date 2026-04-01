@@ -6,30 +6,31 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table(name = "contenido_pagina")
 @Data
-@Table(name = "item_pedido")
 @NoArgsConstructor
 @AllArgsConstructor
-public class ItemPedido {
+public class ContenidoPagina {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pedido_id", nullable = false)
-    private Pedido pedido;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "producto_id", nullable = false)
-    private Producto producto;
+    @JoinColumn(name = "administrador_id", nullable = false)
+    private Usuario administrador;
 
     @Column(nullable = false)
-    private int cantidad;
+    private String tipo;
 
     @Column(nullable = false)
-    private double precioUnitario;
+    private String titulo;
+
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String contenido;
+
+    private String imagenUrl;
 
     @Column(nullable = false)
-    private double subtotal;
+    private Integer orden;
 }
