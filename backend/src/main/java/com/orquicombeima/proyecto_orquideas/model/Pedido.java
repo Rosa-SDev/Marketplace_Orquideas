@@ -42,13 +42,13 @@ public class Pedido {
     private EstadoPedido estado;
 
     @Column(nullable = false)
-    private long subtotal;
+    private double subtotal;
 
     @Column(nullable = false)
-    private long costoEnvio;
+    private double costoEnvio;
 
     @Column(nullable = false)
-    private long total;
+    private double total;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime fechaPedido;
