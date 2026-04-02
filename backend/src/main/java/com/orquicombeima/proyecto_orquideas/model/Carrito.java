@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +26,10 @@ public class Carrito {
     @OneToOne
     @JoinColumn(name = "usuario_id", nullable = false, unique = true)
     private Usuario usuario;
+
+    // Fecha en que se creó el carrito
+    @Column(name = "fecha_creacion")
+    private LocalDateTime fechaCreacion;
 
     // Lista de productos dentro del carrito
     // orphanRemoval: Si borramos un item de la lista también se borra de la BD
