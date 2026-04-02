@@ -6,9 +6,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+// Repositorio para acceder a los datos de orquídeas en la BD
+
 // @Repository le dice a Spring que esta interfaz maneja acceso a la BD
 // JpaRepository<Orquidea, Long> nos da métodos predefinidos para hacer CRUD (findAll, findById, save, deleteById...) sin tener que escribir código SQL
-
 @Repository
 public interface OrquideaRepository extends JpaRepository<Orquidea, Long> {
     // Metodo para buscar orquideas que esten activas

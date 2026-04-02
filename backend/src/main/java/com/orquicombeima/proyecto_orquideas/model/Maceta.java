@@ -5,13 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+// Maceta hereda de Producto igual que Orquidea
+// Tiene su propia tabla "macetas" con sus campos específicos, conectada a "productos" por el mismo id
 @Entity
 @Table(name = "macetas")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @PrimaryKeyJoinColumn(name = "id")
-
 
 public class Maceta extends Producto {
 

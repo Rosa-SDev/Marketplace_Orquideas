@@ -4,12 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-// DTO (Data Transfer Object): clase que define exactamente qué datos le enviamos al frontend. No tiene anotaciones JPA porque no es una tabla,
-// es solo un "sobre" con la información que necesita ver el usuario
+// DTO (Data Transfer Object)
+// Es la clase que define exactamente qué datos le enviamos al frontend
+// No tiene anotaciones de base de datos porque no es una tabla
+// Es solo un "sobre" con la información que necesita ver el usuario
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+
 public class OrquideaDTO {
 
     // Campos heredados de Producto

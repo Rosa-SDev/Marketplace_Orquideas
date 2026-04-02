@@ -6,47 +6,55 @@ import com.orquicombeima.proyecto_orquideas.repository.OrquideaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-// @Service le dice a Spring que aquí vive la lógica de negocio
+// El controlador le pide datos a este servicio, y este se los pide al repositorio
+
+// @Service le dice a Spring que aquí vive la lógica del negocio
 // @RequiredArgsConstructor (Lombok) crea el constructor que inyecta OrquideaRepository automáticamente, sin necesidad de escribir @Autowired
 @Service
 @RequiredArgsConstructor
+
 public class OrquideaService {
 
     private final OrquideaRepository orquideaRepository;
 
-    // Devuelve la lista de todas las orquídeas como DTOs
+    // Devuelve todas las orquideas como una lista de DTOs
     public List<OrquideaDTO> listarTodas() {
-        return orquideaRepository.findAll()         // trae todas las orquídeas de la BD
-                .stream()                           // las convierte en flujo para procesarlas una por una
-                .map(this::convertirADTO)           // a cada orquídea le aplica el metodo convertirADTO
-                .collect(Collectors.toList());      // junta los resultados en una lista
+        List<Orquidea> orquideas = orquideaRepository.findAll();
+        List<OrquideaDTO> resultado = new ArrayList<>();
+
+        for (Orquidea o : orquideas) {
+            resultado.add(convertirADTO(o));
+        }
+
+        return resultado;
     }
 
     // Busca una orquídea por su id y la devuelve como DTO
-    // Si no existe, lanza un error con mensaje descriptivo
+    // Si no existe lanza un error con el id que se buscó
     public OrquideaDTO obtenerPorId(Long id) {
         Orquidea orquidea = orquideaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Orquídea no encontrada con id: " + id));
+                .orElseThrow(() -> new RuntimeException("No se encontró una orquídea con el id: " + id));
         return convertirADTO(orquidea);
     }
 
-    // Metodo privado que convierte una entidad Orquidea en un OrquideaDTO
+    // Metodo que convierte una entidad Orquidea en un OrquideaDTO
+    // La "o" es la orquídea que entra al metodo
     private OrquideaDTO convertirADTO(Orquidea o) {
-        return new OrquideaDTO(
-                o.getId(),
-                o.getNombre(),
-                o.getPrecio(),
-                o.getStock(),
-                o.getImageUrl(),
-                o.getActivo(),
-                o.getVariedad(),
-                o.getColorFlor(),
-                o.getTamanio(),
-                o.getNivelCuidado(),
-                o.getTiempoFloracion()
-        );
+        OrquideaDTO dto = new OrquideaDTO();
+        dto.setId(o.getId());
+        dto.setNombre(o.getNombre());
+        dto.setPrecio(o.getPrecio());
+        dto.setStock(o.getStock());
+        dto.setImageUrl(o.getImageUrl());
+        dto.setActivo(o.getActivo());
+        dto.setVariedad(o.getVariedad());
+        dto.setColorFlor(o.getColorFlor());
+        dto.setTamanio(o.getTamanio());
+        dto.setNivelCuidado(o.getNivelCuidado());
+        dto.setTiempoFloracion(o.getTiempoFloracion());
+        return dto;
     }
 }
