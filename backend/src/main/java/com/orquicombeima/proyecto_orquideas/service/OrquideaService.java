@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 // @Service le dice a Spring que aquí vive la lógica de negocio
 // @RequiredArgsConstructor (Lombok) crea el constructor que inyecta OrquideaRepository automáticamente, sin necesidad de escribir @Autowired
+
 @Service
 @RequiredArgsConstructor
 public class OrquideaService {
