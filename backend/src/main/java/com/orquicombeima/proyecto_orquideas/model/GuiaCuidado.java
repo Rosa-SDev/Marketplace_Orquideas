@@ -42,4 +42,5 @@ public class GuiaCuidado {
     @Column(nullable = false)
     private String fertilizacion;
 
+    private String imageUrl;
 }

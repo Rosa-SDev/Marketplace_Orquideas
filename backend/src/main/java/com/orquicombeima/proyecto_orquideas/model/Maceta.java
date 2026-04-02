@@ -20,6 +20,9 @@ public class Maceta extends Producto {
     private String material;
 
     @Column(nullable = false)
+    private double diametroCm;
+
+    @Column(nullable = false)
     private String color;
 
     @Column(nullable = false)
