@@ -1,4 +1,4 @@
-package com.orquicombeima.proyecto_orquideas.shared.security;
+package com.orquicombeima.proyecto_orquideas.shared.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
