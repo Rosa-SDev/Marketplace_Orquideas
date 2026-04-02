@@ -26,15 +26,23 @@ public abstract class Producto {
     @Column(nullable = false)
     private String nombre;
 
+    @Column
+    private String descripcion;
+
     @Column(nullable = false)
     private Double precio;
 
     @Column(nullable = false)
     private Integer stock;
 
+    // Unidades apartadas temporalmente mientras el cliente está en proceso de compra
+    @Column(name = "stock_reservado", nullable = false)
+    private Integer stockReservado = 0;
+
     @Column(name = "image_url")
     private String imageUrl;
 
+    // Por defecto todo producto empieza activo
     @Column(nullable = false)
-    private Boolean activo = true;               // por defecto todo producto empieza activo
+    private Boolean activo = true;
 }
