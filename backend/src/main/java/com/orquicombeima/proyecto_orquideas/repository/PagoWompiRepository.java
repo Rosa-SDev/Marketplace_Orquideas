@@ -12,5 +12,5 @@ public interface PagoWompiRepository extends JpaRepository<PagoWompi, Long> {
     Optional<PagoWompi> findByReferenciaPago(String referenciaPago);
 
     //Metodo para encontrar un pago utilizando el numero de la transaccion de Wompi
-    Optional<PagoWompi> findByTransaccionWompiId(String transaccionWompiId);
+    Optional<PagoWompi> findByTransaccionId(String transaccionId);
 }

@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
-    //Metodo para encontrar un pedido por el id del cliente
-    List<Pedido> findByClienteIdOrderByFechaCreacionDesc(Long clienteId);
+    //Metodo para encontrar un pedido por el id del usuario
+    List<Pedido> findByUsuarioIdOrderByFechaPedidoDesc(Long usuarioId);
 }

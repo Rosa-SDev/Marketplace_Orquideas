@@ -10,5 +10,5 @@ import java.util.Optional;
 @Repository
 public interface ReservaCarritoRepository extends JpaRepository<ReservaCarrito, Long> {
     // Metodo para buscar una reserva por el id del carrito
-    List<ReservaCarrito> finnByCarritoId(Long carritoId);
+    List<ReservaCarrito> findByCarritoId(Long carritoId);
 }
