@@ -1,0 +1,85 @@
+/* Estilos del contenedor principal del Navbar */
+/* position: sticky hace que el navbar se quede fijo arriba cuando se hace scroll */
+.navbar {
+  background-color: #1B4332; /* Verde oscuro de nuestra paleta */
+  position: sticky;
+  top: 0;
+  z-index: 100; /* Hace que el navbar quede por encima de todo lo demás */
+  padding: 0 2rem;
+}
+
+/* Contenedor interior que organiza los elementos en fila */
+/* display: flex pone los elementos uno al lado del otro */
+.navbar-container {
+  display: flex;
+  align-items: center; /* Centra verticalmente todos los elementos */
+  justify-content: space-between; /* Separa logo, menú e iconos en los extremos */
+  max-width: 1200px; /* Ancho máximo para pantallas grandes */
+  margin: 0 auto; /* Centra el contenedor en la pantalla */
+  height: 70px;
+}
+
+/* Estilo del logo */
+.navbar-logo {
+  color: #FAF7F5; /* Crema claro */
+  text-decoration: none; /* Quita el subrayado del link */
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+/* Lista del menú - quitamos los puntos de la lista */
+.navbar-menu {
+  display: flex;
+  list-style: none; /* Quita los puntos de la lista */
+  gap: 2rem; /* Espacio entre cada item del menú */
+  margin: 0;
+  padding: 0;
+}
+
+/* Estilo de cada link del menú */
+.navbar-menu a {
+  color: #FAF7F5; /* Crema claro */
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: color 0.2s; /* Animación suave al pasar el mouse */
+}
+
+/* Efecto al pasar el mouse por encima de un link */
+.navbar-menu a:hover {
+  color: #E91E8C; /* Rosa de nuestra paleta */
+}
+
+/* Contenedor de los botones de la derecha */
+.navbar-icons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Botón de Acceder */
+.navbar-btn-acceder {
+  background-color: #2D6A4F; /* Verde principal */
+  color: #FAF7F5;
+  text-decoration: none;
+  padding: 0.5rem 1.2rem;
+  border-radius: 20px; /* Bordes redondeados */
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+/* Efecto hover del botón Acceder */
+.navbar-btn-acceder:hover {
+  background-color: #E91E8C; /* Cambia a rosa al pasar el mouse */
+}
+
+/* Botón del carrito */
+.navbar-carrito {
+  color: #FAF7F5;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: color 0.2s;
+}
+
+.navbar-carrito:hover {
+  color: #E91E8C;
+}

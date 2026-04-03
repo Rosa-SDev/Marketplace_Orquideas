@@ -1,6 +1,8 @@
 // Importamos Link de react-router-dom
+// Importamos el archivo CSS para la Navbar
 // Navegar entre páginas sin recargar el navegador
 import { Link } from 'react-router-dom';
+import './Navbar.css';
 
 const Navbar = () => {
   
