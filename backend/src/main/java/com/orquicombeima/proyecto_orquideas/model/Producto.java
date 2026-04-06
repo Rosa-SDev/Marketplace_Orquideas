@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-// Clase bade para los productos del catálogo
+// Clase base para los productos del catálogo
 // No se puede usar directamente, solo a través de Orquidea o Maceta
 
 // @Entity: es una tabla en la base de datos
