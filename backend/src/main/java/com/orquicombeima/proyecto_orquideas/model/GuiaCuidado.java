@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "guia_cuidado")
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class GuiaCuidado {
 
     @Id
