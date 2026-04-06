@@ -1,8 +1,8 @@
 /* Estilos del contenedor principal del Navbar */
 /* position: sticky hace que el navbar se quede fijo arriba cuando se hace scroll */
 .navbar {
-  background-color: #1B4332; /* Verde oscuro de nuestra paleta */
-  position: sticky;
+  background-color: #F1EEE7; /* Crema claro */
+  position: sticky; 
   top: 0;
   z-index: 100; /* Hace que el navbar quede por encima de todo lo demás */
   padding: 0 2rem;
@@ -21,10 +21,17 @@
 
 /* Estilo del logo */
 .navbar-logo {
-  color: #FAF7F5; /* Crema claro */
+  color: #522C5D; /* Moradito */
   text-decoration: none; /* Quita el subrayado del link */
   font-size: 1.3rem;
-  font-weight: bold;
+  font-weight: bold; 
+}
+
+.navbar-logo-image {
+  margin-top: 10px; /* Ajusta la posición vertical del logo */
+  height: 160px; /* Ajusta el tamaño del logo */
+  width: auto; /* Mantiene la proporción del logo */
+
 }
 
 /* Lista del menú - quitamos los puntos de la lista */
@@ -38,7 +45,7 @@
 
 /* Estilo de cada link del menú */
 .navbar-menu a {
-  color: #FAF7F5; /* Crema claro */
+  color: #413B61; /* Moradito */
   text-decoration: none;
   font-size: 0.95rem;
   transition: color 0.2s; /* Animación suave al pasar el mouse */
@@ -74,7 +81,7 @@
 
 /* Botón del carrito */
 .navbar-carrito {
-  color: #FAF7F5;
+  color: #413B61;
   text-decoration: none;
   font-size: 0.95rem;
   transition: color 0.2s;
