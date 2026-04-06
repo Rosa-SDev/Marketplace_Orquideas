@@ -11,6 +11,9 @@ import com.orquicombeima.proyecto_orquideas.repository.GuiaCuidadoRepository;
 import com.orquicombeima.proyecto_orquideas.repository.OrquideaRepository;
 import com.orquicombeima.proyecto_orquideas.repository.RecomendacionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -29,14 +32,17 @@ public class OrquideaService {
     private final GuiaCuidadoRepository guiaCuidadoRepository;
     private final RecomendacionRepository recomendacionRepository;
 
-    // Devuelve todas las orquideas como una lista de DTOs
-    public List<OrquideaDTO> listarTodas() {
-        List<Orquidea> orquideas = orquideaRepository.findAll();
-        List<OrquideaDTO> resultado = new ArrayList<>();
-        for (Orquidea o : orquideas) {
-            resultado.add(convertirADTO(o));
+    // Devuelve las orquideas como una lista de DTOs, aplicando filtros opcionales y paginación
+    // Los filtros que lleguen null simplemente se ignoran
+    public List<OrquideaDTO> listarTodas(String variedad, String colorFlor, Double precioMin, Double precioMax, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Orquidea> resultado = orquideaRepository.findWithFilters(variedad, colorFlor, precioMin, precioMax, pageable);
+
+        List<OrquideaDTO> lista = new ArrayList<>();
+        for (Orquidea o : resultado.getContent()) {
+            lista.add(convertirADTO(o));
         }
-        return resultado;
+        return lista;
     }
 
     // Busca una orquídea por su id y la devuelve como DTO simple
