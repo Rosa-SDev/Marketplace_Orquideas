@@ -1,3 +1,9 @@
+<<<<<<< Matt
+/* 
+  Vacie este archivo porque contenía código JSX por error.
+  El código correcto se encuentra en App.jsx ;)
+*/
+=======
 .counter {
   font-size: 16px;
   padding: 5px 10px;
@@ -182,3 +188,4 @@
     border-right-color: var(--border);
   }
 }
+>>>>>>> main
