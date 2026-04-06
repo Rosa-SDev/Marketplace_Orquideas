@@ -3,6 +3,7 @@
 // Navegar entre páginas sin recargar el navegador
 import { Link } from 'react-router-dom';
 import './Navbar.css';
+import logo from '../../assets/logo.png'; 
 
 const Navbar = () => {
   
@@ -16,15 +17,17 @@ const Navbar = () => {
         {/* Logo del lado izquierdo */}
         {/* Link to="/" lleva al usuario a la página de inicio */}
         <Link to="/" className="navbar-logo">
-          Orquideas del Combeima
+          {/* La imagen del logo, con alt para accesibilidad y clase para estilos */}
+          {/* alt por si el logo no carga, muestra texto alternativo */}
+          <img src={logo} alt="Logo Orquídeas del Combeima" className="navbar-logo-image" />
         </Link>
 
         {/* Menú del centro con las páginas principales */}
         {/* ul = lista, li = cada elemento de la lista */}
         <ul className="navbar-menu">
           <li><Link to="/">Inicio</Link></li>
-          <li><Link to="/catalogo">Catalogo</Link></li>
-          <li><Link to="/guia">Guia de Cuidado</Link></li>
+          <li><Link to="/catalogo">Catálogo</Link></li>
+          <li><Link to="/guia">Guía de Cuidado</Link></li>
           <li><Link to="/contacto">Contacto</Link></li>
         </ul>
 

@@ -18,7 +18,7 @@ const App = () => {
 
         {/* Por ahora solo tenemos la página de inicio */}
         {/* path="/" significa que es la página principal */}
-        <Route path="/" element={<h1>Bienvenido a Orquideas del Combeima</h1>} />
+        <Route path="/" element={<h1>Bienvenido a Orquídeas del Combeima</h1>} />
 
       </Routes>
 
