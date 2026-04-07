@@ -10,6 +10,7 @@ import com.orquicombeima.proyecto_orquideas.model.RecomendacionMaceta;
 import com.orquicombeima.proyecto_orquideas.repository.GuiaCuidadoRepository;
 import com.orquicombeima.proyecto_orquideas.repository.OrquideaRepository;
 import com.orquicombeima.proyecto_orquideas.repository.RecomendacionRepository;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -53,6 +54,8 @@ public class OrquideaService {
     }
 
     // Busca una orquídea por id y devuelve su detalle completo: datos, guía de cuidado y recomendaciones
+    // El transactional(readOnly = true) es para que JPA pueda cargar las relaciones (guía y recomendaciones) aunque el metodo sea de solo lectura
+    @Transactional(readOnly = true)
     public OrquideaDetalleDTO obtenerDetallePorId(Long id) {
         Orquidea orquidea = orquideaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("No se encontró una orquídea con el id: " + id));
@@ -90,6 +93,8 @@ public class OrquideaService {
     }
 
     // Devuelve solo la lista de recomendaciones de macetas para una orquídea
+    // El decor @Transactional(readOnly = true) es para que JPA pueda cargar las relaciones (maceta) aunque el metodo sea de solo lectura
+    @Transactional(readOnly = true)
     public List<RecomendacionMacetaDTO> obtenerRecomendaciones(Long id) {
         if (!orquideaRepository.existsById(id)) {
             throw new RuntimeException("No se encontró una orquídea con el id: " + id);
