@@ -35,7 +35,6 @@ public class AuthController {
                 usuario.getId(),
                 usuario.getNombre(),
                 usuario.getEmail(),
-                usuario.getFotoPerfil(),
                 usuario.getRol()
         );
 
