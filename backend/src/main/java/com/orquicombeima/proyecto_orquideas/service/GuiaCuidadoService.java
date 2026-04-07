@@ -5,6 +5,7 @@ import com.orquicombeima.proyecto_orquideas.model.GuiaCuidado;
 import com.orquicombeima.proyecto_orquideas.repository.GuiaCuidadoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ public class GuiaCuidadoService {
     private final GuiaCuidadoRepository guiaCuidadoRepository;
 
     // GET - Obtener todas las guias de cuidado
+    @Transactional(readOnly = true)     // El transactional(readOnly = true) es para que JPA pueda cargar las relaciones aunque el metodo sea de solo lectura
     public List<GuiaCuidadoDTO> obtenerTodasLasGuias() {
         return guiaCuidadoRepository.findAll().stream()
                 .map(this::convertirADTO)
@@ -22,6 +24,7 @@ public class GuiaCuidadoService {
     }
 
     // GET - Obtener guia de cuidado por variedad
+    @Transactional(readOnly = true)     // El transactional(readOnly = true) es para que JPA pueda cargar las relaciones aunque el metodo sea de solo lectura
     public GuiaCuidadoDTO obtenerGuiaPorVariedad(String variedad) {
         return guiaCuidadoRepository.findByVariedad(variedad)
                 .map(this::convertirADTO)
