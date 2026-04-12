@@ -21,21 +21,21 @@ public class CarritoService {
 
     // GET /api/carrito
     @Transactional(readOnly = true)
-    public CarritoDTO obtenerCarrito(Long idUsuario) {
-        Carrito carrito = carritoRepository.findById(idUsuario)
-                .orElseThrow(() -> new RuntimeException("No se encontró carrito para el usuario: " + idUsuario));
+    public CarritoDTO obtenerCarrito(String emailUsuario) {
+        Carrito carrito = carritoRepository.findByUsuarioEmail(emailUsuario)
+                .orElseThrow(() -> new RuntimeException("No se encontró carrito para el usuario con correo: " + emailUsuario));
 
         return convertirADTO(carrito);
     }
 
     // PUT /api/carrito/{idItem}/cantidad
     @Transactional
-    public CarritoDTO actualizarCantidad(Long idItem, int nuevaCantidad, Long idUsuario) {
+    public CarritoDTO actualizarCantidad(Long idItem, int nuevaCantidad, String emailUsuario) {
         ItemCarrito item = itemCarritoRepository.findById(idItem)
                 .orElseThrow(() -> new RuntimeException("No se encontró el item con id: " + idItem));
 
         //Verificar que el item pertenece al carrito del usuario autenticado
-        if (!item.getCarrito().getUsuario().getId().equals(idUsuario)) {
+        if (!item.getCarrito().getUsuario().getEmail().equals(emailUsuario)) {
             throw new RuntimeException("No tienes permiso para modificar este item");
         }
 
@@ -51,12 +51,12 @@ public class CarritoService {
 
     // DELETE /api/carrito/{idItem}
     @Transactional
-    public CarritoDTO eliminarItem(Long idItem, Long idUsuario) {
+    public CarritoDTO eliminarItem(Long idItem, String emailUsuario) {
         ItemCarrito item = itemCarritoRepository.findById(idItem)
                 .orElseThrow(() -> new RuntimeException("No se encontró el item con id: " + idItem));
 
         // Verificar que el item pertenece al carrito del usuario autenticado
-        if (!item.getCarrito().getUsuario().getId().equals(idUsuario)) {
+        if (!item.getCarrito().getUsuario().getEmail().equals(emailUsuario)) {
             throw new RuntimeException("No tienes permiso para eliminar este item");
         }
 
@@ -69,9 +69,9 @@ public class CarritoService {
 
     // DELETE /api/carrito/vaciar
     @Transactional
-    public void vaciarCarrito(Long idUsuario) {
-        Carrito carrito = carritoRepository.findByUsuarioId(idUsuario)
-                .orElseThrow(() -> new RuntimeException("No se encontró carrito para el usuario: " + idUsuario));
+    public void vaciarCarrito(String emailUsuario) {
+        Carrito carrito = carritoRepository.findByUsuarioEmail(emailUsuario)
+                .orElseThrow(() -> new RuntimeException("No se encontró carrito para el usuario con correo: " + emailUsuario));
 
         carrito.getItems().clear();
         carritoRepository.save(carrito);
