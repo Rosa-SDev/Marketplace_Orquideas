@@ -31,4 +31,11 @@ public class CarritoController {
     public ResponseEntity<CarritoDTO> eliminarItem(@PathVariable Long idItem, @AuthenticationPrincipal String email) {
         return ResponseEntity.ok(carritoService.eliminarItem(idItem, email));
     }
+
+    // Endpoint para vaciar el carrito
+    @DeleteMapping("/vaciar")
+    public ResponseEntity<Void> vaciarCarrito(@AuthenticationPrincipal String email) {
+        carritoService.vaciarCarrito(email);
+        return ResponseEntity.noContent().build();
+    }
 }
