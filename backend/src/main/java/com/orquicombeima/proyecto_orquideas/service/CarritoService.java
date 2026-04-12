@@ -28,6 +28,27 @@ public class CarritoService {
         return convertirADTO(carrito);
     }
 
+    // PUT /api/carrito/{idItem}/cantidad
+    @Transactional
+    public CarritoDTO actualizarCantidad(Long idItem, int nuevaCantidad, Long idUsuario) {
+        ItemCarrito item = itemCarritoRepository.findById(idItem)
+                .orElseThrow(() -> new RuntimeException("No se encontró el item con id: " + idItem));
+
+        //Verificar que el item pertenece al carrito del usuario autenticado
+        if (!item.getCarrito().getUsuario().getId().equals(idUsuario)) {
+            throw new RuntimeException("No tienes permiso para modificar este item");
+        }
+
+        if (nuevaCantidad < 1) {
+            throw new RuntimeException("La cantidad debe ser mayor a 0");
+        }
+
+        item.setCantidad(nuevaCantidad);
+        itemCarritoRepository.save(item);
+
+        return convertirADTO(item.getCarrito());
+    }
+
     // Convertir a CarritoDTO calculando los subtotales y el total
     private CarritoDTO convertirADTO(Carrito carrito) {
         List<ItemCarritoDTO> itemsDTO = carrito.getItems()
