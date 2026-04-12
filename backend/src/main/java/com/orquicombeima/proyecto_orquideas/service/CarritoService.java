@@ -49,6 +49,24 @@ public class CarritoService {
         return convertirADTO(item.getCarrito());
     }
 
+    // DELETE /api/carrito/{idItem}
+    @Transactional
+    public CarritoDTO eliminarItem(Long idItem, Long idUsuario) {
+        ItemCarrito item = itemCarritoRepository.findById(idItem)
+                .orElseThrow(() -> new RuntimeException("No se encontró el item con id: " + idItem));
+
+        // Verificar que el item pertenece al carrito del usuario autenticado
+        if (!item.getCarrito().getUsuario().getId().equals(idUsuario)) {
+            throw new RuntimeException("No tienes permiso para eliminar este item");
+        }
+
+        Carrito carrito = item.getCarrito();
+        carrito.getItems().remove(item);
+        itemCarritoRepository.delete(item);
+
+        return convertirADTO(carrito);
+    }
+
     // Convertir a CarritoDTO calculando los subtotales y el total
     private CarritoDTO convertirADTO(Carrito carrito) {
         List<ItemCarritoDTO> itemsDTO = carrito.getItems()
