@@ -25,4 +25,10 @@ public class CarritoController {
     public ResponseEntity<CarritoDTO> actualizarCantidad(@PathVariable Long idItem, @RequestParam int cantidad, @AuthenticationPrincipal String email) {
         return ResponseEntity.ok(carritoService.actualizarCantidad(idItem, cantidad, email));
     }
+
+    // Endpoint para eliminar el item de un carrito
+    @DeleteMapping("{idItem}")
+    public ResponseEntity<CarritoDTO> eliminarItem(@PathVariable Long idItem, @AuthenticationPrincipal String email) {
+        return ResponseEntity.ok(carritoService.eliminarItem(idItem, email));
+    }
 }
