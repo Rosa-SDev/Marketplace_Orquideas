@@ -5,6 +5,8 @@ import Home   from './pages/Home';
 import Macetas from './pages/Macetas';   
 import Guia from './pages/Guia';
 import Contacto from './pages/Contacto';
+import Catalogo from './pages/Catalogo';
+import DetalleOrquidea from './pages/DetalleOrquidea';
 
 const App = () => {
   return (
@@ -22,6 +24,10 @@ const App = () => {
         <Route path="/guia" element={<Guia />} />
         {/* Página de contacto */}
         <Route path="/contacto" element={<Contacto />} />
+        {/* Página de catálogo de orquídeas */}
+        <Route path="/catalogo" element={<Catalogo />} />
+        {/* Página de detalle de orquídea */}
+        <Route path="/orquideas/:id" element={<DetalleOrquidea />} />
         
         {/* Otras rutas se agregan aquí en el futuro */}
       </Routes>
