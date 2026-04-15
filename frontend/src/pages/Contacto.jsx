@@ -24,7 +24,7 @@ const Contacto = () => {
 
         <div style={{ backgroundColor: '#FFFFFF', borderRadius: '12px', padding: '1.5rem', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
           <h2 style={{ color: '#2D6A4F', marginBottom: '0.8rem' }}>Correo electronico</h2>
-          <p style={{ color: '#1B4332' }}>desarrollo.orquicombeima@gmail.com</p>
+          <p style={{ color: '#1B4332' }}>admin.orquicombeima@gmail.com</p>
         </div>
 
         <div style={{ backgroundColor: '#FFFFFF', borderRadius: '12px', padding: '1.5rem', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
