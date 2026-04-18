@@ -1,3 +1,7 @@
+import Loading from '../components/ui/Loading';
+import ConnectionError from '../components/ui/ConnectionError';
+import useConnectionCheck from '../hooks/useConnectionCheck';
+
 // Guia.jsx
 // Pagina informativa sobre como cuidar las orquideas
 // El contenido real vendra del backend en semana 2 con GET /api/guia
@@ -38,6 +42,11 @@ const secciones = [
 ];
 
 const Guia = () => {
+  const { loading, error, retry } = useConnectionCheck();
+
+  if (loading) return <Loading mensaje="Cargando pagina..." />;
+  if (error) return <ConnectionError mensaje={error} onRetry={retry} />;
+
   return (
     <main>
 

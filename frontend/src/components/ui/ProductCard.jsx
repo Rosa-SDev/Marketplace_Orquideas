@@ -1,5 +1,6 @@
 import './ProductCard.css';
-import Button from './Button'; // Reutilizamos el Button que ya tienes
+import Button from './Button';
+import { Link } from 'react-router-dom';
 
 // Props que recibe esta tarjeta:
 //   nombre  → "Orquídea Phalaenopsis"
@@ -8,8 +9,8 @@ import Button from './Button'; // Reutilizamos el Button que ya tienes
 //   badge   → "Novedad" o "Oferta" (si no se pasa, no aparece nada)
 //   stock   → 8 (número de unidades disponibles)
 
-const ProductCard = ({ nombre, precio, imagen, badge, stock }) => {
-  return (
+const ProductCard = ({ id, nombre, precio, imagen, badge, stock }) => {
+  const cardContent = (
     <div className="product-card">
 
       {/* Parte de arriba: imagen + badge */}
@@ -45,11 +46,25 @@ const ProductCard = ({ nombre, precio, imagen, badge, stock }) => {
 
         <Button
           text="Agregar al carrito"
-          onClick={() => alert(`Agregaste ${nombre} al carrito`)}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            alert(`Agregaste ${nombre} al carrito`);
+          }}
         />
 
       </div>
     </div>
+  );
+
+  return (
+    id ? (
+      <Link to={`/orquideas/${id}`} style={{ textDecoration: 'none' }}>
+        {cardContent}
+      </Link>
+    ) : (
+      cardContent
+    )
   );
 };
 

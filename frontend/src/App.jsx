@@ -7,6 +7,7 @@ import Guia from './pages/Guia';
 import Contacto from './pages/Contacto';
 import Catalogo from './pages/Catalogo';
 import DetalleOrquidea from './pages/DetalleOrquidea';
+import NotFound from './pages/NotFound';
 
 const App = () => {
   return (
@@ -28,6 +29,8 @@ const App = () => {
         <Route path="/catalogo" element={<Catalogo />} />
         {/* Página de detalle de orquídea */}
         <Route path="/orquideas/:id" element={<DetalleOrquidea />} />
+        {/* Cualquier ruta inexistente */}
+        <Route path="*" element={<NotFound />} />
         
         {/* Otras rutas se agregan aquí en el futuro */}
       </Routes>
