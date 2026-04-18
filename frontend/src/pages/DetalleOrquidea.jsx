@@ -1,16 +1,21 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Loading from '../components/ui/Loading';
+import ConnectionError from '../components/ui/ConnectionError';
 import Button from '../components/ui/Button';
 import api from '../services/api';
+
+const MENSAJE_ERROR_CONEXION =
+  'No fue posible conectar con el servidor. Verifica que el backend este encendido e intenta nuevamente.';
 
 const DetalleOrquidea = () => {
   const { id } = useParams();
 
   const [orquidea, setOrquidea] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  // 🔧 NUEVOS ESTADOS
+  //NUEVOS ESTADOS
   const [imagenActiva, setImagenActiva] = useState(null);
   const [cantidad, setCantidad] = useState(1);
   const [tabActiva, setTabActiva] = useState('descripcion');
@@ -20,13 +25,16 @@ const DetalleOrquidea = () => {
     const cargarDetalle = async () => {
       try {
         setLoading(true);
+        setError('');
         const response = await api.get(`/orquideas/${id}`);
         setOrquidea(response.data);
 
         // 🔧 inicializar imagen principal
         setImagenActiva(response.data.imageUrl);
-      } catch (error) {
-        console.error('Error cargando detalle:', error);
+      } catch (err) {
+        console.error('Error cargando detalle:', err);
+        setError(MENSAJE_ERROR_CONEXION);
+        setOrquidea(null);
       } finally {
         setLoading(false);
       }
@@ -35,14 +43,30 @@ const DetalleOrquidea = () => {
     if (id) cargarDetalle();
   }, [id]);
 
+  const reintentar = async () => {
+    try {
+      setLoading(true);
+      setError('');
+      const response = await api.get(`/orquideas/${id}`);
+      setOrquidea(response.data);
+      setImagenActiva(response.data.imageUrl);
+    } catch (err) {
+      console.error('Error recargando detalle:', err);
+      setError(MENSAJE_ERROR_CONEXION);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (loading) return <Loading mensaje="Cargando detalles..." />;
+  if (error) return <ConnectionError mensaje={error} onRetry={reintentar} />;
   if (!orquidea) return <div>No encontrada</div>;
 
   return (
     <main style={{ padding: '2rem' }}>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem' }}>
 
-        {/* 🟢 IZQUIERDA: GALERÍA */}
+        {/* IZQUIERDA: GALERÍA */}
         <div>
 
           {/* Imagen principal */}
@@ -62,7 +86,7 @@ const DetalleOrquidea = () => {
             />
           </div>
 
-          {/* 🔧 Miniaturas */}
+          {/* Miniaturas */}
           <div style={{ display: 'flex', gap: '0.5rem' }}>
             {[orquidea.imageUrl, orquidea.imageUrl, orquidea.imageUrl].map((img, i) => (
               <img
@@ -83,7 +107,7 @@ const DetalleOrquidea = () => {
 
         </div>
 
-        {/* 🟢 DERECHA: INFO */}
+        {/* DERECHA: INFO */}
         <div>
 
           <h1>{orquidea.nombre}</h1>
@@ -112,7 +136,7 @@ const DetalleOrquidea = () => {
             ))}
           </div>
 
-          {/* 🔧 Contador de cantidad */}
+          {/* Contador de cantidad */}
           <div style={{ margin: '1rem 0' }}>
             <h4>Cantidad</h4>
 
@@ -157,17 +181,24 @@ const DetalleOrquidea = () => {
         </div>
       </div>
 
-      {/* 🟢 RECOMENDACIONES */}
+      {/* RECOMENDACIONES */}
       {orquidea.recomendaciones?.length > 0 && (
         <section style={{ marginTop: '3rem' }}>
           <h2>Macetas recomendadas</h2>
 
           <div style={{ display: 'flex', gap: '1rem' }}>
-            {orquidea.recomendaciones.map(rec => (
-              <div key={rec.maceta.id} style={{ border: '1px solid #ddd', padding: '1rem' }}>
-                <h4>{rec.maceta.nombre}</h4>
+            {orquidea.recomendaciones.map((rec, index) => (
+              <div
+                key={rec.maceta?.id ?? rec.macetaId ?? index}
+                style={{ border: '1px solid #ddd', padding: '1rem' }}
+              >
+                <h4>{rec.maceta?.nombre ?? rec.macetaNombre ?? 'Maceta recomendada'}</h4>
                 <p>{rec.descripcion}</p>
-                <p>${rec.maceta.precio}</p>
+                <p>
+                  ${
+                    (rec.maceta?.precio ?? rec.macetaPrecio)?.toLocaleString('es-CO')
+                  }
+                </p>
               </div>
             ))}
           </div>

@@ -1,21 +1,47 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import ProductCard from '../components/ui/ProductCard';
 import Loading from '../components/ui/Loading';
+import ConnectionError from '../components/ui/ConnectionError';
 import api from '../services/api';
 
+const MENSAJE_ERROR_CONEXION =
+  'No fue posible conectar con el servidor. Verifica que el backend este encendido e intenta nuevamente.';
+
+const normalizarTexto = (texto) =>
+  texto
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '');
+
+const coincidePorPalabras = (nombre, busqueda) => {
+  const busquedaNormalizada = normalizarTexto(busqueda).trim();
+
+  if (!busquedaNormalizada) return true;
+
+  const palabrasBusqueda = busquedaNormalizada.split(/\s+/).filter(Boolean);
+  const nombreNormalizado = normalizarTexto(nombre);
+
+  return palabrasBusqueda.every((palabra) => nombreNormalizado.includes(palabra));
+};
+
 const Catalogo = () => {
+  const [searchParams] = useSearchParams();
   const [orquideas, setOrquideas] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filtros, setFiltros] = useState({
-    variedad: '',
-    colorFlor: '',
-    precioMin: '',
-    precioMax: ''
-  });
+  const [error, setError] = useState('');
+  const busquedaHero = searchParams.get('busqueda') || '';
+  const [filtros, setFiltros] = useState(() => ({
+    variedad: searchParams.get('variedad') || '',
+    colorFlor: searchParams.get('colorFlor') || '',
+    precioMin: searchParams.get('precioMin') || '',
+    precioMax: searchParams.get('precioMax') || ''
+  }));
 
   const cargarOrquideas = useCallback(async () => {
     try {
       setLoading(true);
+      setError('');
       const params = new URLSearchParams();
       Object.entries(filtros).forEach(([key, value]) => {
         if (value) params.append(key, value);
@@ -23,8 +49,9 @@ const Catalogo = () => {
 
       const response = await api.get(`/orquideas?${params}`);
       setOrquideas(response.data);
-    } catch (error) {
-      console.error('Error cargando orquídeas:', error);
+    } catch (err) {
+      console.error('Error cargando orquídeas:', err);
+      setError(MENSAJE_ERROR_CONEXION);
     } finally {
       setLoading(false);
     }
@@ -55,6 +82,10 @@ const Catalogo = () => {
       e.preventDefault();
     }
   };
+
+  const orquideasVisibles = orquideas.filter((orquidea) =>
+    coincidePorPalabras(orquidea.nombre, busquedaHero)
+  );
 
   return (
     <main>
@@ -132,11 +163,19 @@ const Catalogo = () => {
         {/* Resultados */}
         {loading ? (
           <Loading mensaje="Cargando catálogo..." />
+        ) : error ? (
+          <ConnectionError mensaje={error} onRetry={cargarOrquideas} />
         ) : (
           <>
             <p style={{ color: '#1B4332', marginBottom: '1.5rem' }}>
-              {orquideas.length} orquídeas disponibles
+              {orquideasVisibles.length} orquídeas disponibles
             </p>
+
+            {busquedaHero && (
+              <p style={{ color: '#2D6A4F', marginBottom: '1rem' }}>
+                Resultados para: <strong>{busquedaHero}</strong>
+              </p>
+            )}
 
             {/* Grid de ProductCards */}
             <div style={{
@@ -145,9 +184,10 @@ const Catalogo = () => {
               flexWrap: 'wrap',
               justifyContent: 'center'
             }}>
-              {orquideas.map(orquidea => (
+              {orquideasVisibles.map(orquidea => (
                 <ProductCard
                   key={orquidea.id}
+                  id={orquidea.id}
                   nombre={orquidea.nombre}
                   precio={orquidea.precio}
                   imagen={orquidea.imageUrl}
@@ -156,6 +196,12 @@ const Catalogo = () => {
                 />
               ))}
             </div>
+
+            {orquideasVisibles.length === 0 && (
+              <p style={{ color: '#1B4332', marginTop: '1.5rem', textAlign: 'center' }}>
+                No encontramos orquídeas que coincidan con tu búsqueda.
+              </p>
+            )}
           </>
         )}
       </section>

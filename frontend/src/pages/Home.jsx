@@ -1,19 +1,58 @@
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Loading from '../components/ui/Loading';
+import ConnectionError from '../components/ui/ConnectionError';
 import ProductCard from '../components/ui/ProductCard';
-
-// Datos de prueba — en semana 2/3 vendrán del backend real
-const orquideasDestacadas = [
-  { id: 1, nombre: 'Orquídea Phalaenopsis', precio: 45000, stock: 8,  badge: 'Novedad' },
-  { id: 2, nombre: 'Orquídea Cattleya',     precio: 62000, stock: 3,  badge: 'Oferta'  },
-  { id: 3, nombre: 'Orquídea Dendrobium',   precio: 38000, stock: 0,  badge: null      },
-];
+import api from '../services/api';
 
 const Home = () => {
+  const [busqueda, setBusqueda] = useState('');
+  const [orquideasDestacadas, setOrquideasDestacadas] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  const cargarDestacadas = async () => {
+    try {
+      setLoading(true);
+      setError('');
+      const response = await api.get('/orquideas');
+      setOrquideasDestacadas(response.data.slice(0, 3));
+    } catch (err) {
+      console.error('Error cargando orquídeas destacadas:', err);
+      setError('No fue posible conectar con el servidor. Verifica que el backend este encendido e intenta nuevamente.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    cargarDestacadas();
+  }, []);
+
+  const irACatalogo = () => {
+    const termino = busqueda.trim();
+
+    if (!termino) {
+      navigate('/catalogo');
+      return;
+    }
+
+    navigate(`/catalogo?busqueda=${encodeURIComponent(termino)}`);
+  };
+
+  if (loading) return <Loading mensaje="Cargando pagina..." />;
+  if (error) return <ConnectionError mensaje={error} onRetry={cargarDestacadas} />;
+
   return (
     <main>
 
       {/* Seccion principal de bienvenida */}
       <section style={{
-        background: 'linear-gradient(135deg, #1B4332 0%, #2D6A4F 100%)',
+        backgroundImage: "linear-gradient(rgba(27, 67, 50, 0.55), rgba(27, 67, 50, 0.55)), url('/hero-home.png')",
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
         color: '#FAF7F5',
         padding: '5rem 2rem',
         textAlign: 'center'
@@ -30,6 +69,13 @@ const Home = () => {
           <input
             type="text"
             placeholder="Buscar orquídeas..."
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                irACatalogo();
+              }
+            }}
             style={{
               padding: '0.7rem 1.2rem',
               borderRadius: '20px',
@@ -38,7 +84,9 @@ const Home = () => {
               fontSize: '0.95rem'
             }}
           />
-          <button style={{
+          <button
+            onClick={irACatalogo}
+            style={{
             backgroundColor: '#E91E8C',
             color: '#fff',
             border: 'none',
@@ -46,7 +94,8 @@ const Home = () => {
             padding: '0.7rem 1.5rem',
             cursor: 'pointer',
             fontSize: '0.95rem'
-          }}>
+            }}
+          >
             Buscar
           </button>
         </div>
@@ -81,10 +130,11 @@ const Home = () => {
           {orquideasDestacadas.map(orquidea => (
             <ProductCard
               key={orquidea.id}
+              id={orquidea.id}
               nombre={orquidea.nombre}
               precio={orquidea.precio}
+              imagen={orquidea.imageUrl}
               stock={orquidea.stock}
-              badge={orquidea.badge}
             />
           ))}
         </div>

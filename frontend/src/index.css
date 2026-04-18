@@ -9,7 +9,20 @@
 
 /* Estilos del cuerpo de la página */
 body {
-  background-color: #FAF7F5; /* Fondo crema de nuestra paleta */
+  background-color: #FAF7F5;
+  background-image: linear-gradient(rgba(250, 247, 245, 0.82), rgba(250, 247, 245, 0.82)), url('/fondo.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
   font-family: Arial, sans-serif;
   color: #1B4332; /* Verde oscuro para el texto */
+}
+
+#root {
+  min-height: 100vh;
+}
+
+main {
+  background: transparent;
 }
