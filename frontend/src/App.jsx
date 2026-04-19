@@ -43,9 +43,11 @@ const App = () => {
         <Route path="/auth/callback" element={<AuthCallback />} />
         <Route path="/carrito" element={
           <ProtectedRoute>
-            <h1>Carrito — proximamente</h1>
+            <carrito />
           </ProtectedRoute>
         } />
+
+        
         {/* Siempre de ultima */}
         <Route path="*" element={<NotFound />} />
       </Routes>

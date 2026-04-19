@@ -2,10 +2,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 import logo from '../../assets/logo.png';
 import useAuth from '../../hooks/useAuth';
+import useCarritoStore from '../../store/carritoStore';
 
 const Navbar = () => {
   const { isLoggedIn, usuario, logout } = useAuth();
   const navigate = useNavigate();
+  const totalItems = useCarritoStore((state) => state.totalItems);
 
   const handleLogout = () => {
     logout();
@@ -65,7 +67,7 @@ const Navbar = () => {
 
           {/* Carrito — siempre visible */}
           <Link to="/carrito" className="navbar-carrito">
-            Carrito (0)
+            Carrito ({totalItems})
           </Link>
 
         </div>
