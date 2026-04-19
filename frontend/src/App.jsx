@@ -13,6 +13,8 @@ import DetalleOrquidea from './pages/DetalleOrquidea';
 import Login from './pages/Login';
 import AuthCallback from './pages/AuthCallback';
 import NotFound from './pages/NotFound';
+import Carrito from './pages/Carrito';
+
 
 const App = () => {
   return (
@@ -31,9 +33,11 @@ const App = () => {
         <Route path="/auth/callback" element={<AuthCallback />} />
         <Route path="/carrito" element={
           <ProtectedRoute>
-            <h1>Carrito — proximamente</h1>
+            <carrito />
           </ProtectedRoute>
         } />
+
+        
         {/* Siempre de ultima */}
         <Route path="*" element={<NotFound />} />
       </Routes>
