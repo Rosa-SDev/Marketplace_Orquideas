@@ -1,0 +1,28 @@
+[33m2c47a5c[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mdaniel/frontend[m[33m, [m[1;31morigin/daniel/frontend[m[33m)[m HEAD@{0}: checkout: moving from daniel/frontend to daniel/frontend
+[33m2c47a5c[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mdaniel/frontend[m[33m, [m[1;31morigin/daniel/frontend[m[33m)[m HEAD@{1}: checkout: moving from daniel/frontend to daniel/frontend
+[33m2c47a5c[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mdaniel/frontend[m[33m, [m[1;31morigin/daniel/frontend[m[33m)[m HEAD@{2}: commit: AuthCallback, redirección post-login y navbar con usuario logueado
+[33m9bf4b40[m HEAD@{3}: checkout: moving from daniel/frontend to daniel/frontend
+[33m9bf4b40[m HEAD@{4}: commit: Pantalla login, useAuth, authStore y protectedRoute
+[33me90b6a7[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{5}: checkout: moving from daniel/frontend to daniel/frontend
+[33me90b6a7[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{6}: pull origin main: Fast-forward
+[33m2d13912[m HEAD@{7}: commit: Crear página de contacto
+[33m341d108[m HEAD@{8}: commit: Crear página de guía de cuidado
+[33m07ec5df[m HEAD@{9}: commit: Crear página de catalogo de macetas
+[33m584d4f8[m HEAD@{10}: commit: Componentes frontend (Loading, button, ProductCard, Footer, pagina base de Home
+[33mc884884[m HEAD@{11}: checkout: moving from daniel/frontend to daniel/frontend
+[33mc884884[m HEAD@{12}: pull origin main: Merge made by the 'ort' strategy.
+[33md625b96[m HEAD@{13}: commit: Añadir componente boton con estilos
+[33m7756332[m HEAD@{14}: commit: Agregar a estructura (ui, layout, pages)
+[33m0c62318[m HEAD@{15}: commit: Creación de index.css para la vista de la pagina
+[33m93ea129[m HEAD@{16}: checkout: moving from daniel/frontend to daniel/frontend
+[33m93ea129[m HEAD@{17}: pull origin main: Fast-forward
+[33m0b8a6cd[m HEAD@{18}: commit: Cambio de colores (navbar.css) y agregar llogo png (navbar.jsx)
+[33m8bda812[m HEAD@{19}: checkout: moving from daniel/frontend to daniel/frontend
+[33m8bda812[m HEAD@{20}: pull origin main: Fast-forward
+[33m813a99d[m HEAD@{21}: commit: Agregar Navbar al App.jsx
+[33mf29beca[m HEAD@{22}: commit: Agregar estilos CSS al navbar
+[33m9abf8a3[m HEAD@{23}: commit: Crear componente navbar
+[33m06b1786[m HEAD@{24}: commit: Instalar dependencias axios react-router-dom zustand recharts
+[33m4215d2d[m HEAD@{25}: commit: Iniciarlizar proyecto React con vite
+[33m10f73ca[m[33m ([m[1;32mmain[m[33m)[m HEAD@{26}: checkout: moving from main to daniel/frontend
+[33m10f73ca[m[33m ([m[1;32mmain[m[33m)[m HEAD@{27}: clone: from https://github.com/Rosa-SDev/Marketplace_Orquideas.git
