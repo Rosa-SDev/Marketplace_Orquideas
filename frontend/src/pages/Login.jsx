@@ -1,15 +1,15 @@
 // Login.jsx
+// Pantalla de inicio de sesion con Google
+// El boton redirige al backend que maneja todo el proceso de OAuth2
+
 import { useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
-import api from '../services/api';
 import logo from '../assets/logo.png';
-import { savePostLoginRedirect } from '../utils/authFlowStorage';
 
 const Login = () => {
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
 
   // Si el usuario ya esta logueado, lo mandamos al inicio
   useEffect(() => {
@@ -18,11 +18,9 @@ const Login = () => {
     }
   }, [isLoggedIn]);
 
-  // Construye la URL del backend dinamicamente desde api.js
-  // en lugar de tenerla hardcodeada como 'http://localhost:8080'
+  // Al hacer clic, redirigimos al endpoint de Google OAuth2 del backend
   const handleLoginGoogle = () => {
-    const backendBaseUrl = api.defaults.baseURL.replace('/api', '');
-    window.location.href = `${backendBaseUrl}/oauth2/authorization/google`;
+    window.location.href = 'http://localhost:8080/oauth2/authorization/google';
   };
 
   return (
@@ -35,6 +33,7 @@ const Login = () => {
       padding: '2rem'
     }}>
 
+      {/* Card central */}
       <div style={{
         backgroundColor: '#FFFFFF',
         borderRadius: '16px',
@@ -45,6 +44,7 @@ const Login = () => {
         textAlign: 'center'
       }}>
 
+        {/* Logo */}
         <img
           src={logo}
           alt="Logo Orquideas del Combeima"
@@ -58,6 +58,7 @@ const Login = () => {
           Inicia sesion para acceder a tu cuenta
         </p>
 
+        {/* Boton de Google */}
         <button
           onClick={handleLoginGoogle}
           style={{
@@ -84,6 +85,7 @@ const Login = () => {
           Continuar con Google
         </button>
 
+        {/* Lista de beneficios */}
         <div style={{ textAlign: 'left' }}>
           <p style={{ color: '#1B4332', fontWeight: 'bold', marginBottom: '0.8rem', fontSize: '0.9rem' }}>
             Al iniciar sesion puedes:
