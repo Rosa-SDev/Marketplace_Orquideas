@@ -1,32 +1,31 @@
-// Importamos Link de react-router-dom
-// Importamos el archivo CSS para la Navbar
-// Navegar entre páginas sin recargar el navegador
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Navbar.css';
-import logo from '../../assets/logo.png'; 
+import logo from '../../assets/logo.png';
+import useAuth from '../../hooks/useAuth';
 
 const Navbar = () => {
-  
+  const { isLoggedIn, usuario, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
   return (
-
     <nav className="navbar">
-
-      {/* Contenedor principal que organiza todo en fila */}
       <div className="navbar-container">
 
-        {/* Logo del lado izquierdo */}
-        {/* Link to="/" lleva al usuario a la página de inicio */}
+        {/* Logo */}
         <Link to="/" className="navbar-logo">
-          {/* La imagen del logo, con alt para accesibilidad y clase para estilos */}
-          {/* alt por si el logo no carga, muestra texto alternativo */}
-          <img src={logo} alt="Logo Orquídeas del Combeima" className="navbar-logo-image" />
+          <img src={logo} alt="Logo Orquideas del Combeima" className="navbar-logo-image" />
         </Link>
 
-        {/* Menú del centro con las páginas principales */}
-        {/* ul = lista, li = cada elemento de la lista */}
+        {/* Menu del centro */}
         <ul className="navbar-menu">
           <li><Link to="/">Inicio</Link></li>
           <li><Link to="/catalogo">Catálogo</Link></li>
+          <li><Link to="/macetas">Macetas</Link></li>
           <li><Link to="/guia">Guía de Cuidado</Link></li>
           <li><Link to="/contacto">Contacto</Link></li>
         </ul>
@@ -34,13 +33,37 @@ const Navbar = () => {
         {/* Botones del lado derecho */}
         <div className="navbar-icons">
 
-          {/* Botón para iniciar sesión */}
-          <Link to="/login" className="navbar-btn-acceder">
-            Acceder
-          </Link>
+          {/* Si NO esta logueado muestra el boton Acceder */}
+          {!isLoggedIn && (
+            <Link to="/login" className="navbar-btn-acceder">
+              Acceder
+            </Link>
+          )}
 
-          {/* Carrito de compras con contador */}
-          {/* El 0 es el número de productos, después lo haremos dinámico */}
+          {/* Si SI esta logueado muestra el nombre y boton de cerrar sesion */}
+          {isLoggedIn && usuario && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+              <span style={{ color: '#1B4332', fontSize: '0.9rem' }}>
+                Hola, {usuario.nombre}
+              </span>
+              <button
+                onClick={handleLogout}
+                style={{
+                  backgroundColor: 'transparent',
+                  border: '1px solid #2D6A4F',
+                  color: '#2D6A4F',
+                  padding: '0.4rem 1rem',
+                  borderRadius: '20px',
+                  cursor: 'pointer',
+                  fontSize: '0.85rem'
+                }}
+              >
+                Salir
+              </button>
+            </div>
+          )}
+
+          {/* Carrito — siempre visible */}
           <Link to="/carrito" className="navbar-carrito">
             Carrito (0)
           </Link>
@@ -51,5 +74,4 @@ const Navbar = () => {
   );
 };
 
-// Exportamos el componente para poder usarlo en otros archivos
 export default Navbar;
