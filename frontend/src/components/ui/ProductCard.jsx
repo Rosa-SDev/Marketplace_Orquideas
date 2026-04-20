@@ -1,6 +1,7 @@
 import './ProductCard.css';
 import Button from './Button';
 import { Link } from 'react-router-dom';
+import useCarritoStore from '../../store/carritoStore';
 
 // Props que recibe esta tarjeta:
 //   nombre  → "Orquídea Phalaenopsis"
@@ -10,6 +11,7 @@ import { Link } from 'react-router-dom';
 //   stock   → 8 (número de unidades disponibles)
 
 const ProductCard = ({ id, nombre, precio, imagen, badge, stock }) => {
+  const agregar = useCarritoStore(state => state.agregar);
   const cardContent = (
     <div className="product-card">
 
@@ -46,10 +48,8 @@ const ProductCard = ({ id, nombre, precio, imagen, badge, stock }) => {
 
         <Button
           text="Agregar al carrito"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            alert(`Agregaste ${nombre} al carrito`);
+          onClick={() => {
+            agregar({ id, nombre, precio, imagen, stock });
           }}
         />
 

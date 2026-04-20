@@ -4,6 +4,8 @@ import Loading from '../components/ui/Loading';
 import ConnectionError from '../components/ui/ConnectionError';
 import Button from '../components/ui/Button';
 import api from '../services/api';
+import useCarritoStore from '../store/carritoStore';
+
 
 const MENSAJE_ERROR_CONEXION =
   'No fue posible conectar con el servidor. Verifica que el backend este encendido e intenta nuevamente.';
@@ -20,6 +22,7 @@ const DetalleOrquidea = () => {
   const [cantidad, setCantidad] = useState(1);
   const [tabActiva, setTabActiva] = useState('descripcion');
   const [tamanoSeleccionado, setTamanoSeleccionado] = useState('');
+  const agregar = useCarritoStore(state => state.agregar);
 
   useEffect(() => {
     const cargarDetalle = async () => {
@@ -147,9 +150,17 @@ const DetalleOrquidea = () => {
 
           <Button
             text="Agregar al carrito"
-            onClick={() =>
-              alert(`Agregaste ${cantidad} (${tamanoSeleccionado})`)
-            }
+            onClick={() => {
+              for (let i = 0; i < cantidad; i++) {
+                agregar({
+                  id : orquidea.id,
+                  nombre: orquidea.nombre,
+                  precio: orquidea.precio,
+                  imagen: orquidea.imageUrl,
+                  stock: orquidea.stock
+                  });
+              }
+            }}
           />
 
           {/* 🔧 Tabs */}
