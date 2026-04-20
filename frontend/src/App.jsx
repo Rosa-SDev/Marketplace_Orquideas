@@ -7,7 +7,10 @@ import Guia from './pages/Guia';
 import Contacto from './pages/Contacto';
 import Catalogo from './pages/Catalogo';
 import DetalleOrquidea from './pages/DetalleOrquidea';
+import Login from './pages/Login';
+import AuthCallback from './pages/AuthCallback';
 import NotFound from './pages/NotFound';
+import SessionExpiryWarning from './components/ui/SessionExpiryWarning';
 
 const App = () => {
   return (
@@ -16,9 +19,16 @@ const App = () => {
       {/* Navbar aparece en todas las páginas */}
       <Navbar />
 
+      {/* Advertencia global de expiración de sesion */}
+      <SessionExpiryWarning />
+
       <Routes>
         {/* La página de inicio */}
         <Route path="/" element={<Home />} />
+        {/* Inicio de sesion con Google */}
+        <Route path="/login" element={<Login />} />
+        {/* Callback después de autenticar con Google */}
+        <Route path="/auth/callback" element={<AuthCallback />} />
         {/* Página de catálogo de macetas */}
         <Route path="/macetas" element={<Macetas />} />
         {/* Página de guía de cuidado */}
