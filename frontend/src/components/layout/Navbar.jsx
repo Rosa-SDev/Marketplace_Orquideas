@@ -7,7 +7,7 @@ import useCarritoStore from '../../store/carritoStore';
 const Navbar = () => {
   const { isLoggedIn, usuario, logout } = useAuth();
   const navigate = useNavigate();
-  const totalItems = useCarritoStore((state) => state.totalItems);
+  const totalItems = useCarritoStore((state) => state.totalItems());
 
   const handleLogout = () => {
     logout();
