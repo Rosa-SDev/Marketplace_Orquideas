@@ -33,11 +33,11 @@ const App = () => {
         <Route path="/auth/callback" element={<AuthCallback />} />
         <Route path="/carrito" element={
           <ProtectedRoute>
-            <carrito />
+            <Carrito />
           </ProtectedRoute>
         } />
 
-        
+
         {/* Siempre de ultima */}
         <Route path="*" element={<NotFound />} />
       </Routes>
