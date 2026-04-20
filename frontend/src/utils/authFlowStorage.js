@@ -7,9 +7,9 @@ export const savePendingCartAdd = (payload) => {
 
 export const consumePendingCartAdd = () => {
   const raw = sessionStorage.getItem(PENDING_CART_ADD_KEY);
-  if (!raw) return null;
-
   sessionStorage.removeItem(PENDING_CART_ADD_KEY);
+
+  if (!raw) return null;
 
   try {
     return JSON.parse(raw);

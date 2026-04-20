@@ -3,13 +3,15 @@
 // El boton redirige al backend que maneja todo el proceso de OAuth2
 
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 import logo from '../assets/logo.png';
+import { savePostLoginRedirect } from '../utils/authFlowStorage';
 
 const Login = () => {
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   // Si el usuario ya esta logueado, lo mandamos al inicio
   useEffect(() => {
@@ -20,6 +22,9 @@ const Login = () => {
 
   // Al hacer clic, redirigimos al endpoint de Google OAuth2 del backend
   const handleLoginGoogle = () => {
+    // Modificado (Matt): conservamos la ruta destino para volver luego del login
+    const from = location.state?.from;
+    if (from) savePostLoginRedirect(from);
     window.location.href = 'http://localhost:8080/oauth2/authorization/google';
   };
 
@@ -57,6 +62,19 @@ const Login = () => {
         <p style={{ color: '#666', marginBottom: '2rem', fontSize: '0.95rem' }}>
           Inicia sesion para acceder a tu cuenta
         </p>
+
+        {/* Modificado (Matt): aviso simple segun el motivo del login */}
+        {location.state?.motivo === 'carrito' && (
+          <p style={{ color: '#8a5a00', marginBottom: '1rem', fontSize: '0.9rem' }}>
+            Necesitas iniciar sesion para agregar productos al carrito.
+          </p>
+        )}
+
+        {location.state?.motivo === 'expirada' && (
+          <p style={{ color: '#8a5a00', marginBottom: '1rem', fontSize: '0.9rem' }}>
+            Tu sesion expiro, inicia sesion de nuevo para continuar.
+          </p>
+        )}
 
         {/* Boton de Google */}
         <button
