@@ -1,15 +1,22 @@
 package com.orquicombeima.proyecto_orquideas.service;
 
+import com.orquicombeima.proyecto_orquideas.dto.AgregarItemRequestDTO;
 import com.orquicombeima.proyecto_orquideas.dto.CarritoDTO;
 import com.orquicombeima.proyecto_orquideas.dto.ItemCarritoDTO;
 import com.orquicombeima.proyecto_orquideas.model.Carrito;
 import com.orquicombeima.proyecto_orquideas.model.ItemCarrito;
+import com.orquicombeima.proyecto_orquideas.model.Producto;
+import com.orquicombeima.proyecto_orquideas.model.Usuario;
 import com.orquicombeima.proyecto_orquideas.repository.CarritoRepository;
 import com.orquicombeima.proyecto_orquideas.repository.ItemCarritoRepository;
+import com.orquicombeima.proyecto_orquideas.repository.ProductoRepository;
+import com.orquicombeima.proyecto_orquideas.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,6 +25,9 @@ public class CarritoService {
 
     private final CarritoRepository carritoRepository;
     private final ItemCarritoRepository itemCarritoRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final ProductoRepository productoRepository;
+    private final StockReservaService stockReservaService;
 
     // GET /api/carrito
     @Transactional(readOnly = true)
@@ -28,13 +38,75 @@ public class CarritoService {
         return convertirADTO(carrito);
     }
 
+    // POST /api/carrito/agregar
+    // Agrega un producto al carrito del usuario autenticado
+    // Si el producto ya estaba en el carrito, le suma la cantidad nueva a la existente
+    @Transactional
+    public CarritoDTO agregarItem(AgregarItemRequestDTO request, String emailUsuario) {
+        // Buscamos al usuario por su email
+        Usuario usuario = usuarioRepository.findByEmail(emailUsuario)
+                .orElseThrow(() -> new RuntimeException("No se encontró usuario con correo: " + emailUsuario));
+
+        // Buscamos el producto y validamos que esté activo en el catálogo
+        Producto producto = productoRepository.findByIdAndActivoTrue(request.getIdProducto())
+                .orElseThrow(() -> new RuntimeException("No se encontró producto activo con id: " + request.getIdProducto()));
+
+        // Buscamos el carrito del usuario; si no existe lo creamos en el momento
+        Carrito carrito = carritoRepository.findByUsuarioEmail(emailUsuario)
+                .orElseGet(() -> {
+                    Carrito nuevo = new Carrito();
+                    nuevo.setUsuario(usuario);
+                    nuevo.setFechaCreacion(LocalDateTime.now());
+                    nuevo.setItems(new ArrayList<>());
+                    return carritoRepository.save(nuevo);
+                });
+
+        // Revisamos si el producto ya estaba en el carrito (para sumarle en vez de duplicar)
+        ItemCarrito itemExistente = null;
+        for (ItemCarrito item : carrito.getItems()) {
+            if (item.getProducto().getId().equals(producto.getId())) {
+                itemExistente = item;
+                break;
+            }
+        }
+
+        // Calculamos la cantidad total que quedaría: la que ya había + la nueva que se agrega
+        int cantidadTotal;
+        if (itemExistente != null) {
+            cantidadTotal = itemExistente.getCantidad() + request.getCantidad();
+        } else {
+            cantidadTotal = request.getCantidad();
+        }
+
+        // Verificamos que haya suficiente stock disponible para esa cantidad total
+        boolean hayDisponibilidad = stockReservaService.verificarDisponibilidad(producto.getId(), cantidadTotal);
+        if (!hayDisponibilidad) {
+            throw new RuntimeException("No hay suficiente stock disponible para el producto: " + producto.getNombre());
+        }
+
+        // Si ya existía el item, le sumamos la cantidad; si no, creamos uno nuevo
+        if (itemExistente != null) {
+            itemExistente.setCantidad(cantidadTotal);
+            itemCarritoRepository.save(itemExistente);
+        } else {
+            ItemCarrito nuevoItem = new ItemCarrito();
+            nuevoItem.setCarrito(carrito);
+            nuevoItem.setProducto(producto);
+            nuevoItem.setCantidad(request.getCantidad());
+            itemCarritoRepository.save(nuevoItem);
+            carrito.getItems().add(nuevoItem);
+        }
+
+        return convertirADTO(carrito);
+    }
+
     // PUT /api/carrito/{idItem}/cantidad
     @Transactional
     public CarritoDTO actualizarCantidad(Long idItem, int nuevaCantidad, String emailUsuario) {
         ItemCarrito item = itemCarritoRepository.findById(idItem)
                 .orElseThrow(() -> new RuntimeException("No se encontró el item con id: " + idItem));
 
-        //Verificar que el item pertenece al carrito del usuario autenticado
+        // Verificar que el item pertenece al carrito del usuario autenticado
         if (!item.getCarrito().getUsuario().getEmail().equals(emailUsuario)) {
             throw new RuntimeException("No tienes permiso para modificar este item");
         }
@@ -55,7 +127,6 @@ public class CarritoService {
         ItemCarrito item = itemCarritoRepository.findById(idItem)
                 .orElseThrow(() -> new RuntimeException("No se encontró el item con id: " + idItem));
 
-        // Verificar que el item pertenece al carrito del usuario autenticado
         if (!item.getCarrito().getUsuario().getEmail().equals(emailUsuario)) {
             throw new RuntimeException("No tienes permiso para eliminar este item");
         }
@@ -77,16 +148,15 @@ public class CarritoService {
         carritoRepository.save(carrito);
     }
 
-    // Convertir a CarritoDTO calculando los subtotales y el total
+    // Convierte el carrito a DTO calculando los subtotales de cada item y el total del carrito
     private CarritoDTO convertirADTO(Carrito carrito) {
-        List<ItemCarritoDTO> itemsDTO = carrito.getItems()
-                .stream()
-                .map(this::convertirAItemDTO)
-                .toList();
-
-        double total = itemsDTO.stream()
-                .map(ItemCarritoDTO::getSubtotal)
-                .reduce(0.0, Double::sum);  // Se suman los subtotales partiendo desde 0.0
+        List<ItemCarritoDTO> itemsDTO = new ArrayList<>();
+        double total = 0.0;
+        for (ItemCarrito item : carrito.getItems()) {
+            ItemCarritoDTO itemDTO = convertirAItemDTO(item);
+            itemsDTO.add(itemDTO);
+            total = total + itemDTO.getSubtotal();
+        }
 
         return CarritoDTO.builder()
                 .id(carrito.getId())
@@ -96,7 +166,7 @@ public class CarritoService {
                 .build();
     }
 
-    // Convertir a ItemCarritoDTO calculando el subtotal
+    // Convierte un ItemCarrito a ItemCarritoDTO calculando su subtotal (precio x cantidad)
     private ItemCarritoDTO convertirAItemDTO(ItemCarrito item) {
         double precio = item.getProducto().getPrecio();
         double subtotal = precio * item.getCantidad();
