@@ -1,17 +1,22 @@
-// ProtectedRoute.jsx
-// Protege rutas que requieren estar logueado
-// Si el usuario no tiene sesion, lo manda al login
-// Uso: <ProtectedRoute> <PaginaProtegida /> </ProtectedRoute>
-
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
+import { savePostLoginRedirect } from '../../utils/authFlowStorage';
 
 const ProtectedRoute = ({ children }) => {
   const { isLoggedIn } = useAuth();
+  const location = useLocation();
 
   if (!isLoggedIn) {
-    // Navigate reemplaza la pagina actual por /login
-    return <Navigate to="/login" />;
+    // Guardamos la ruta para redirigir después del login
+    savePostLoginRedirect(`${location.pathname}${location.search || ''}`);
+
+    return (
+      <Navigate
+        to="/login"
+        state={{ from: location.pathname }}
+        replace
+      />
+    );
   }
 
   return children;
