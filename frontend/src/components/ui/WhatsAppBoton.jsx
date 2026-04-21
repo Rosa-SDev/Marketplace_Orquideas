@@ -5,7 +5,7 @@
 const WhatsAppBoton = () => {
   return (
     <a
-      href="https://wa.me/573000000000"
+      href="https://wa.me/573014791094"
       target="_blank"
       rel="noreferrer"
       style={{
