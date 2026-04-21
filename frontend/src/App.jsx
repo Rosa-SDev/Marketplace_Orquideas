@@ -3,6 +3,7 @@ import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import WhatsAppBoton from './components/ui/WhatsAppBoton';
 import ProtectedRoute from './components/layout/ProtectedRoute';
+import SessionManager from './components/layout/SessionManager';
 
 import Home from './pages/Home';
 import Macetas from './pages/Macetas';
@@ -15,10 +16,11 @@ import AuthCallback from './pages/AuthCallback';
 import NotFound from './pages/NotFound';
 import Carrito from './pages/Carrito';
 
-
 const App = () => {
   return (
     <BrowserRouter>
+      {/* Gestor de sesión */}
+      <SessionManager />
 
       <Navbar />
 
@@ -31,12 +33,15 @@ const App = () => {
         <Route path="/orquideas/:id" element={<DetalleOrquidea />} />
         <Route path="/login" element={<Login />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
-        <Route path="/carrito" element={
-          <ProtectedRoute>
-            <Carrito />
-          </ProtectedRoute>
-        } />
 
+        <Route
+          path="/carrito"
+          element={
+            <ProtectedRoute>
+              <Carrito />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Siempre de ultima */}
         <Route path="*" element={<NotFound />} />
@@ -44,7 +49,6 @@ const App = () => {
 
       <Footer />
       <WhatsAppBoton />
-
     </BrowserRouter>
   );
 };

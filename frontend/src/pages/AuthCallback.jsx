@@ -1,59 +1,74 @@
-// AuthCallback.jsx
-// Esta pagina recibe el token que manda el backend despues del login con Google
-// El backend redirige a /auth/callback?token=XXXXXX
-// Nosotros capturamos ese token, pedimos los datos del usuario y guardamos la sesion
-
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 import api from '../services/api';
 import Loading from '../components/ui/Loading';
+import useCarritoStore from '../store/carritoStore';
+import {
+  consumePendingCartAdd,
+  consumePostLoginRedirect
+} from '../utils/authFlowStorage';
 
 const AuthCallback = () => {
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { login } = useAuth();
+  const agregar = useCarritoStore((state) => state.agregar);
 
   useEffect(() => {
     const procesarLogin = async () => {
-      // Leemos el token de la URL — window.location.search es "?token=XXXXX"
-      const params = new URLSearchParams(window.location.search);
-      const token = params.get('token');
+      const token = searchParams.get('token');
 
       if (!token) {
-        // Si no hay token algo salió mal, mandamos al login
-        navigate('/login');
+        navigate('/login', { replace: true });
         return;
       }
 
       try {
-        // Guardamos el token temporalmente para que api.js lo use en la siguiente peticion
+        // Guardar token
         localStorage.setItem('token', token);
 
-        // Le preguntamos al backend quién es el usuario con ese token
+        // Obtener usuario
         const response = await api.get('/auth/me');
         const usuario = response.data;
 
-        // Guardamos el usuario y el token en Zustand
+        // Guardar sesión global
         login(usuario, token);
 
-        // Si es administrador lo mandamos al panel admin, si no al inicio
-        if (usuario.rol === 'ADMINISTRADOR') {
-          navigate('/admin');
-        } else {
-          navigate('/');
+        // Ejecutar acción pendiente (ej: agregar al carrito)
+        const pendingAdd = consumePendingCartAdd();
+        if (pendingAdd?.producto) {
+          const cantidad =
+            Number(pendingAdd.cantidad) > 0
+              ? Number(pendingAdd.cantidad)
+              : 1;
+
+          for (let i = 0; i < cantidad; i++) {
+            agregar(pendingAdd.producto);
+          }
         }
+
+        // Redirección inteligente
+        const redirectPath = consumePostLoginRedirect();
+
+        if (redirectPath) {
+          navigate(redirectPath, { replace: true });
+        } else if (usuario.rol === 'ADMINISTRADOR') {
+          navigate('/admin', { replace: true });
+        } else {
+          navigate('/', { replace: true });
+        }
+
       } catch (err) {
-        // Si algo falla limpiamos y mandamos al login
         localStorage.removeItem('token');
-        navigate('/login');
+        navigate('/login', { replace: true });
       }
     };
 
     procesarLogin();
-  }, []);
+  }, [agregar, login, navigate, searchParams]);
 
-  // Mientras procesa mostramos el spinner
-  return <Loading mensaje="Iniciando sesion..." />;
+  return <Loading mensaje="Finalizando autenticación..." />;
 };
 
 export default AuthCallback;
