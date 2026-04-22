@@ -49,7 +49,7 @@ const ProductCard = ({ id, nombre, precio, imagen, badge, stock, tipo = 'orquide
 
   return (
     id && tipo === 'orquidea' ? (
-      <Link to={`/orquidea/${id}`} style={{ textDecoration: 'none' }}>
+      <Link to={`/orquideas/${id}`} style={{ textDecoration: 'none' }}>
         {cardContent}
       </Link>
     ) : (
