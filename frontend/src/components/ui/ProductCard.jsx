@@ -38,7 +38,6 @@ const ProductCard = ({ id, nombre, precio, imagen, badge, stock }) => {
         <Button
           text="Agregar al carrito"
           onClick={(event) => {
-            event.preventDefault();
             event.stopPropagation();
             agregarConLoginLazy({ id, nombre, precio, imagen, stock });
           }}
