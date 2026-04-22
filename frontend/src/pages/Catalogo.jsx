@@ -30,6 +30,7 @@ const Catalogo = () => {
   const [orquideas, setOrquideas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [errorPrecio, setErrorPrecio] = useState('');
   const busquedaHero = searchParams.get('busqueda') || '';
   const [filtros, setFiltros] = useState(() => ({
     variedad: searchParams.get('variedad') || '',
@@ -84,7 +85,8 @@ const Catalogo = () => {
   };
 
   const orquideasVisibles = orquideas.filter((orquidea) =>
-    coincidePorPalabras(orquidea.nombre, busquedaHero)
+  coincidePorPalabras(orquidea.nombre, busquedaHero) &&
+  (filtros.variedad === '' || normalizarTexto(orquidea.variedad).includes(normalizarTexto(filtros.variedad)))
   );
 
   return (
@@ -112,43 +114,69 @@ const Catalogo = () => {
           flexWrap: 'wrap',
           marginBottom: '1rem'
         }}>
+          
+          {/* Variedad - búsqueda parcial */}
           <input
-            placeholder="Variedad"
-            value={filtros.variedad}
-            onChange={(e) => setFiltros(prev => ({ ...prev, variedad: soloTexto(e.target.value) }))}
-            style={{ padding: '0.5rem', borderRadius: '8px', border: '1px solid #ddd' }}
+          placeholder="Variedad (ej: Cattleya)"
+          value={filtros.variedad}
+          onChange={(e) => setFiltros(prev => ({ ...prev, variedad: soloTexto(e.target.value)}))}
+          style={{ padding: '0.5rem', borderRadius: '8px', border: '1px solid #ddd'}}
           />
-          <input
-            placeholder="Color de flor"
+
+          {/* Color de flor - desplegable */}
+          <select
             value={filtros.colorFlor}
-            onChange={(e) => setFiltros(prev => ({ ...prev, colorFlor: soloTexto(e.target.value) }))}
-            style={{ padding: '0.5rem', borderRadius: '8px', border: '1px solid #ddd' }}
-          />
+            onChange={(e) => setFiltros(prev => ({ ...prev, colorFlor: e.target.value }))}
+            style={{ padding: '0.5rem', borderRadius: '8px', border: '1px solid #ddd', backgroundColor: '#fff' }}
+          >
+            <option value="">Seleccionar color</option>
+            <option value="Blanco">Blanco</option>
+            <option value="Rojo">Rojo</option>
+            <option value="Amarillo">Amarillo</option>
+            <option value="Morado">Morado</option>
+            <option value="Rosa">Rosa</option>
+          </select>
+
+          {/* Precio mínimo */}
           <input
             type="number"
             placeholder="Precio mínimo"
-            min="0"
+            min='0'
             value={filtros.precioMin}
-            onKeyDown={soloNumeros}
             onChange={(e) => handlePrecioChange('precioMin', e.target.value)}
-            style={{ padding: '0.5rem', borderRadius: '8px', border: '1px solid #ddd' }}
-          />
-          <input
-            type="number"
-            placeholder="Precio máximo"
-            min="0"
-            value={filtros.precioMax}
             onKeyDown={soloNumeros}
-            onChange={(e) => handlePrecioChange('precioMax', e.target.value)}
             style={{ padding: '0.5rem', borderRadius: '8px', border: '1px solid #ddd' }}
           />
 
-          {/* Botón que dispara la búsqueda */}
+          {/* Precio máximo */}
+          <input
+            type="number"
+            placeholder="Precio máximo"
+            min={filtros.precioMin || '0'}
+            value={filtros.precioMax}
+            onChange={(e) => {
+              const valor = e.target.value;
+              handlePrecioChange('precioMax', valor);
+            }}
+            onKeyDown={soloNumeros}
+            style={{ padding: '0.5rem', borderRadius: '8px', border: filtros.precioMin && filtros.precioMax && Number(filtros.precioMax) < Number(filtros.precioMin)
+              ? '1px solid #E91E8C'
+              : '1px solid #ddd'
+             }}
+          />
+
           <button
-            onClick={cargarOrquideas}
+            onClick={() => {
+              if (filtros.precioMin && filtros.precioMax && Number(filtros.precioMax) < Number(filtros.precioMin)) {
+                setErrorPrecio('El precio máximo no puede ser menor al precio mínimo');
+                return;
+              }
+              setErrorPrecio('');
+              cargarOrquideas();
+            }}
             style={{
-              padding: '0.5rem 1.5rem',
-              backgroundColor: '#1B4332',
+              padding: '0.5rem 1rem',
+              backgroundColor: '#1B4332', 
               color: '#FAF7F5',
               border: 'none',
               borderRadius: '8px',
@@ -158,7 +186,14 @@ const Catalogo = () => {
           >
             Buscar
           </button>
+
         </div>
+
+        {errorPrecio && (
+          <p style={{ color: '#E91E8C', marginBottom: '1rem', fontSize: '0.9rem' }}>
+            {errorPrecio}
+          </p>
+        )}
 
         {/* Resultados */}
         {loading ? (

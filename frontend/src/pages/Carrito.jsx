@@ -127,7 +127,7 @@ const Carrito = () => {
           </span>
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
-          <span style={{ color: '#666' }}>Envio</span>
+          <span style={{ color: '#666' }}>Envío</span>
           <span style={{ color: '#2D6A4F' }}>A calcular</span>
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem', borderTop: '1px solid #eee', paddingTop: '1rem' }}>

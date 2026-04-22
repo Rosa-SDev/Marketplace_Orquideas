@@ -11,9 +11,9 @@ import ProductCard from '../components/ui/ProductCard';
 // Datos de prueba basados en el DTO del backend:
 // material, diametroCm, color, estilo, precio, stock, imageUrl
 const macetasDePrueba = [
-  { id: 1, nombre: 'Maceta de Barro Rustica',   precio: 18000, stock: 12, badge: null       },
-  { id: 2, nombre: 'Maceta de Ceramica Blanca', precio: 25000, stock: 5,  badge: 'Novedad'  },
-  { id: 3, nombre: 'Maceta Plastica Verde',      precio: 9000,  stock: 20, badge: null       },
+  { id: 1, nombre: 'Maceta de Barro Rústica',   precio: 18000, stock: 12, badge: null       },
+  { id: 2, nombre: 'Maceta de Cerámica Blanca', precio: 25000, stock: 5,  badge: 'Novedad'  },
+  { id: 3, nombre: 'Maceta Plástica Verde',      precio: 9000,  stock: 20, badge: null       },
   { id: 4, nombre: 'Maceta de Madera Natural',  precio: 32000, stock: 0,  badge: null       },
 ];
 

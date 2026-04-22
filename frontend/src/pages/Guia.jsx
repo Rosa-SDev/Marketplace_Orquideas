@@ -18,26 +18,26 @@ const secciones = [
   {
     id: 2,
     titulo: 'Riego',
-    descripcion: 'Riega cada 7 a 10 dias en epoca seca y cada 12 a 14 dias en epoca humeda. La raiz debe secarse entre riego y riego. Nunca dejes la maceta con agua acumulada abajo.',
-    consejo: 'Mas orquideas mueren por exceso de agua que por falta de ella.'
+    descripcion: 'Riega cada 7 a 10 dias en epoca seca y cada 12 a 14 dias en epoca humeda. La raíz debe secarse entre riego y riego. Nunca dejes la maceta con agua acumulada abajo.',
+    consejo: 'Mueren más orquídeas por exceso de agua que por falta de esta.'
   },
   {
     id: 3,
     titulo: 'Temperatura',
-    descripcion: 'La temperatura ideal esta entre 15 y 28 grados centígrados. Evita corrientes de aire frio directo y cambios bruscos de temperatura.',
+    descripcion: 'La temperatura ideal esta entre 15 y 28 grados centígrados. Evita corrientes de aire frío directo y cambios bruscos de temperatura.',
     consejo: 'En Ibagué el clima es casi perfecto para las orquideas todo el año.'
   },
   {
     id: 4,
     titulo: 'Fertilización',
-    descripcion: 'Usa fertilizante liquido especial para orquideas cada 15 dias durante la epoca de crecimiento. Reduce la fertilizacion en epoca de descanso.',
+    descripcion: 'Usa fertilizante líquido especial para orquideas cada 15 dias durante la epoca de crecimiento. Reduce la fertilización en epoca de descanso.',
     consejo: 'Usa siempre la mitad de la dosis recomendada en el empaque.'
   },
   {
     id: 5,
     titulo: 'Humedad',
-    descripcion: 'Las orquideas prefieren una humedad entre 50% y 70%. Si el ambiente es muy seco, puedes poner un plato con piedras y agua debajo de la maceta.',
-    consejo: 'No rocies agua directamente sobre las flores, solo sobre las raices.'
+    descripcion: 'Las orquídeas prefieren una humedad entre 50% y 70%. Si el ambiente es muy seco, puedes poner un plato con piedras y agua debajo de la maceta.',
+    consejo: 'No rocíes agua directamente sobre las flores, solo sobre las raíces.'
   },
 ];
 
@@ -61,7 +61,7 @@ const Guia = () => {
           Guía de Cuidado
         </h1>
         <p style={{ opacity: 0.9 }}>
-          Todo lo que necesitas saber para mantener tus orquideas saludables
+          Todo lo que necesitas saber para mantener tus orquídeas saludables
         </p>
       </section>
 
