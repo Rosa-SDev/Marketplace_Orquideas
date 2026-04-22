@@ -22,7 +22,7 @@ const Contacto = () => {
           <h2 style={{ color: '#2D6A4F', marginBottom: '0.8rem' }}>WhatsApp</h2>
           <p style={{ color: '#1B4332', marginBottom: '1rem' }}>La forma más rápida de comunicarte con nosotros.</p>
           <a
-            href="https://wa.me/573000000000"
+            href="https://wa.me/573014791094"
             target="_blank"
             rel="noreferrer"
             style={{ backgroundColor: '#2D6A4F', color: '#FAF7F5', padding: '0.6rem 1.4rem', borderRadius: '20px', textDecoration: 'none', display: 'inline-block' }}
