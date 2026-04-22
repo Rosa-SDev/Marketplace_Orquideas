@@ -11,13 +11,13 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 // Cuando el usuario va a comprar, se crea una reserva para apartar el stock
-// Esta reserva puede estar activa, expirada, confirmada, liberada o cancelada
+// Un carrito puede tener varias reservas, una por cada producto distinto
+// Cada reserva puede estar activa, expirada, confirmada, liberada o cancelada
 @Entity
 @Table(name = "reservas_carrito")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class ReservaCarrito {
 
     @Id
@@ -25,19 +25,19 @@ public class ReservaCarrito {
     private Long id;
 
     // A qué carrito pertenece esta reserva
-    @OneToOne
-    @JoinColumn(name = "carrito_id", nullable = false, unique = true)
+    // @ManyToOne porque un carrito puede tener varias reservas (una por producto)
+    @ManyToOne
+    @JoinColumn(name = "carrito_id", nullable = false)
     private Carrito carrito;
 
     // Qué producto está siendo reservado
-    // Un producto puede aparecer en muchas reservas, pero cada reserva solo aparta un producto
     @NotNull
     @ManyToOne
     @JoinColumn(name = "producto_id", nullable = false)
     private Producto producto;
 
     // Cuántas unidades se están reservando
-    // @Positive para que nunca se guarde un 0 o un número negativo y rompa el stock
+    // @Positive para que nunca se guarde un 0 o negativo y rompa el stock
     @Positive
     @Column(name = "cantidad_reservada", nullable = false)
     private Integer cantidadReservada;
@@ -48,7 +48,7 @@ public class ReservaCarrito {
     @Column(nullable = false)
     private EstadoReserva estado;
 
-    // LocalDateTime: Guarda fecha y hora juntas, es más preciso que Date
+    // LocalDateTime guarda fecha y hora juntas
     @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion;
 

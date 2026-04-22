@@ -15,7 +15,6 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class Carrito {
 
     @Id
@@ -32,11 +31,12 @@ public class Carrito {
     private LocalDateTime fechaCreacion;
 
     // Lista de productos dentro del carrito
-    // orphanRemoval: Si borramos un item de la lista también se borra de la BD
+    // orphanRemoval: si borramos un item de la lista también se borra de la BD
     @OneToMany(mappedBy = "carrito", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ItemCarrito> items = new ArrayList<>();
 
-    // La reserva que se crea cuando el usuario está por comprar
-    @OneToOne(mappedBy = "carrito", cascade = CascadeType.ALL)
-    private ReservaCarrito reserva;
+    // Las reservas que se crean cuando el usuario está por comprar
+    // Un carrito tiene varias reservas, una por cada producto en el carrito
+    @OneToMany(mappedBy = "carrito", cascade = CascadeType.ALL)
+    private List<ReservaCarrito> reservas = new ArrayList<>();
 }
