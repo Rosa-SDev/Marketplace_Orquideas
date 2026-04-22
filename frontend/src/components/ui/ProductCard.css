@@ -5,6 +5,7 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10);
   overflow: hidden;        /* Evita que la imagen se salga de las esquinas redondeadas */
   width: 240px;
+  height: 380px;
   display: flex;
   flex-direction: column;  /* Imagen arriba, texto abajo */
   transition: transform 0.2s, box-shadow 0.2s;
@@ -48,12 +49,14 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  margin-top: auto;
 }
 
 .product-card-nombre {
   font-size: 1rem;
   color: #1B4332;
-  margin: 0;
+  margin: -10;
+  min-height: 3.5rem;
 }
 
 .product-card-precio {
