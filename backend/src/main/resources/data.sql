@@ -17,7 +17,7 @@ INSERT INTO orquideas (id, variedad, color_flor, tamanio, nivel_cuidado, tiempo_
 -- Macetas
 INSERT INTO productos (nombre, descripcion, precio, stock, stock_reservado, image_url, activo) VALUES
                                                                                                    ('Maceta de Barro Rústica',  'Maceta artesanal de barro con excelente drenaje para orquídeas', 18000, 20, 0, 'https://placehold.co/400x400?text=Maceta+Barro',    true),
-                                                                                                   ('Maceta Plástica Transpare','Permite ver las raíces para controlar el riego fácilmente',       12000, 30, 0, 'https://placehold.co/400x400?text=Maceta+Plastica',  true),
+                                                                                                   ('Maceta Plástica Transparente','Permite ver las raíces para controlar el riego fácilmente',       12000, 30, 0, 'https://placehold.co/400x400?text=Maceta+Plastica',  true),
                                                                                                    ('Maceta Cerámica Moderna',  'Diseño elegante con acabado brillante, ideal para regalo',        25000, 12, 0, 'https://placehold.co/400x400?text=Maceta+Ceramica',  true);
 
 INSERT INTO macetas (id, material, diametro_cm, color, estilo) VALUES
