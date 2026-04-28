@@ -22,7 +22,7 @@ public class WompiWebhookService {
 
     @Transactional
     public void procesarEvento(Map<String, Object> payload) {
-        String evento = (String) payload.get("evento");
+        String evento = (String) payload.get("event");
 
         // En caso de que no se presenten actualizaciones del pago salir
         if (!"transaction.updated".equals(evento)) {
@@ -33,7 +33,7 @@ public class WompiWebhookService {
         Map<String, Object> data = (Map<String, Object>) payload.get("data");
         Map<String, Object> transaccion = (Map<String, Object>) data.get("transaction");
 
-        String referencia = (String) transaccion.get("referencia");
+        String referencia = (String) transaccion.get("reference");
         String statusWompi = (String) transaccion.get("status");
         String idTransaccion = (String) transaccion.get("id");
 
@@ -45,10 +45,10 @@ public class WompiWebhookService {
         if (pago == null) {
             return;
         }
-        
+
         // Mapear el estado de Wompi al de nosotros
         EstadoPago nuevoEstadoPago = mapearEstado(statusWompi);
-        
+
         // Actualizar el pago
         pago.setTransaccionId(idTransaccion);
         pago.setEstado(nuevoEstadoPago);
@@ -58,7 +58,7 @@ public class WompiWebhookService {
         }
 
         pagoWompiRepository.save(pago);
-        
+
         // Actualizar el estado del pedido segun el pago
         Pedido pedido = pago.getPedido();
 
