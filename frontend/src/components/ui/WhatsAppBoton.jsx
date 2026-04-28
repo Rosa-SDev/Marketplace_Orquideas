@@ -14,16 +14,27 @@ const WhatsAppBoton = () => {
         right: '2rem',
         backgroundColor: '#25D366',
         color: '#fff',
-        padding: '0.8rem 1.2rem',
+        padding: '0.8rem',
         borderRadius: '50px',
         textDecoration: 'none',
         fontWeight: 'bold',
         fontSize: '0.9rem',
         boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
-        zIndex: 999
+        zIndex: 999,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
       }}
     >
-      WhatsApp
+      <img 
+        src="/whatsapp.png" 
+        alt="Contacto por WhatsApp" 
+        style={{
+          width: '28px',
+          height: '28px',
+          display: 'block'
+        }}
+      />
     </a>
   );
 };
