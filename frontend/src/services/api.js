@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://marketplaceorquideas-production.up.railway.app/api',
+  baseURL: 'https://marketplaceorquideas-production.up.railway.app/api' || 'http://localhost:8080/api',
 });
 
 api.interceptors.request.use((config) => {
