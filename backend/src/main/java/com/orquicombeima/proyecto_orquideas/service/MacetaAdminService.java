@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -19,7 +20,7 @@ public class MacetaAdminService {
 
     // Metodo GET para listar todas las macetas (incluye inactivas)
     @Transactional
-    public Iterable<MacetaDTO> listarMacetas() {
+    public List<MacetaDTO> listarMacetas() {
         return macetaRepository.findAll()
                 .stream()
                 .map(this::convertirADTO)
