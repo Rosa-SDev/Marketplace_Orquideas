@@ -29,4 +29,9 @@ public class ContenidoPaginaAdminController {
     public ResponseEntity<ContenidoPaginaDTO> crearContenidoPagina(@ModelAttribute ContenidoPaginaAdminDTO dto, @AuthenticationPrincipal String email) throws IOException {
         return ResponseEntity.ok(contenidoPaginaAdminService.crearContenidoPagina(dto, email));
     }
+
+    @PutMapping(path = "/{id}", consumes = "multipart/form-data")
+    public ResponseEntity<ContenidoPaginaDTO> actualizarContenidoPagina(@PathVariable long id, @ModelAttribute ContenidoPaginaAdminDTO dto) throws IOException {
+        return ResponseEntity.ok(contenidoPaginaAdminService.actualizarContenidoPagina(id, dto));
+    }
 }
