@@ -34,4 +34,10 @@ public class ContenidoPaginaAdminController {
     public ResponseEntity<ContenidoPaginaDTO> actualizarContenidoPagina(@PathVariable long id, @ModelAttribute ContenidoPaginaAdminDTO dto) throws IOException {
         return ResponseEntity.ok(contenidoPaginaAdminService.actualizarContenidoPagina(id, dto));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarContenidoPagina(@PathVariable long id) throws IOException {
+        contenidoPaginaAdminService.eliminarContenidoPagina(id);
+        return ResponseEntity.noContent().build();
+    }
 }
