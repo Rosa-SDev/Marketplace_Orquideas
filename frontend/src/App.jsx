@@ -2,8 +2,10 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import WhatsAppBoton from './components/ui/WhatsAppBoton';
+import ChatbotWidget from './components/ui/ChatbotWidget';
 import ProtectedRoute from './components/layout/ProtectedRoute';
 import SessionManager from './components/layout/SessionManager';
+import MiCuenta from './pages/MiCuenta';
 
 import Home from './pages/Home';
 import Macetas from './pages/Macetas';
@@ -15,6 +17,7 @@ import Login from './pages/Login';
 import AuthCallback from './pages/AuthCallback';
 import NotFound from './pages/NotFound';
 import Carrito from './pages/Carrito';
+import Checkout from './pages/Checkout';
 
 const App = () => {
   return (
@@ -25,6 +28,12 @@ const App = () => {
       <Navbar />
 
       <Routes>
+        <Route path="/checkout" element={
+          <ProtectedRoute>
+            <Checkout />
+          </ProtectedRoute>
+        } />
+        
         <Route path="/" element={<Home />} />
         <Route path="/macetas" element={<Macetas />} />
         <Route path="/guia" element={<Guia />} />
@@ -33,10 +42,13 @@ const App = () => {
         <Route path="/orquideas/:id" element={<DetalleOrquidea />} />
         <Route path="/login" element={<Login />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
+        <Route path="/mi-cuenta" element={
+          <ProtectedRoute>
+            <MiCuenta />
+          </ProtectedRoute>
+        } />
 
-        <Route
-          path="/carrito"
-          element={
+        <Route path="/carrito"element={
             <ProtectedRoute>
               <Carrito />
             </ProtectedRoute>
@@ -49,6 +61,7 @@ const App = () => {
 
       <Footer />
       <WhatsAppBoton />
+        <ChatbotWidget />
     </BrowserRouter>
   );
 };

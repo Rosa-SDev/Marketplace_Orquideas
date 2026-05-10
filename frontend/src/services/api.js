@@ -1,7 +1,11 @@
 import axios from 'axios';
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL?.trim() ||
+  'https://marketplaceorquideas-production.up.railway.app/api';
+
 const api = axios.create({
-  baseURL: 'https://marketplaceorquideas-production.up.railway.app/api',
+  baseURL: API_BASE_URL,
 });
 
 api.interceptors.request.use((config) => {

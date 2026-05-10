@@ -9,6 +9,7 @@ import {
   consumePostLoginRedirect
 } from '../utils/authFlowStorage';
 
+
 const AuthCallback = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -34,6 +35,8 @@ const AuthCallback = () => {
 
         // Guardar sesión global
         login(usuario, token);
+        // Cargamos el carrito al back despues del login para sincronizarlo
+        useCarritoStore.getState().cargarCarrito();
 
         // Ejecutar acción pendiente (ej: agregar al carrito)
         const pendingAdd = consumePendingCartAdd();

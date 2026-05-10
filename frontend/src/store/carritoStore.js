@@ -1,51 +1,74 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import api from '../services/api';
 
-// persist hace que el carrito se guarde en localStorage automaticamente
-// asi no se pierde cuando el usuario recarga la pagina
+const useCarritoStore = create((set, get) => ({
+  items: [],
+  cargando: false,
 
-const useCarritoStore = create(
-  persist(
-    (set, get) => ({
-      items: [],
-
-      agregar: (producto) => {
-        const items = get().items;
-        const existe = items.find(item => item.id === producto.id);
-
-        if (existe) {
-          set({
-            items: items.map(item =>
-              item.id === producto.id
-                ? { ...item, cantidad: item.cantidad + 1 }
-                : item
-            )
-          });
-        } else {
-          set({ items: [...items, { ...producto, cantidad: 1 }] });
-        }
-      },
-
-      cambiarCantidad: (id, cantidad) => {
-        set({
-          items: get().items.map(item =>
-            item.id === id ? { ...item, cantidad } : item
-          )
-        });
-      },
-
-      eliminar: (id) => {
-        set({ items: get().items.filter(item => item.id !== id) });
-      },
-
-      vaciar: () => set({ items: [] }),
-
-      totalItems: () => get().items.reduce((acc, item) => acc + item.cantidad, 0),
-    }),
-    {
-      name: 'carrito', // nombre de la clave en localStorage
+  // Trae el carrito del backend
+  cargarCarrito: async () => {
+    try {
+      const response = await api.get('/carrito');
+      const itemsBackend = response.data.items.map(item => ({
+        id: item.idProducto,
+        idItemCarrito: item.id,
+        nombre: item.nombreProducto,
+        precio: item.precioUnitario,
+        imagen: item.imagenUrl,
+        cantidad: item.cantidad,
+      }));
+      set({ items: itemsBackend });
+    } catch (err) {
+      // Si falla (ej: no logueado) dejamos el carrito vacio
+      set({ items: [] });
     }
-  )
-);
+  },
+
+  // Agrega un producto al carrito
+  agregar: async (producto) => {
+    try {
+      await api.post('/carrito/agregar', {
+        idProducto: producto.id,
+        cantidad: 1,
+      });
+      // Recargamos el carrito del backend para tener datos frescos
+      await get().cargarCarrito();
+    } catch (err) {
+      console.error('Error agregando al carrito:', err);
+    }
+  },
+
+  // Cambia la cantidad de un item
+  cambiarCantidad: async (idItemCarrito, cantidad) => {
+    try {
+      await api.put(`/carrito/${idItemCarrito}/cantidad?cantidad= ${cantidad}`);
+      await get().cargarCarrito();
+    } catch (err) {
+      console.error('Error cambiando cantidad:', err);
+    }
+  },
+
+  // Elimina un item del carrito
+  eliminar: async (idItemCarrito) => {
+    try {
+      await api.delete(`/carrito/${idItemCarrito}`);
+      await get().cargarCarrito();
+    } catch (err) {
+      console.error('Error eliminando del carrito:', err);
+    }
+  },
+
+  // Vacia todo el carrito
+  vaciar: async () => {
+    try {
+      await api.delete('/carrito/vaciar');
+      set({ items: [] });
+    } catch (err) {
+      console.error('Error vaciando carrito:', err);
+    }
+  },
+
+  totalItems: () => get().items.reduce((acc, item) => acc + item.cantidad, 0),
+}));
 
 export default useCarritoStore;

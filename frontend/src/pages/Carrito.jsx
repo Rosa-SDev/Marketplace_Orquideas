@@ -83,14 +83,14 @@ const Carrito = () => {
             {/* Controles de cantidad */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <button
-                onClick={() => cambiarCantidad(item.id, Math.max(1, item.cantidad - 1))}
+                onClick={() => cambiarCantidad(item.idItemCarrito, Math.max(1, item.cantidad - 1))}
                 style={{ width: '30px', height: '30px', borderRadius: '50%', border: '1px solid #ddd', cursor: 'pointer', backgroundColor: '#fff' }}
               >
                 -
               </button>
               <span style={{ minWidth: '20px', textAlign: 'center' }}>{item.cantidad}</span>
               <button
-                onClick={() => cambiarCantidad(item.id, Math.min(item.stock, item.cantidad + 1))}
+                onClick={() => cambiarCantidad(item.idItemCarrito, Math.min(item.stock, item.cantidad + 1))}
                 style={{ width: '30px', height: '30px', borderRadius: '50%', border: '1px solid #ddd', cursor: 'pointer', backgroundColor: '#fff' }}
               >
                 +
@@ -104,7 +104,7 @@ const Carrito = () => {
 
             {/* Boton eliminar — abre el modal */}
             <button
-              onClick={() => setIdAEliminar(item.id)}
+              onClick={() => setIdAEliminar(item.idItemCarrito)}
               style={{ backgroundColor: 'transparent', border: 'none', color: '#E91E8C', cursor: 'pointer', fontSize: '1.2rem' }}
             >
               X

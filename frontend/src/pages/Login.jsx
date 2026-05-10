@@ -7,6 +7,10 @@ import useAuth from '../hooks/useAuth';
 import logo from '../assets/logo.png';
 import { savePostLoginRedirect } from '../utils/authFlowStorage';
 
+const BACKEND_BASE_URL =
+  import.meta.env.VITE_BACKEND_URL?.trim() ||
+  'https://marketplaceorquideas-production.up.railway.app';
+
 const Login = () => {
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
@@ -24,7 +28,7 @@ const Login = () => {
     const from = location.state?.from;
     if (from) savePostLoginRedirect(from);
 
-      window.location.href = 'https://marketplaceorquideas-production.up.railway.app/oauth2/authorization/google';
+    window.location.href = `${BACKEND_BASE_URL}/oauth2/authorization/google`;
   };
 
   return (

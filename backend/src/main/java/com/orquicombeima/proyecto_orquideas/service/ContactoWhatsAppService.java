@@ -6,6 +6,7 @@ import com.orquicombeima.proyecto_orquideas.repository.PedidoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -20,6 +21,7 @@ public class ContactoWhatsAppService {
     private final PedidoRepository pedidoRepository;
 
     // Función para generar el enlace de contacto
+    @Transactional
     public String generarEnlaceContacto(Long idPedido) {
         Pedido pedido = pedidoRepository.findById(idPedido)
                 .orElseThrow(() -> new RuntimeException("No se encontró el pedido: " + idPedido));
@@ -45,7 +47,7 @@ public class ContactoWhatsAppService {
         mensaje.append("\nSubtotal: $").append(String.format("%,.0f", pedido.getSubtotal()));
         mensaje.append("\nEnvío: $").append(String.format("%,.0f", pedido.getCostoEnvio()));
         mensaje.append("\nTotal: $").append(String.format("%,.0f", pedido.getTotal()));
-        mensaje.append("\n\nDireccion de envio: ")
+        mensaje.append("\n\nDirección de envío: ")
                 .append(pedido.getDireccionEnvio().getDireccion()).append(", ")
                 .append(pedido.getDireccionEnvio().getCiudad()).append(", ")
                 .append(pedido.getDireccionEnvio().getDepartamento()).append(", ");

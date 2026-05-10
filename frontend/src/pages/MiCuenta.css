@@ -1,0 +1,203 @@
+.mi-cuenta-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.mi-cuenta-header h1 {
+  color: #1b4332;
+  margin: 0;
+}
+
+.mi-cuenta-header p {
+  color: #666;
+  margin: 0.35rem 0 1.5rem;
+}
+
+.mi-cuenta-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.mi-cuenta-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.mi-cuenta-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.mi-cuenta-card h2 {
+  margin: 0;
+  color: #1b4332;
+  font-size: 1.1rem;
+}
+
+.mi-cuenta-date {
+  margin-top: 0.35rem;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.mi-cuenta-statuses {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.45rem;
+}
+
+.mi-badge {
+  border-radius: 999px;
+  padding: 0.3rem 0.65rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.mi-badge-pendiente,
+.mi-badge-en_preparacion,
+.mi-badge-enviado {
+  background: #fff4e5;
+  color: #9a6700;
+}
+
+.mi-badge-pagado,
+.mi-badge-entregado,
+.mi-badge-aprobado {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.mi-badge-cancelado,
+.mi-badge-rechazado {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.mi-cuenta-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin-bottom: 1rem;
+}
+
+.mi-cuenta-item {
+  display: grid;
+  grid-template-columns: 72px 1fr auto;
+  gap: 0.8rem;
+  align-items: center;
+  border: 1px solid #f0f0f0;
+  border-radius: 10px;
+  padding: 0.55rem;
+}
+
+.mi-cuenta-item-image {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #f8f8f8;
+}
+
+.mi-cuenta-item-name {
+  margin: 0;
+  color: #1b4332;
+  font-weight: 700;
+}
+
+.mi-cuenta-item-meta {
+  margin: 0.2rem 0 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.mi-cuenta-item-subtotal {
+  margin: 0;
+  color: #1b4332;
+  font-weight: 700;
+}
+
+.mi-cuenta-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 1rem;
+}
+
+.mi-cuenta-block {
+  border-top: 1px solid #eee;
+  padding-top: 0.8rem;
+}
+
+.mi-cuenta-block h3 {
+  margin: 0 0 0.55rem;
+  color: #1b4332;
+}
+
+.mi-cuenta-block p {
+  margin: 0.3rem 0;
+  color: #555;
+  line-height: 1.35;
+}
+
+.mi-cuenta-total-row {
+  display: flex;
+  justify-content: space-between;
+  color: #555;
+  margin-bottom: 0.35rem;
+}
+
+.mi-cuenta-total-final {
+  color: #1b4332;
+  font-weight: 700;
+  border-top: 1px solid #eee;
+  padding-top: 0.45rem;
+  margin-top: 0.3rem;
+}
+
+.mi-cuenta-empty {
+  text-align: center;
+}
+
+.mi-cuenta-empty h2 {
+  margin-bottom: 0.5rem;
+}
+
+.mi-cuenta-empty p {
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.mi-cuenta-btn {
+  display: inline-block;
+  text-decoration: none;
+  background-color: #2d6a4f;
+  color: #faf7f5;
+  padding: 0.65rem 1.1rem;
+  border-radius: 20px;
+  font-weight: 700;
+}
+
+.mi-cuenta-error {
+  color: #c1121f;
+}
+
+@media (max-width: 900px) {
+  .mi-cuenta-card-top {
+    flex-direction: column;
+  }
+
+  .mi-cuenta-statuses {
+    justify-content: flex-start;
+  }
+
+  .mi-cuenta-grid {
+    grid-template-columns: 1fr;
+  }
+}

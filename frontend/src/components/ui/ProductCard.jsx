@@ -38,7 +38,18 @@ const ProductCard = ({ id, nombre, precio, imagen, badge, stock, tipo = 'orquide
         <Button
           text="Agregar al carrito"
           onClick={(event) => {
-            event.stopPropagation();
+            const hasSession = Boolean(localStorage.getItem('token'));
+            const isDetailLink = Boolean(id && tipo === 'orquidea');
+
+            if (!hasSession && isDetailLink) {
+              return;
+            }
+
+            if (isDetailLink) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+
             agregarConLoginLazy({ id, nombre, precio, imagen, stock });
           }}
         />

@@ -1,5 +1,6 @@
 package com.orquicombeima.proyecto_orquideas.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -12,7 +13,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Configuration: Indica que esta clase es una clase de configuración de Spring.
@@ -25,6 +28,9 @@ public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+
+    @Value("${app.cors.allowed-origins}")
+    private String corsAllowedOrigins;
 
     public SecurityConfig(JwtAuthFilter jwtAuthFilter, OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler) {
         this.jwtAuthFilter = jwtAuthFilter;
@@ -48,7 +54,8 @@ public class SecurityConfig {
                                 "/api/contenido/**",
                                 "/api/contacto/**",
                                 "/api/orquideas/**",
-                                "/api/webhook/**"
+                                "/api/webhook/**",
+                                "/api/chatbot/**"
                         ).permitAll()
                         // Rutas protegidas para clientes y administradores
                         .requestMatchers(
@@ -76,8 +83,12 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
+        List<String> allowedOrigins = Arrays.stream(corsAllowedOrigins.split(","))
+                .map(String::trim)
+                .filter(origin -> !origin.isEmpty())
+                .collect(Collectors.toList());
 
-        configuration.setAllowedOrigins(List.of("https://marketplace-orquideas.vercel.app"));  // Ruta del frontend
+        configuration.setAllowedOrigins(allowedOrigins);  // Rutas del frontend permitidas
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));    // Métodos HTTP permitidos
         configuration.setAllowedHeaders(List.of("*"));  // Permitir todos los encabezados
         configuration.setAllowCredentials(true);    // Permitir el envío de cookies y credenciales

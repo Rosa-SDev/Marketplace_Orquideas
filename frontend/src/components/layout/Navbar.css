@@ -90,3 +90,18 @@
 .navbar-carrito:hover {
   color: #E91E8C;
 }
+
+.navbar-mi-cuenta {
+  color: #2D6A4F;
+  text-decoration: none;
+  font-size: 0.9rem;
+  border: 1px solid #2D6A4F;
+  border-radius: 20px;
+  padding: 0.35rem 0.9rem;
+  transition: all 0.2s;
+}
+
+.navbar-mi-cuenta:hover {
+  background-color: #2D6A4F;
+  color: #FAF7F5;
+}
