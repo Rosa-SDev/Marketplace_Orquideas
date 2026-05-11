@@ -410,6 +410,7 @@ const AdminPanel = () => {
 
         <section className="admin-content">
           <h2>{section.title}</h2>
+          <p>{section.text}</p>
 
           {erroresSeccion[activeSection] && (
             <div className="admin-section-feedback">
@@ -762,7 +763,7 @@ const AdminPanel = () => {
                   onClick={subirProducto}
                   disabled={formularioCargando}
                 >
-                  {formularioCargando ? 'Agregando...' : 'Agregar elemento a catalogo'}
+                  {formularioCargando ? 'Agregando...' : 'Agregar al catálogo'}
                 </button>
               </div>
             </>
@@ -1031,7 +1032,6 @@ const AdminPanel = () => {
             </>
           )}
 
-          <p>{section.text}</p>
         </section>
 
         <PedidosSidebar pedidos={pedidosSidebar} cargando={cargandoSidebar} />
