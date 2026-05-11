@@ -39,4 +39,7 @@ public class PedidoDTO {
 
     // Referencia única del pago, sirve para consultarlo después contra Wompi
     private String referenciaPago;
+
+    // Firma de integridad para validar que los datos no han sido alterados (se genera al crear el pedido y se verifica al consultar el historial)
+    private String firmaIntegridad;
 }

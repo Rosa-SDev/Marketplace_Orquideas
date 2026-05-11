@@ -26,12 +26,13 @@ const loadWompiScript = () => {
 };
 
 export const openWompiCheckout = async ({
-  amountInCents,
-  reference,
-  customerEmail,
-  customerFullName,
-  onResult,
-}) => {
+                                          amountInCents,
+                                          reference,
+                                          customerEmail,
+                                          customerFullName,
+                                          firmaIntegridad,
+                                          onResult,
+                                        }) => {
   const publicKey = import.meta.env.VITE_WOMPI_PUBLIC_KEY;
 
   if (!publicKey) {
@@ -40,6 +41,10 @@ export const openWompiCheckout = async ({
 
   if (!Number.isFinite(amountInCents) || amountInCents <= 0) {
     throw new Error('El monto para Wompi no es válido.');
+  }
+
+  if (!firmaIntegridad) {
+    throw new Error('Falta la firma de integridad.');
   }
 
   await loadWompiScript();
@@ -53,14 +58,10 @@ export const openWompiCheckout = async ({
       email: customerEmail,
       fullName: customerFullName,
     },
+    signature: {
+      integrity: firmaIntegridad,
+    },
   };
-
-  const integritySignature = import.meta.env.VITE_WOMPI_INTEGRITY_SIGNATURE;
-  if (integritySignature) {
-    checkoutOptions.signature = {
-      integrity: integritySignature,
-    };
-  }
 
   try {
     const checkout = new window.WidgetCheckout(checkoutOptions);

@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 // Servicio que orquesta todo el flujo de creación y consulta de pedidos
 //  - crearPedido: convierte el carrito del usuario en un Pedido, genera el link de Wompi, confirma reservas y vacía el carrito
@@ -98,8 +99,10 @@ public class PedidoService {
         // Por las anotaciones cascade=ALL en Pedido, también se guardan en cascada los items y la dirección
         pedido = pedidoRepository.save(pedido);
 
-        // 9. Generamos el link de Wompi: esto crea el PagoWompi en BD, lo asocia al pedido y devuelve la URL
-        String linkPago = pagoWompiService.generarEnlacePago(pedido);
+        // 9. Generamos el pago en Wompi: se crea el registro de pago en la BD y se obtiene el link de pago
+        Map<String, String> pagoInfo = pagoWompiService.generarEnlacePago(pedido);
+        String linkPago = pagoInfo.get("linkPago");
+        String firmaIntegridad = pagoInfo.get("firmaIntegridad");
 
         // 10. Confirmamos las reservas del carrito: descuenta el stock real y limpia el stockReservado
         // Los items que estaban "apartados" pasan a estar realmente vendidos
@@ -109,7 +112,7 @@ public class PedidoService {
         carritoService.vaciarCarrito(emailUsuario);
 
         // 12. Devolvemos el DTO con el link de pago para que el frontend redirija al usuario a Wompi
-        return mapearAPedidoDTO(pedido, linkPago);
+        return mapearAPedidoDTO(pedido, linkPago, firmaIntegridad);
     }
 
     // GET /api/pedidos/historial
@@ -125,7 +128,7 @@ public class PedidoService {
         // Convertimos cada pedido a DTO; en el historial NO mandamos linkPago (ya pasó el momento de pagar)
         List<PedidoDTO> resultado = new ArrayList<>();
         for (Pedido pedido : pedidos) {
-            resultado.add(mapearAPedidoDTO(pedido, null));
+            resultado.add(mapearAPedidoDTO(pedido, null, null));
         }
         return resultado;
     }
@@ -175,7 +178,7 @@ public class PedidoService {
 
     // Convierte el Pedido completo en su DTO de respuesta
     // El linkPago viene como parámetro porque solo se llena al crear (no en el historial)
-    private PedidoDTO mapearAPedidoDTO(Pedido pedido, String linkPago) {
+    private PedidoDTO mapearAPedidoDTO(Pedido pedido, String linkPago, String firmaIntegridad) {
         // Mapeamos cada item con un for normal para que sea fácil de leer
         List<ItemPedidoDTO> itemsDTO = new ArrayList<>();
         for (ItemPedido item : pedido.getItems()) {
@@ -202,6 +205,7 @@ public class PedidoService {
                 .fechaPedido(pedido.getFechaPedido())
                 .linkPago(linkPago)
                 .referenciaPago(referenciaPago)
+                .firmaIntegridad(firmaIntegridad)
                 .build();
     }
 }

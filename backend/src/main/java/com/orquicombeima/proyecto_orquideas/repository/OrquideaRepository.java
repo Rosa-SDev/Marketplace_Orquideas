@@ -22,7 +22,7 @@ public interface OrquideaRepository extends JpaRepository<Orquidea, Long> {
 
     // Busca orquideas aplicando filtros opcionales y paginación
     // Si un filtro llega null, se ignora y no afecta la búsqueda
-    @Query("SELECT o FROM Orquidea o WHERE " +
+    @Query("SELECT o FROM Orquidea o WHERE o.activo = true AND " +
             "(:variedad IS NULL OR o.variedad = :variedad) AND " +
             "(:colorFlor IS NULL OR o.colorFlor = :colorFlor) AND " +
             "(:precioMin IS NULL OR o.precio >= :precioMin) AND " +

@@ -56,7 +56,7 @@ public class PagoWompiService {
     // Crea un PagoWompi para el pedido y devuelve la URL del Web Checkout de Wompi
     // El frontend abre esa URL en el navegador del usuario para que complete el pago
     @Transactional
-    public String generarEnlacePago(Pedido pedido) {
+    public Map<String, String> generarEnlacePago(Pedido pedido) {
         // Wompi exige una referencia única por transacción
         // Formato pedido-{id}-{uuidCorto} para que sea fácil de rastrear si toca buscar el pago en la BD
         String referencia = "pedido-" + pedido.getId() + "-" + UUID.randomUUID().toString().substring(0, 8);
@@ -78,17 +78,15 @@ public class PagoWompiService {
         // Asociamos el pago al pedido en memoria para que el controller pueda devolverlo en el DTO
         pedido.setPago(pago);
 
-        // Construimos la URL del Web Checkout sandbox de Wompi
-        // El usuario entra ahí, ve el portal de Wompi, paga, y al final Wompi lo redirige al frontend
-        return String.format(
-                "%s?public-key=%s&currency=COP&amount-in-cents=%d&reference=%s&signature:integrity=%s&redirect-url=%s/pago/resultado",
-                CHECKOUT_BASE_URL,
-                publicKey,
-                montoEnCentavos,
-                referencia,
-                firmaIntegridad,
-                frontendUrl
-        );
+        // Generamos el link de pago
+        String linkPago = String.format("%s?public-key=%s&currency=COP&amount-in-cents=%d&reference=%s&signature:integrity=%s&redirect-url=%s/pago/resultado",
+                CHECKOUT_BASE_URL, publicKey, montoEnCentavos, referencia, firmaIntegridad, frontendUrl);
+
+        // Se retorna el link de pago, la firma de integridad y la referencia
+        return Map.of("linkPago", linkPago,
+                "firmaIntegridad", firmaIntegridad,
+                "referencia", referencia
+                );
     }
 
     // Calcula la firma SHA-256 que Wompi exige en el link del checkout

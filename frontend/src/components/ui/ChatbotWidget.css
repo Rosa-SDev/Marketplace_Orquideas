@@ -12,6 +12,7 @@
 
 /* Burbuja flotante */
 .chatbot-burbuja {
+    position: relative;
     width: 55px;
     height: 55px;
     border-radius: 50%;
@@ -155,6 +156,47 @@
 .chatbot-enviar:hover:not(:disabled) { background-color: #5e3a6e; }
 .chatbot-enviar:disabled { opacity: 0.5; cursor: default; }
 
+/* Badge de exclamación animado */
+.chatbot-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 20px;
+    height: 20px;
+    background-color: #E91E8C;
+    color: white;
+    border-radius: 50%;
+    font-size: 0.75rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pulsar 1.5s infinite;
+}
+
+@keyframes pulsar {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+/* Tooltip al hacer hover */
+.chatbot-tooltip {
+    background-color: white;
+    color: #333;
+    padding: 10px 14px;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    font-size: 0.875rem;
+    max-width: 220px;
+    animation: aparecer 0.2s ease;
+    border-left: 3px solid #7b4f8e;
+}
+
+@keyframes aparecer {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 /*RESPONSIVE EN CELULAR*/
 @media (max-width: 480px) {
     .chatbot-widget {
@@ -166,5 +208,22 @@
         width: calc(100vw - 2rem);
         max-height: 70vh;
         border-radius: 12px;
+    }
+
+    .chatbot-tooltip {
+        max-width: 160px;
+        font-size: 0.8rem;
+        padding: 8px 10px;
+    }
+
+    .chatbot-badge {
+        width: 18px;
+        height: 18px;
+        font-size: 0.7rem;
+    }
+
+    .chatbot-tooltip {
+        right: 0;
+        left: auto;
     }
 }

@@ -6,7 +6,7 @@
 
 .admin-panel-layout {
   display: grid;
-  grid-template-columns: 260px 1fr;
+  grid-template-columns: 260px 1fr 240px;
   gap: 1rem;
 }
 
@@ -79,8 +79,349 @@
   line-height: 1.5;
 }
 
+.admin-section-feedback {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: #fff6f6;
+  border: 1px solid #f3c5c5;
+  border-radius: 10px;
+  padding: 0.7rem 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.admin-reload-btn {
+  border: 1px solid #9b2226;
+  color: #9b2226;
+  background: #fff;
+  border-radius: 8px;
+  padding: 0.35rem 0.7rem;
+  cursor: pointer;
+}
+
+.admin-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.admin-metric-card {
+  background: #f7faf8;
+  border: 1px solid #d9e2dc;
+  border-radius: 12px;
+  padding: 0.9rem 1rem;
+}
+
+.admin-metric-label {
+  display: block;
+  color: #4a5568;
+  font-size: 0.86rem;
+  margin-bottom: 0.35rem;
+}
+
+.admin-metric-value {
+  color: #1b4332;
+  font-size: 1.3rem;
+}
+
+.admin-subtitle {
+  color: #1b4332;
+  margin: 1rem 0 0.6rem;
+  font-size: 1rem;
+}
+
+.admin-chart-card {
+  border: 1px solid #e8ecea;
+  border-radius: 10px;
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+  background: #fff;
+}
+
+.admin-chart-container {
+  width: 100%;
+  height: 280px;
+}
+
+.admin-chart-empty {
+  margin: 0;
+  color: #64748b;
+}
+
+.admin-table-wrapper {
+  overflow-x: auto;
+  border: 1px solid #e8ecea;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 560px;
+}
+
+.admin-table th,
+.admin-table td {
+  border-bottom: 1px solid #edf1ef;
+  padding: 0.6rem 0.7rem;
+  text-align: left;
+  color: #334155;
+  font-size: 0.9rem;
+}
+
+.admin-table th {
+  background: #f7faf8;
+  color: #1b4332;
+  font-weight: 700;
+}
+
+.admin-table tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-empty-cell {
+  text-align: center;
+  color: #64748b;
+}
+
+.admin-table-action {
+  border: 1px solid #2d6a4f;
+  color: #2d6a4f;
+  background: #fff;
+  border-radius: 8px;
+  padding: 0.28rem 0.6rem;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.admin-table-action:hover {
+  background: #e8f3ed;
+}
+
+.admin-form-switch {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.admin-form-switch-btn {
+  border: 1px solid #d9e2dc;
+  background: #f7faf8;
+  color: #1b4332;
+  border-radius: 8px;
+  padding: 0.45rem 0.8rem;
+  cursor: pointer;
+}
+
+.admin-form-switch-btn.is-active {
+  border-color: #2d6a4f;
+  background: #e8f3ed;
+  font-weight: 700;
+}
+
+.admin-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.admin-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.88rem;
+  color: #334155;
+}
+
+.admin-form-field input,
+.admin-form-field select,
+.admin-form-field textarea {
+  border: 1px solid #dbe2df;
+  border-radius: 8px;
+  padding: 0.5rem 0.6rem;
+  font-size: 0.9rem;
+}
+
+.admin-form-field--full {
+  grid-column: 1 / -1;
+}
+
+.admin-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.7rem;
+  margin-top: 1rem;
+}
+
+.admin-reset-btn,
+.admin-submit-btn {
+  border-radius: 8px;
+  padding: 0.5rem 0.9rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.admin-reset-btn {
+  border: 1px solid #64748b;
+  color: #475569;
+  background: #fff;
+}
+
+.admin-submit-btn {
+  border: 1px solid #2d6a4f;
+  background: #2d6a4f;
+  color: #fff;
+}
+
+.admin-form-error,
+.admin-form-success {
+  border-radius: 8px;
+  padding: 0.55rem 0.7rem;
+  margin-bottom: 0.8rem;
+}
+
+.admin-form-error {
+  border: 1px solid #f3c5c5;
+  background: #fff6f6;
+  color: #9b2226;
+}
+
+.admin-form-success {
+  border: 1px solid #c7e9d5;
+  background: #f2fcf6;
+  color: #1b7f4f;
+}
+
 @media (max-width: 900px) {
   .admin-panel-layout {
     grid-template-columns: 1fr;
+  }
+
+  .pedidos-sidebar {
+    display: none;
+  }
+
+  .admin-metrics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-section-feedback {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .admin-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-form-actions {
+    justify-content: stretch;
+    flex-direction: column;
+  }
+}
+/* ═══════════════════════════════════════════════
+   SIDEBAR PEDIDOS RECIENTES
+═══════════════════════════════════════════════ */
+.pedidos-sidebar {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 1rem;
+  position: sticky;
+  top: 1rem;
+  height: fit-content;
+  max-height: calc(100vh - 4rem);
+  overflow-y: auto;
+}
+
+.pedidos-sidebar-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #6b7280;
+  margin: 0 0 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.pedidos-sidebar-empty {
+  font-size: 0.82rem;
+  color: #9ca3af;
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+.pedidos-sidebar-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.pedidos-sidebar-item {
+  background: #f7faf8;
+  border: 1px solid #d9e2dc;
+  border-radius: 10px;
+  padding: 0.65rem 0.75rem;
+  transition: box-shadow 0.15s;
+}
+
+.pedidos-sidebar-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
+}
+
+.pedidos-sidebar-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.2rem;
+}
+
+.pedidos-sidebar-id {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #1b4332;
+}
+
+.pedidos-sidebar-estado {
+  font-size: 0.63rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.pedidos-sidebar-cliente {
+  font-size: 0.78rem;
+  color: #334155;
+  margin-bottom: 0.3rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pedidos-sidebar-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  color: #6b7280;
+}
+
+.pedidos-sidebar-tiempo {
+  font-style: italic;
+}
+
+@media (max-width: 1100px) {
+  .admin-panel-layout {
+    grid-template-columns: 260px 1fr;
+  }
+  .pedidos-sidebar {
+    display: none;
   }
 }

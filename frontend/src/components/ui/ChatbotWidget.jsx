@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
 import api from '../../services/api';
-import './ChatbotWidget.css';
 import ReactMarkdown from 'react-markdown';
+import './ChatbotWidget.css';
 
 const ChatbotWidget = () => {
     const [abierto, setAbierto] = useState(false);
+    const [hover, setHover] = useState(false);
     const [mensajes, setMensajes] = useState([
         {
             rol: 'bot',
@@ -61,6 +62,7 @@ const ChatbotWidget = () => {
 
     return (
         <div className="chatbot-widget">
+            {/* Ventana de chat */}
             {abierto && (
                 <div className="chatbot-ventana">
                     <div className="chatbot-header">
@@ -106,12 +108,23 @@ const ChatbotWidget = () => {
                 </div>
             )}
 
+            {/* Tooltip al hacer pasar el cursor por el widget */}
+            {!abierto && hover && (
+                <div className="chatbot-tooltip">
+                    ¡Hola! 🌸 ¿En qué puedo ayudarte?
+                </div>
+            )}
+
+            {/* Burbuja flotante */}
             <button
                 className="chatbot-burbuja"
                 onClick={() => setAbierto((prev) => !prev)}
+                onMouseEnter={() => setHover(true)}
+                onMouseLeave={() => setHover(false)}
                 aria-label="Abrir chat"
             >
                 {abierto ? '✕' : '🌸'}
+                {!abierto && <span className="chatbot-badge">!</span>}
             </button>
         </div>
     );

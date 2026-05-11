@@ -15,7 +15,7 @@ const useCarritoStore = create((set, get) => ({
         nombre: item.nombreProducto,
         precio: item.precioUnitario,
         imagen: item.imagenUrl,
-        cantidad: item.cantidad,
+        cantidad: Number(item.cantidad),
       }));
       set({ items: itemsBackend });
     } catch (err) {
@@ -41,7 +41,7 @@ const useCarritoStore = create((set, get) => ({
   // Cambia la cantidad de un item
   cambiarCantidad: async (idItemCarrito, cantidad) => {
     try {
-      await api.put(`/carrito/${idItemCarrito}/cantidad?cantidad= ${cantidad}`);
+      await api.put(`/carrito/${idItemCarrito}/cantidad?cantidad=${cantidad}`);
       await get().cargarCarrito();
     } catch (err) {
       console.error('Error cambiando cantidad:', err);

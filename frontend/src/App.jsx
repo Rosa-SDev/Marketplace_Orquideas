@@ -19,6 +19,8 @@ import NotFound from './pages/NotFound';
 import Carrito from './pages/Carrito';
 import Checkout from './pages/Checkout';
 import AdminPanel from './pages/AdminPanel';
+import PagoExitoso from './pages/PagoExitoso';
+import PagoRechazado from './pages/PagoRechazado';
 
 const App = () => {
   return (
@@ -60,6 +62,10 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+
+        {/* Rutas de resultado de pago */}
+        <Route path="/pago-exitoso" element={<PagoExitoso />} />
+        <Route path="/pago-rechazado" element={<PagoRechazado />} />
 
         {/* Siempre de ultima */}
         <Route path="*" element={<NotFound />} />

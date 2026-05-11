@@ -90,7 +90,7 @@ const Carrito = () => {
               </button>
               <span style={{ minWidth: '20px', textAlign: 'center' }}>{item.cantidad}</span>
               <button
-                onClick={() => cambiarCantidad(item.idItemCarrito, Math.min(item.stock, item.cantidad + 1))}
+                onClick={() => cambiarCantidad(item.idItemCarrito, item.cantidad + 1)}
                 style={{ width: '30px', height: '30px', borderRadius: '50%', border: '1px solid #ddd', cursor: 'pointer', backgroundColor: '#fff' }}
               >
                 +
