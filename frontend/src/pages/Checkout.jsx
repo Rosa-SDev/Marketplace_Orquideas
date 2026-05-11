@@ -27,6 +27,8 @@ const Checkout = () => {
   });
   const [metodoPago, setMetodoPago] = useState('tarjeta');
   const [errors, setErrors] = useState({});
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [transactionData, setTransactionData] = useState(null);
   const [isOpeningWompi, setIsOpeningWompi] = useState(false);
 
   const subtotal = useMemo(
@@ -103,12 +105,10 @@ const Checkout = () => {
             return;
           }
 
-          navigate('/pago-rechazado', {
-            state: {
-              status: transaction.status,
-              referencia: transaction.reference || reference,
-            }
-          });
+          setErrors((prev) => ({
+            ...prev,
+            payment: `El pago terminó con estado ${transaction.status}.`,
+          }));
         },
       });
 
