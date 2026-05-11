@@ -762,7 +762,7 @@ const AdminPanel = () => {
                   onClick={subirProducto}
                   disabled={formularioCargando}
                 >
-                  {formularioCargando ? 'Subiendo...' : 'Subir a la BD'}
+                  {formularioCargando ? 'Agregando...' : 'Agregar elemento a catalogo'}
                 </button>
               </div>
             </>
