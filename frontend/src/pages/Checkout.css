@@ -151,6 +151,15 @@
   cursor: not-allowed;
 }
 
+.checkout-btn-whatsapp {
+  margin-bottom: 0.75rem;
+  background-color: #25d366;
+}
+
+.checkout-btn-whatsapp:hover:not(:disabled) {
+  background-color: #1faa57;
+}
+
 .checkout-empty {
   text-align: center;
   max-width: 600px;

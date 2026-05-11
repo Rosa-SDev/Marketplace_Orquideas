@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import api from '../../services/api';
 import './ChatbotWidget.css';
+import ReactMarkdown from 'react-markdown';
 
 const ChatbotWidget = () => {
     const [abierto, setAbierto] = useState(false);
@@ -24,12 +25,19 @@ const ChatbotWidget = () => {
         const texto = input.trim();
         if (!texto || cargando) return;
 
-        setMensajes((prev) => [...prev, { rol: 'usuario', texto }]);
+        const nuevosMensajes = [...mensajes, { rol: 'usuario', texto }];
+        setMensajes(nuevosMensajes);
         setInput('');
         setCargando(true);
 
         try {
-            const res = await api.post('/chatbot', { mensaje: texto });
+            const res = await api.post('/chatbot', {
+                mensaje: texto,
+                historial: mensajes.map(m => ({
+                    rol: m.rol,
+                    texto: m.texto
+                }))
+            });
             setMensajes((prev) => [
                 ...prev,
                 { rol: 'bot', texto: res.data.respuesta },
@@ -63,7 +71,10 @@ const ChatbotWidget = () => {
                     <div className="chatbot-mensajes">
                         {mensajes.map((msg, i) => (
                             <div key={i} className={`chatbot-mensaje chatbot-mensaje--${msg.rol}`}>
-                                {msg.texto}
+                                {msg.rol === 'bot'
+                                    ? <ReactMarkdown>{msg.texto}</ReactMarkdown>
+                                    : msg.texto
+                                }
                             </div>
                         ))}
                         {cargando && (

@@ -18,6 +18,7 @@ import AuthCallback from './pages/AuthCallback';
 import NotFound from './pages/NotFound';
 import Carrito from './pages/Carrito';
 import Checkout from './pages/Checkout';
+import AdminPanel from './pages/AdminPanel';
 
 const App = () => {
   return (
@@ -42,6 +43,11 @@ const App = () => {
         <Route path="/orquideas/:id" element={<DetalleOrquidea />} />
         <Route path="/login" element={<Login />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
+        <Route path="/admin" element={
+          <ProtectedRoute>
+            <AdminPanel />
+          </ProtectedRoute>
+        } />
         <Route path="/mi-cuenta" element={
           <ProtectedRoute>
             <MiCuenta />

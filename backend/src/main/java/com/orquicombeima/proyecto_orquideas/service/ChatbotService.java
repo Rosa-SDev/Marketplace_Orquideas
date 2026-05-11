@@ -1,5 +1,6 @@
 package com.orquicombeima.proyecto_orquideas.service;
 
+import com.orquicombeima.proyecto_orquideas.dto.MensajeHistorialDTO;
 import com.orquicombeima.proyecto_orquideas.model.Maceta;
 import com.orquicombeima.proyecto_orquideas.model.Orquidea;
 import com.orquicombeima.proyecto_orquideas.repository.MacetaRepository;
@@ -30,9 +31,9 @@ public class ChatbotService {
     private final RestTemplate restTemplate = new RestTemplate();
 
     // Función para procesar el mesaje que recibira Gemini
-    public String procesarMensaje (String mensajeUsuario) {
+    public String procesarMensaje (String mensajeUsuario, List<MensajeHistorialDTO> historial) {
         String contexto = construirContexto();
-        String prompt = construirPrompt(contexto, mensajeUsuario);
+        String prompt = construirPrompt(contexto, mensajeUsuario, historial);
         return llamarGemini(prompt);
     }
 
@@ -61,26 +62,42 @@ public class ChatbotService {
     }
 
     // Función para construir el prompt con la estructura necesaria que sera enviada a Gemini
-    private String construirPrompt (String contexto, String mensajeUsuario) {
-        return """
-                Eres el asistente virtual de Orquídeas del Combeima, un emprendimiento colombiano especializado en la venta de orquídeas y macetas ubicado en Ibagué, Tolima.
+    private String construirPrompt (String contexto, String mensajeUsuario, List<MensajeHistorialDTO> historial) {
+        StringBuilder sb = new StringBuilder();
 
-                Tu función es ÚNICAMENTE responder preguntas relacionadas con:
-                - El catálogo de productos del negocio
-                - Cuidados y guías de orquídeas
-                - Precios y disponibilidad
-                - Proceso de compra y pedidos
-                - Información del negocio
+        sb.append("""
+                    Eres el asistente virtual de Orquídeas del Combeima, un emprendimiento colombiano especializado en la venta de orquídeas y macetas ubicado en Ibagué, Tolima.
+    
+                    Tu función es ÚNICAMENTE responder preguntas relacionadas con:
+                    - El catálogo de productos del negocio
+                    - Cuidados y guías de orquídeas
+                    - Precios y disponibilidad
+                    - Proceso de compra y pedidos
+                    - Información del negocio
+    
+                    Si el usuario pregunta algo que NO está relacionado con el negocio, responde amablemente:
+                    "Solo puedo ayudarte con información sobre Orquídeas del Combeima. ¿Tienes alguna pregunta sobre nuestros productos o servicios?"
+    
+                    Responde siempre en español, de forma amable y profesional.
+                    Usa el catálogo actualizado para dar información precisa sobre precios y disponibilidad.
+    
+                    """);
 
-                Si el usuario pregunta algo que NO está relacionado con el negocio, responde amablemente:
-                "Solo puedo ayudarte con información sobre Orquídeas del Combeima. ¿Tienes alguna pregunta sobre nuestros productos o servicios?"
+        sb.append(contexto).append("\n");
 
-                Responde siempre en español, de forma amable y profesional.
-                Usa el catálogo actualizado para dar información precisa sobre precios y disponibilidad.
+        // Condicional que verifica si el usuario ya tiene historial o si este se encuentra vacio para asi mismo incluir el historial en el prompt
+        if (historial != null && !historial.isEmpty()) {
+            sb.append("HISTORIAL DE CONVERSACIÓN:\n");
 
-                """ + contexto + """
+            for (MensajeHistorialDTO mensajeHistorial : historial) {
+                String rol = mensajeHistorial.getRol().equals("bot") ? "Asistente" : "Cliente";
+                sb.append(rol).append(": ").append(mensajeHistorial.getTexto()).append("\n");
+            }
+            sb.append("\n");
+        }
 
-                Pregunta del cliente: """ + mensajeUsuario;
+        sb.append("Pregunta actual del cliente: ").append(mensajeUsuario);
+        return sb.toString();
     }
 
     // Función para hacer la llamada a Gemini con el prompt construido y procesar la respuesta para devolver solo el texto de la respuesta de Gemini
@@ -107,7 +124,6 @@ public class ChatbotService {
             return (String) parts.get(0).get("text");
 
         } catch (Exception e) {
-            e.printStackTrace();
             return "Lo siento, en este momento no puedo procesar tu pregunta. Por favor intenta más tarde";
         }
     }

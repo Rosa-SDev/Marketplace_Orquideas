@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useCarritoStore from '../store/carritoStore';
+import api from '../services/api';
 import { openWompiCheckout } from '../services/wompiWidget';
 import './Checkout.css';
 
@@ -31,6 +32,42 @@ const Checkout = () => {
   );
   const envio = 0;
   const total = subtotal + envio;
+
+  const construirMensajeWhatsapp = () => {
+    const productos = items
+      .map(
+        (item) =>
+          `- ${item.nombre} x${item.cantidad} -> $${(item.precio * item.cantidad).toLocaleString('es-CO')}`
+      )
+      .join('\n');
+
+    return [
+      'Hola, acabo de completar mi compra en Orquídeas del Combeima.',
+      '',
+      'Resumen del pedido:',
+      productos,
+      '',
+      `Subtotal: $${subtotal.toLocaleString('es-CO')}`,
+      `Envío: ${envio === 0 ? 'Gratis' : `$${envio.toLocaleString('es-CO')}`}`,
+      `Total: $${total.toLocaleString('es-CO')}`,
+      '',
+      `Nombre: ${formData.nombre.trim()}`,
+      `Correo: ${formData.correo.trim()}`,
+      `Dirección: ${formData.direccion.trim()}`,
+      '',
+      `Referencia de transacción: ${transactionData?.reference || 'Sin referencia'}`,
+      `Estado del pago: ${transactionData?.status || 'Sin estado'}`,
+    ].join('\n');
+  };
+
+  const compartirPorWhatsapp = async () => {
+    const contactoResponse = await api.get('/contacto').catch(() => null);
+    const numeroDesdeApi = String(contactoResponse?.data?.numero || '').replace(/\D/g, '');
+    const numero = numeroDesdeApi || '573014791094';
+    const mensaje = construirMensajeWhatsapp();
+    const urlWhatsapp = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
+    window.open(urlWhatsapp, '_blank', 'noopener,noreferrer');
+  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -157,6 +194,13 @@ const Checkout = () => {
           <p>ID de transacción: <strong>{transactionData.transactionId}</strong></p>
           <p>Estado: <strong>{transactionData.status}</strong></p>
           <p>Recibirás un correo de confirmación en breve.</p>
+          <button
+            type="button"
+            className="checkout-btn checkout-btn-whatsapp"
+            onClick={compartirPorWhatsapp}
+          >
+            Enviar resumen por WhatsApp
+          </button>
           <button type="button" className="checkout-btn" onClick={() => navigate('/')}>
             Volver al inicio
           </button>

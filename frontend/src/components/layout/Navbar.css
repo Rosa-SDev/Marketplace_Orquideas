@@ -105,3 +105,19 @@
   background-color: #2D6A4F;
   color: #FAF7F5;
 }
+
+.navbar-panel-btn {
+  color: #E91E8C;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: 2px solid #E91E8C;
+  border-radius: 20px;
+  padding: 0.35rem 0.9rem;
+  transition: all 0.2s;
+}
+
+.navbar-panel-btn:hover {
+  background-color: #E91E8C;
+  color: #FAF7F5;
+}

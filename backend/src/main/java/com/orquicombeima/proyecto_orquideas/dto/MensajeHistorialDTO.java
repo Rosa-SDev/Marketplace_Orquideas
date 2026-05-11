@@ -4,13 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class ChatbotRequestDTO {
+@AllArgsConstructor
+public class MensajeHistorialDTO {
 
-    private String mensaje;
-    private List<MensajeHistorialDTO> historial;
+    private String rol;
+    private String texto;
 }

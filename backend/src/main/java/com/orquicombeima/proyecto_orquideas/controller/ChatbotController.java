@@ -19,7 +19,7 @@ public class ChatbotController {
 
     @PostMapping
     public ResponseEntity<ChatbotResponseDTO> chat(@RequestBody ChatbotRequestDTO peticion) {
-        String respuesta = chatbotService.procesarMensaje(peticion.getMensaje());
+        String respuesta = chatbotService.procesarMensaje(peticion.getMensaje(), peticion.getHistorial());
         return  ResponseEntity.ok(new ChatbotResponseDTO(respuesta));
     }
 }
