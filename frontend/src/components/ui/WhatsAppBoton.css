@@ -1,6 +1,7 @@
 .whatsapp-boton {
     position: fixed;
-    bottom: 2rem;
+    /* CAMBIO: bottom sube 60px extra en móvil para no quedar tapado por la barra inferior */
+    bottom: calc(2rem + 60px);
     right: 2rem;
     background-color: #25D366;
     color: #fff;
@@ -14,6 +15,13 @@
     align-items: center;
     justify-content: center;
     transition: transform 0.2s, background-color 0.2s;
+}
+
+/* En desktop vuelve a su posición original */
+@media (min-width: 769px) {
+    .whatsapp-boton {
+        bottom: 2rem;
+    }
 }
 
 .whatsapp-boton:hover {

@@ -199,6 +199,11 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+  /* CAMBIO: centrar el logo en móvil */
+  .navbar-container {
+    justify-content: center;
+  }
+
   .navbar-hamburguesa {
     display: flex;
     align-items: center;
