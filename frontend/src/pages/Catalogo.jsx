@@ -1,227 +1,247 @@
-import { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import useCarritoStore from '../store/carritoStore';
-import { openWompiCheckout } from '../services/wompiWidget';
+import { useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import ProductCard from '../components/ui/ProductCard';
+import Loading from '../components/ui/Loading';
+import ConnectionError from '../components/ui/ConnectionError';
 import api from '../services/api';
-import './Checkout.css';
 
-const Checkout = () => {
-  const { items } = useCarritoStore();
-  const navigate = useNavigate();
+const MENSAJE_ERROR_CONEXION =
+  'No fue posible conectar con el servidor. Verifica que el backend este encendido e intenta nuevamente.';
 
-  const [formData, setFormData] = useState({
-    nombre: '',
-    correo: '',
-    telefono: '',
-    departamento: '',
-    ciudad: '',
-    direccion: '',
-  });
-  const [errors, setErrors] = useState({});
-  const [isOpeningWompi, setIsOpeningWompi] = useState(false);
+const normalizarTexto = (texto) =>
+  texto
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '');
 
-  const subtotal = useMemo(
-      () => items.reduce((acc, item) => acc + item.precio * item.cantidad, 0),
-      [items]
-  );
-  const envio = 10000;
-  const total = subtotal + envio;
+const coincidePorPalabras = (nombre, busqueda) => {
+  const busquedaNormalizada = normalizarTexto(busqueda).trim();
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    if (name === 'nombre' && /\d/.test(value)) return;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  if (!busquedaNormalizada) return true;
 
-  const validate = () => {
-    const nextErrors = {};
-    if (!formData.nombre.trim()) nextErrors.nombre = 'El nombre es obligatorio.';
-    if (!formData.correo.trim()) {
-      nextErrors.correo = 'El correo es obligatorio.';
-    } else if (!/^[^\s@]+@(gmail\.com|outlook\.com)$/.test(formData.correo.trim())) {
-      nextErrors.correo = 'Solo se permiten correos de @gmail.com o @outlook.com por el momento.';
-    }
-    if (!formData.telefono.trim()) nextErrors.telefono = 'El teléfono es obligatorio.';
-    if (!formData.departamento.trim()) nextErrors.departamento = 'El departamento es obligatorio.';
-    if (!formData.ciudad.trim()) nextErrors.ciudad = 'La ciudad es obligatoria.';
-    if (!formData.direccion.trim()) nextErrors.direccion = 'La dirección es obligatoria.';
-    return nextErrors;
-  };
+  const palabrasBusqueda = busquedaNormalizada.split(/\s+/).filter(Boolean);
+  const nombreNormalizado = normalizarTexto(nombre);
 
-  const abrirWompi = async () => {
-    setIsOpeningWompi(true);
-    setErrors((prev) => ({ ...prev, payment: undefined }));
+  return palabrasBusqueda.every((palabra) => nombreNormalizado.includes(palabra));
+};
 
+const Catalogo = () => {
+  const [searchParams] = useSearchParams();
+  const [orquideas, setOrquideas] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [errorPrecio, setErrorPrecio] = useState('');
+  const busquedaHero = searchParams.get('busqueda') || '';
+  const [filtros, setFiltros] = useState(() => ({
+    variedad: searchParams.get('variedad') || '',
+    colorFlor: searchParams.get('colorFlor') || '',
+    precioMin: searchParams.get('precioMin') || '',
+    precioMax: searchParams.get('precioMax') || ''
+  }));
+
+  const cargarOrquideas = useCallback(async () => {
     try {
-      // 1. Crear pedido en el backend y obtener firma de integridad
-      const response = await api.post('/pedidos', {
-        direccionEnvio: {
-          nombreDestinatario: formData.nombre.trim(),
-          telefonoDestinatario: formData.telefono.trim(),
-          departamento: formData.departamento.trim(),
-          ciudad: formData.ciudad.trim(),
-          direccion: formData.direccion.trim(),
-        }
+      setLoading(true);
+      setError('');
+      const params = new URLSearchParams();
+      Object.entries(filtros).forEach(([key, value]) => {
+        if (value) params.append(key, value);
       });
 
-      const pedido = response.data;
+      const response = await api.get(`/orquideas?${params}`);
+      setOrquideas(response.data);
+    } catch (err) {
+      console.error('Error cargando orquídeas:', err);
+      setError(MENSAJE_ERROR_CONEXION);
+    } finally {
+      setLoading(false);
+    }
+  }, [filtros]);
 
-      // 2. Abrir widget de Wompi con firma del backend
-      await openWompiCheckout({
-        amountInCents: Math.round(pedido.total * 100),
-        reference: pedido.referenciaPago,
-        customerEmail: formData.correo.trim(),
-        customerFullName: formData.nombre.trim(),
-        firmaIntegridad: pedido.firmaIntegridad,
-        onResult: (result) => {
-          const transaction = result?.transaction;
-          if (!transaction?.status) {
-            setErrors((prev) => ({
-              ...prev,
-              payment: 'Pago cancelado o sin respuesta final de Wompi.',
-            }));
-            return;
-          }
+  useEffect(() => {
+    cargarOrquideas();
+  }, [/*Esto tiene que queda vacio, NO TOCAR*/]);
 
-          if (transaction.status === 'APPROVED' || transaction.status === 'PENDING') {
-            navigate('/pago-exitoso', {
-              state: {
-                referencia: transaction.reference || pedido.referenciaPago,
-                transactionId: transaction.id || 'Sin ID',
-                status: transaction.status,
-                items,
-                total: pedido.total,
-                nombre: formData.nombre.trim(),
-                direccion: formData.direccion.trim(),
-              }
-            });
-            return;
-          }
+  const handlePrecioChange = (campo, valor) => {
+    if (valor === '') {
+      setFiltros(prev => ({ ...prev, [campo]: '' }));
+      return;
+    }
+    const numero = Math.max(0, Number(valor));
+    setFiltros(prev => ({ ...prev, [campo]: String(numero) }));
+  };
 
-          navigate('/pago-rechazado', {
-            state: {
-              status: transaction.status,
-              referencia: transaction.reference || pedido.referenciaPago,
-            }
-          });
-        },
-      });
+  // Elimina cualquier carácter que NO sea letra, espacio o acento
+  const soloTexto = (valor) => valor.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ ]/g, '');
 
-      if (document.hasFocus()) {
-        setIsOpeningWompi(false);
-      } else {
-        const unlockOnFocus = () => {
-          setIsOpeningWompi(false);
-          window.removeEventListener('focus', unlockOnFocus);
-        };
-        window.addEventListener('focus', unlockOnFocus, { once: true });
-      }
-    } catch (error) {
-      setErrors((prev) => ({
-        ...prev,
-        payment: error.message || 'No fue posible iniciar el pago con Wompi.',
-      }));
-      setIsOpeningWompi(false);
+  // Permite solo: dígitos, Backspace, Delete, Tab, flechas
+  const soloNumeros = (e) => {
+    if (
+      !/[0-9]/.test(e.key) &&
+      !['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight'].includes(e.key)
+    ) {
+      e.preventDefault();
     }
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const nextErrors = validate();
-    setErrors(nextErrors);
-    if (Object.keys(nextErrors).length > 0) return;
-    await abrirWompi();
-  };
-
-  if (items.length === 0) {
-    return (
-        <main className="checkout-page">
-          <section className="checkout-card checkout-empty">
-            <h1>Tu carrito está vacío</h1>
-            <p>Agrega productos antes de continuar con el checkout.</p>
-            <button type="button" className="checkout-btn" onClick={() => navigate('/catalogo')}>
-              Ir al catálogo
-            </button>
-          </section>
-        </main>
-    );
-  }
+  const orquideasVisibles = orquideas.filter((orquidea) =>
+  coincidePorPalabras(orquidea.nombre, busquedaHero) &&
+  (filtros.variedad === '' || normalizarTexto(orquidea.variedad).includes(normalizarTexto(filtros.variedad)))
+  );
 
   return (
-      <main className="checkout-page">
-        <h1 className="checkout-title">Checkout</h1>
+    <main>
+      {/* Encabezado */}
+      <section style={{
+        backgroundColor: '#1B4332',
+        color: '#FAF7F5',
+        padding: '3rem 2rem',
+        textAlign: 'center'
+      }}>
+        <h1>Catálogo de Orquídeas</h1>
+        <p>Descubre nuestra colección exclusiva</p>
+      </section>
 
-        <form className="checkout-grid" onSubmit={handleSubmit} noValidate>
-          <section className="checkout-card">
-            <h2>Datos de entrega</h2>
+      {/* Filtros */}
+      <section style={{
+        maxWidth: '1200px',
+        margin: '2rem auto',
+        padding: '0 2rem'
+      }}>
+        <div style={{
+          display: 'flex',
+          gap: '1rem',
+          flexWrap: 'wrap',
+          marginBottom: '1rem'
+        }}>
+          
+          {/* Variedad - búsqueda parcial */}
+          <input
+          placeholder="Variedad (ej: Cattleya)"
+          value={filtros.variedad}
+          onChange={(e) => setFiltros(prev => ({ ...prev, variedad: soloTexto(e.target.value)}))}
+          style={{ padding: '0.5rem', borderRadius: '8px', border: '1px solid #ddd'}}
+          />
 
-            <label htmlFor="nombre" className="checkout-label">Nombre</label>
-            <input id="nombre" name="nombre" value={formData.nombre} onChange={handleChange} className="checkout-input" placeholder="Tu nombre completo" />
-            {errors.nombre && <p className="checkout-error">{errors.nombre}</p>}
+          {/* Color de flor - desplegable */}
+          <select
+            value={filtros.colorFlor}
+            onChange={(e) => setFiltros(prev => ({ ...prev, colorFlor: e.target.value }))}
+            style={{ padding: '0.5rem', borderRadius: '8px', border: '1px solid #ddd', backgroundColor: '#fff' }}
+          >
+            <option value="">Seleccionar color</option>
+            <option value="Blanco">Blanco</option>
+            <option value="Rojo">Rojo</option>
+            <option value="Amarillo">Amarillo</option>
+            <option value="Morado">Morado</option>
+            <option value="Rosa">Rosa</option>
+          </select>
 
-            <label htmlFor="correo" className="checkout-label">Correo</label>
-            <input id="correo" name="correo" type="email" value={formData.correo} onChange={handleChange} className="checkout-input" placeholder="tu-correo@ejemplo.com" />
-            {errors.correo && <p className="checkout-error">{errors.correo}</p>}
+          {/* Precio mínimo */}
+          <input
+            type="number"
+            placeholder="Precio mínimo"
+            min='0'
+            value={filtros.precioMin}
+            onChange={(e) => handlePrecioChange('precioMin', e.target.value)}
+            onKeyDown={soloNumeros}
+            style={{ padding: '0.5rem', borderRadius: '8px', border: '1px solid #ddd' }}
+          />
 
-            <label htmlFor="telefono" className="checkout-label">Teléfono</label>
-            <input id="telefono" name="telefono" value={formData.telefono} onChange={handleChange} className="checkout-input" placeholder="3001234567" />
-            {errors.telefono && <p className="checkout-error">{errors.telefono}</p>}
+          {/* Precio máximo */}
+          <input
+            type="number"
+            placeholder="Precio máximo"
+            min={filtros.precioMin || '0'}
+            value={filtros.precioMax}
+            onChange={(e) => {
+              const valor = e.target.value;
+              handlePrecioChange('precioMax', valor);
+            }}
+            onKeyDown={soloNumeros}
+            style={{ padding: '0.5rem', borderRadius: '8px', border: filtros.precioMin && filtros.precioMax && Number(filtros.precioMax) < Number(filtros.precioMin)
+              ? '1px solid #E91E8C'
+              : '1px solid #ddd'
+             }}
+          />
 
-            <label htmlFor="departamento" className="checkout-label">Departamento</label>
-            <input id="departamento" name="departamento" value={formData.departamento} onChange={handleChange} className="checkout-input" placeholder="Tolima" />
-            {errors.departamento && <p className="checkout-error">{errors.departamento}</p>}
+          <button
+            onClick={() => {
+              if (filtros.precioMin && filtros.precioMax && Number(filtros.precioMax) < Number(filtros.precioMin)) {
+                setErrorPrecio('El precio máximo no puede ser menor al precio mínimo');
+                return;
+              }
+              setErrorPrecio('');
+              cargarOrquideas();
+            }}
+            style={{
+              padding: '0.5rem 1rem',
+              backgroundColor: '#1B4332', 
+              color: '#FAF7F5',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontWeight: 'bold'
+            }}
+          >
+            Buscar
+          </button>
 
-            <label htmlFor="ciudad" className="checkout-label">Ciudad</label>
-            <input id="ciudad" name="ciudad" value={formData.ciudad} onChange={handleChange} className="checkout-input" placeholder="Ibagué" />
-            {errors.ciudad && <p className="checkout-error">{errors.ciudad}</p>}
+        </div>
 
-            <label htmlFor="direccion" className="checkout-label">Dirección</label>
-            <textarea id="direccion" name="direccion" rows={4} value={formData.direccion} onChange={handleChange} className="checkout-input checkout-textarea" placeholder="Dirección completa de entrega" />
-            {errors.direccion && <p className="checkout-error">{errors.direccion}</p>}
-          </section>
+        {errorPrecio && (
+          <p style={{ color: '#E91E8C', marginBottom: '1rem', fontSize: '0.9rem' }}>
+            {errorPrecio}
+          </p>
+        )}
 
-          <aside className="checkout-card">
-            <h2>Resumen del pedido</h2>
-            <div className="checkout-items">
-              {items.map((item) => (
-                  <div key={item.id} className="checkout-item">
-                    <div>
-                      <p className="checkout-item-name">{item.nombre}</p>
-                      <p className="checkout-item-meta">
-                        {item.cantidad} x ${item.precio?.toLocaleString('es-CO')}
-                      </p>
-                    </div>
-                    <p className="checkout-item-total">
-                      ${(item.precio * item.cantidad).toLocaleString('es-CO')}
-                    </p>
-                  </div>
+        {/* Resultados */}
+        {loading ? (
+          <Loading mensaje="Cargando catálogo..." />
+        ) : error ? (
+          <ConnectionError mensaje={error} onRetry={cargarOrquideas} />
+        ) : (
+          <>
+            <p style={{ color: '#1B4332', marginBottom: '1.5rem' }}>
+              {orquideasVisibles.length} orquídeas disponibles
+            </p>
+
+            {busquedaHero && (
+              <p style={{ color: '#2D6A4F', marginBottom: '1rem' }}>
+                Resultados para: <strong>{busquedaHero}</strong>
+              </p>
+            )}
+
+            {/* Grid de ProductCards */}
+            <div style={{
+              display: 'flex',
+              gap: '1.5rem',
+              flexWrap: 'wrap',
+              justifyContent: 'center'
+            }}>
+              {orquideasVisibles.map(orquidea => (
+                <ProductCard
+                  key={orquidea.id}
+                  id={orquidea.id}
+                  nombre={orquidea.nombre}
+                  precio={orquidea.precio}
+                  imagen={orquidea.imageUrl}
+                  stock={orquidea.stock}
+                  badge={orquidea.activo ? null : 'Inactivo'}
+                />
               ))}
             </div>
 
-            <div className="checkout-totals">
-              <div className="checkout-row">
-                <span>Subtotal</span>
-                <span>${subtotal.toLocaleString('es-CO')}</span>
-              </div>
-              <div className="checkout-row">
-                <span>Envío</span>
-                <span>${envio.toLocaleString('es-CO')}</span>
-              </div>
-              <div className="checkout-row checkout-row-total">
-                <span>Total</span>
-                <span>${total.toLocaleString('es-CO')}</span>
-              </div>
-            </div>
-
-            <button type="submit" className="checkout-btn" disabled={isOpeningWompi}>
-              {isOpeningWompi ? 'Abriendo Wompi...' : 'Pagar con Wompi'}
-            </button>
-            <p className="checkout-payment-note">El método de pago es por medio de tarjeta débito/crédito</p>
-            {errors.payment && <p className="checkout-error">{errors.payment}</p>}
-          </aside>
-        </form>
-      </main>
+            {orquideasVisibles.length === 0 && (
+              <p style={{ color: '#1B4332', marginTop: '1.5rem', textAlign: 'center' }}>
+                No encontramos orquídeas que coincidan con tu búsqueda.
+              </p>
+            )}
+          </>
+        )}
+      </section>
+    </main>
   );
 };
 
-export default Checkout;
+export default Catalogo;
