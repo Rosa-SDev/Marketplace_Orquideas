@@ -42,3 +42,22 @@ main {
   background-color: #E91E8C;
   transform: translateY(-1px);
 }
+/* Botón de confirmación verde en modales */
+.btn-confirmar {
+  padding: 0.6rem 1.5rem;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  background-color: #2D6A4F;
+  color: #fff;
+  font-size: 0.95rem;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn-confirmar:hover {
+  background-color: #1B4332;
+}
+
+.btn-confirmar:active {
+  transform: scale(0.97);
+}

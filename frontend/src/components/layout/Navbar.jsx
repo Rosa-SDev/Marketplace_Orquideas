@@ -12,7 +12,6 @@ const Navbar = () => {
 
   const [mostrarModalSalir, setMostrarModalSalir] = useState(false);
   const [menuUsuario, setMenuUsuario] = useState(false);
-  const [menuAbierto, setMenuAbierto] = useState(false);
 
   const handleLogout = () => {
     setMostrarModalSalir(false);
@@ -30,23 +29,13 @@ const Navbar = () => {
           <img src={logo} alt="Logo Orquideas del Combeima" className="navbar-logo-image" />
         </Link>
 
-        {/* Boton hamburguesa */}
-        <button
-          className="navbar-hamburguesa"
-          onClick={() => setMenuAbierto((v) => !v)}
-        >
-          <span className="material-icons">
-            {menuAbierto ? 'close' : 'menu'}
-          </span>
-        </button>
-
         {/* Menu del centro */}
-        <ul className={`navbar-menu ${menuAbierto ? 'menu-abierto' : ''}`}>
-          <li><Link to="/" onClick={() => setMenuAbierto(false)}>Inicio</Link></li>
-          <li><Link to="/catalogo" onClick={() => setMenuAbierto(false)}>Catálogo</Link></li>
-          <li><Link to="/macetas" onClick={() => setMenuAbierto(false)}>Macetas</Link></li>
-          <li><Link to="/guia" onClick={() => setMenuAbierto(false)}>Guía de Cuidado</Link></li>
-          <li><Link to="/contacto" onClick={() => setMenuAbierto(false)}>Contacto</Link></li>
+        <ul className="navbar-menu">
+          <li><Link to="/">Inicio</Link></li>
+          <li><Link to="/catalogo">Catálogo</Link></li>
+          <li><Link to="/macetas">Macetas</Link></li>
+          <li><Link to="/guia">Guía de Cuidado</Link></li>
+          <li><Link to="/contacto">Contacto</Link></li>
         </ul>
 
         {/* Botones del lado derecho */}
@@ -150,57 +139,13 @@ const Navbar = () => {
               >
                 Cancelar
               </button>
-              <button
-                onClick={handleLogout}
-                style={{
-                  padding: '0.6rem 1.5rem',
-                  borderRadius: '20px',
-                  border: 'none',
-                  cursor: 'pointer',
-                  backgroundColor: '#2D6A4F',
-                  color: '#fff'
-                }}
-              >
+              <button onClick={handleLogout} className="btn-confirmar">
                 Cerrar sesión
               </button>
             </div>
           </div>
         </div>
       )}
-
-      {/* Barra de navegacion inferior para movil */}
-      <div className="navbar-bottom-mobile">
-        <Link to="/" className="navbar-bottom-item" onClick={() => setMenuAbierto(false)}>
-          <span className="material-icons">home</span>
-          <span>Inicio</span>
-        </Link>
-
-        {isLoggedIn && usuario ? (
-          <Link to="/mi-cuenta" className="navbar-bottom-item">
-            <span className="material-icons">account_circle</span>
-            <span>{usuario.nombre.split(' ')[0]}</span>
-          </Link>
-        ) : (
-          <Link to="/login" className="navbar-bottom-item">
-            <span className="material-icons">person</span>
-            <span>Acceder</span>
-          </Link>
-        )}
-
-        <Link to="/carrito" className="navbar-bottom-item">
-          <span className="material-icons">shopping_cart</span>
-          {totalItems > 0 && <span className="navbar-bottom-badge">{totalItems}</span>}
-          <span>Carrito</span>
-        </Link>
-
-        <button
-          className="navbar-bottom-item"
-          onClick={() => setMenuAbierto((v) => !v)}
-        >
-          <span className="material-icons">{menuAbierto ? 'close' : 'menu'}</span>
-          <span>Menú</span>
-        </button>
-      </div>
     </nav>
   );
 };
