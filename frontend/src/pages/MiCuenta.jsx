@@ -142,12 +142,7 @@ const MiCuenta = () => {
                 onClick={() => setMostrarModalSalir(false)}
                 style={{ padding: '0.6rem 1.5rem', borderRadius: '20px', border: '1px solid #ddd', cursor: 'pointer', backgroundColor: '#fff' }}
               >Cancelar</button>
-              <button
-                onClick={handleLogout}
-                className="btn-confirmar-salir"
-              >
-                Cerrar sesión
-              </button>
+              <button onClick={handleLogout} className="btn-confirmar">Cerrar sesión</button>
             </div>
           </div>
         </div>
