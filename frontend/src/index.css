@@ -56,7 +56,7 @@ main {
 
 .btn-confirmar:hover {
   background-color: #1B4332;
-}
+} 
 
 .btn-confirmar:active {
   transform: scale(0.97);
