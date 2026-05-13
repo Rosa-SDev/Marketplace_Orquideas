@@ -12,7 +12,7 @@ const METODOS_PAGO = [
 ];
 
 const Checkout = () => {
-  const { items } = useCarritoStore();
+  const { items, vaciar } = useCarritoStore();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -92,6 +92,7 @@ const Checkout = () => {
           }
 
           if (transaction.status === 'APPROVED' || transaction.status === 'PENDING') {
+            await vaciar();
             navigate('/pago-exitoso', {
               state: {
                 referencia: transaction.reference || pedido.referenciaPago,
