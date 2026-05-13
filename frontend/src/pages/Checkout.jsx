@@ -81,7 +81,7 @@ const Checkout = () => {
         customerEmail: formData.correo.trim(),
         customerFullName: formData.nombre.trim(),
         firmaIntegridad: pedido.firmaIntegridad,
-        onResult: (result) => {
+        onResult: async (result) => {
           const transaction = result?.transaction;
           if (!transaction?.status) {
             setErrors((prev) => ({
