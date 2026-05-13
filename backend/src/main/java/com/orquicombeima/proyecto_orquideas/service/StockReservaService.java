@@ -118,7 +118,8 @@ public class StockReservaService {
         // Por cada reserva vencida devolvemos el stock al producto y cambiamos el estado a EXPIRADA
         for (ReservaCarrito reserva : reservasExpiradas) {
             Producto producto = reserva.getProducto();
-            producto.setStockReservado(producto.getStockReservado() - reserva.getCantidadReservada());
+            int nuevoStockReservado = producto.getStockReservado() - reserva.getCantidadReservada();
+            producto.setStockReservado(Math.max(0, nuevoStockReservado));
             productoRepository.save(producto);
 
             reserva.setEstado(EstadoReserva.EXPIRADA);
@@ -155,7 +156,8 @@ public class StockReservaService {
 
         for (ReservaCarrito reserva : reservasActivas) {
             Producto producto = reserva.getProducto();
-            producto.setStockReservado(producto.getStockReservado() - reserva.getCantidadReservada());
+            int nuevoStockReservado = producto.getStockReservado() - reserva.getCantidadReservada();
+            producto.setStockReservado(Math.max(0, nuevoStockReservado));
             productoRepository.save(producto);
 
             reserva.setEstado(EstadoReserva.CANCELADA);
@@ -172,10 +174,35 @@ public class StockReservaService {
         for (ReservaCarrito reserva : reservas) {
             if (reserva.getProducto().getId().equals(idProducto)) {
                 Producto producto = reserva.getProducto();
-                producto.setStockReservado(producto.getStockReservado() - reserva.getCantidadReservada());
+                int nuevoStockReservado = producto.getStockReservado() - reserva.getCantidadReservada();
+                producto.setStockReservado(Math.max(0, nuevoStockReservado));
                 productoRepository.save(producto);
 
                 reserva.setEstado(EstadoReserva.CANCELADA);
+                reservaCarritoRepository.save(reserva);
+                break;
+            }
+        }
+    }
+
+    // Ajusta la reserva cuando el usuario cambia la cantidad de un item en el carrito
+    @Transactional
+    public void ajustarReserva(Long idCarrito, Long idProducto, int nuevaCantidad) {
+        List<ReservaCarrito> reservas = reservaCarritoRepository
+                .findByCarritoIdAndEstado(idCarrito, EstadoReserva.ACTIVA);
+
+        for (ReservaCarrito reserva : reservas) {
+            if (reserva.getProducto().getId().equals(idProducto)) {
+                Producto producto = reserva.getProducto();
+                int diferencia = nuevaCantidad - reserva.getCantidadReservada();
+
+                // Si diferencia > 0 está aumentando, si < 0 está disminuyendo
+                int nuevoStockReservado = producto.getStockReservado() + diferencia;
+                producto.setStockReservado(Math.max(0, nuevoStockReservado));
+                productoRepository.save(producto);
+
+                reserva.setCantidadReservada(nuevaCantidad);
+                reserva.setFechaExpiracion(LocalDateTime.now().plusMinutes(MINUTOS_EXPIRACION));
                 reservaCarritoRepository.save(reserva);
                 break;
             }

@@ -120,6 +120,7 @@ public class CarritoService {
             throw new RuntimeException("La cantidad debe ser mayor a 0");
         }
 
+        stockReservaService.ajustarReserva(item.getCarrito().getId(), item.getProducto().getId(), nuevaCantidad);
         item.setCantidad(nuevaCantidad);
         itemCarritoRepository.save(item);
 
