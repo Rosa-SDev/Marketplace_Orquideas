@@ -19,6 +19,11 @@ public class PedidoAdminController {
 
     private final PedidoAdminService pedidoAdminService;
 
+    @GetMapping
+    public ResponseEntity<List<PedidoRecienteDTO>> obtenerPedidos() {
+        return  ResponseEntity.ok(pedidoAdminService.obtenerPedidos());
+    }
+
     @GetMapping("/recientes")
     public ResponseEntity<List<PedidoRecienteDTO>> obtenerPedidosRecientes() {
         return  ResponseEntity.ok(pedidoAdminService.obtenerPedidosRecientes());

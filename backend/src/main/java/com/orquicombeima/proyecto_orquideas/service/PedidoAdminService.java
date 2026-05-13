@@ -25,6 +25,14 @@ public class PedidoAdminService {
                 .toList();
     }
 
+    // Metodo GET para obtener todos los pedidos
+    @Transactional(readOnly = true)
+    public List<PedidoRecienteDTO> obtenerPedidos() {
+        return pedidoRepository.findAllByOrderByFechaPedidoAsc().stream()
+                .map(this::convertirAPedidoRecienteDTO)
+                .toList();
+    }
+
     // Función que permite convertir un pedido a un pedido reciente DTO
     private PedidoRecienteDTO convertirAPedidoRecienteDTO(Pedido pedido) {
         return PedidoRecienteDTO.builder()
