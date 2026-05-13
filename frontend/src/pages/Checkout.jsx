@@ -3,7 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import useCarritoStore from '../store/carritoStore';
 import { openWompiCheckout } from '../services/wompiWidget';
 import api from '../services/api';
+import { getDepartamentos, getCiudades } from '../data/colombiaData';
 import './Checkout.css';
+
+const DEPARTAMENTOS = getDepartamentos();
 
 const Checkout = () => {
   const { items, vaciar } = useCarritoStore();
@@ -20,6 +23,12 @@ const Checkout = () => {
   const [errors, setErrors] = useState({});
   const [isOpeningWompi, setIsOpeningWompi] = useState(false);
 
+  // Ciudades disponibles según el departamento seleccionado
+  const ciudadesDisponibles = useMemo(
+      () => getCiudades(formData.departamento),
+      [formData.departamento]
+  );
+
   const subtotal = useMemo(
       () => items.reduce((acc, item) => acc + item.precio * item.cantidad, 0),
       [items]
@@ -30,6 +39,11 @@ const Checkout = () => {
   const handleChange = (event) => {
     const { name, value } = event.target;
     if (name === 'nombre' && /\d/.test(value)) return;
+    // Al cambiar el departamento limpiamos la ciudad para que el usuario elija una nueva
+    if (name === 'departamento') {
+      setFormData((prev) => ({ ...prev, departamento: value, ciudad: '' }));
+      return;
+    }
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -169,16 +183,42 @@ const Checkout = () => {
             {errors.telefono && <p className="checkout-error">{errors.telefono}</p>}
 
             <label htmlFor="departamento" className="checkout-label">Departamento</label>
-            <input id="departamento" name="departamento" value={formData.departamento} onChange={handleChange} className="checkout-input" placeholder="Tolima" />
+            <select
+                id="departamento"
+                name="departamento"
+                value={formData.departamento}
+                onChange={handleChange}
+                className="checkout-input checkout-select"
+            >
+              <option value="">Selecciona un departamento</option>
+              {DEPARTAMENTOS.map((dep) => (
+                  <option key={dep} value={dep}>{dep}</option>
+              ))}
+            </select>
             {errors.departamento && <p className="checkout-error">{errors.departamento}</p>}
 
-            <label htmlFor="ciudad" className="checkout-label">Ciudad</label>
-            <input id="ciudad" name="ciudad" value={formData.ciudad} onChange={handleChange} className="checkout-input" placeholder="Ibagué" />
+            <label htmlFor="ciudad" className="checkout-label">Ciudad / Municipio</label>
+            <select
+                id="ciudad"
+                name="ciudad"
+                value={formData.ciudad}
+                onChange={handleChange}
+                disabled={!formData.departamento}
+                className="checkout-input checkout-select"
+            >
+              <option value="">
+                {formData.departamento ? 'Selecciona una ciudad' : 'Primero elige un departamento'}
+              </option>
+              {ciudadesDisponibles.map((ciudad) => (
+                  <option key={ciudad} value={ciudad}>{ciudad}</option>
+              ))}
+            </select>
             {errors.ciudad && <p className="checkout-error">{errors.ciudad}</p>}
 
             <label htmlFor="direccion" className="checkout-label">Dirección</label>
             <textarea id="direccion" name="direccion" rows={4} value={formData.direccion} onChange={handleChange} className="checkout-input checkout-textarea" placeholder="Dirección completa de entrega" />
             {errors.direccion && <p className="checkout-error">{errors.direccion}</p>}
+
           </section>
 
           <aside className="checkout-card">
