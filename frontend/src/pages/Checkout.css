@@ -151,6 +151,14 @@
   cursor: not-allowed;
 }
 
+.checkout-payment-note {
+  margin-top: 0.6rem;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.86rem;
+  opacity: 0.82;
+}
+
 .checkout-btn-whatsapp {
   margin-bottom: 0.75rem;
   background-color: #25d366;
