@@ -167,6 +167,40 @@ const Navbar = () => {
           </div>
         </div>
       )}
+
+      {/* Barra de navegacion inferior para movil */}
+      <div className="navbar-bottom-mobile">
+        <Link to="/" className="navbar-bottom-item" onClick={() => setMenuAbierto(false)}>
+          <span className="material-icons">home</span>
+          <span>Inicio</span>
+        </Link>
+
+        {isLoggedIn && usuario ? (
+          <Link to="/mi-cuenta" className="navbar-bottom-item">
+            <span className="material-icons">account_circle</span>
+            <span>{usuario.nombre.split(' ')[0]}</span>
+          </Link>
+        ) : (
+          <Link to="/login" className="navbar-bottom-item">
+            <span className="material-icons">person</span>
+            <span>Acceder</span>
+          </Link>
+        )}
+
+        <Link to="/carrito" className="navbar-bottom-item">
+          <span className="material-icons">shopping_cart</span>
+          {totalItems > 0 && <span className="navbar-bottom-badge">{totalItems}</span>}
+          <span>Carrito</span>
+        </Link>
+
+        <button
+          className="navbar-bottom-item"
+          onClick={() => setMenuAbierto((v) => !v)}
+        >
+          <span className="material-icons">{menuAbierto ? 'close' : 'menu'}</span>
+          <span>Menú</span>
+        </button>
+      </div>
     </nav>
   );
 };
