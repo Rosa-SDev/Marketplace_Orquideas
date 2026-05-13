@@ -238,6 +238,22 @@
   font-size: 0.9rem;
 }
 
+.admin-inline-time-fields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.45rem;
+}
+
+.admin-inline-time-fields select {
+  min-width: 110px;
+}
+
+.admin-form-field-error {
+  color: #b91c1c;
+  font-size: 0.78rem;
+  line-height: 1.25;
+}
+
 .admin-form-field--full {
   grid-column: 1 / -1;
 }
