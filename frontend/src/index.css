@@ -42,7 +42,7 @@ main {
   background-color: #E91E8C;
   transform: translateY(-1px);
 }
-/* Botón de confirmación verde en modales */
+
 .btn-confirmar {
   padding: 0.6rem 1.5rem;
   border-radius: 20px;

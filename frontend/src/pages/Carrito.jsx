@@ -109,11 +109,7 @@ const Carrito = () => {
               >Cancelar</button>
               <button
                 onClick={() => handleEliminar(idAEliminar)}
-                style={{ padding: '0.6rem 1.5rem', borderRadius: '20px', border: 'none', cursor: 'pointer', backgroundColor: '#E91E8C', color: '#fff', transition: 'background-color 0.2s, transform 0.1s' }}
-                onMouseEnter={e => e.currentTarget.style.backgroundColor = '#c4176f'}
-                onMouseLeave={e => e.currentTarget.style.backgroundColor = '#E91E8C'}
-                onMouseDown={e => e.currentTarget.style.transform = 'scale(0.97)'}
-                onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
+                style={{ padding: '0.6rem 1.5rem', borderRadius: '20px', border: 'none', cursor: 'pointer', backgroundColor: '#E91E8C', color: '#fff' }}
               >Eliminar</button>
             </div>
           </div>
