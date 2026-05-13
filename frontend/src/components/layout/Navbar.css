@@ -1,11 +1,13 @@
+/* Estilos del contenedor principal del Navbar */
 .navbar {
   background-color: #F1EEE7;
-  position: sticky;
+  position: sticky; 
   top: 0;
   z-index: 100;
-  padding: 0 1.5rem;
+  padding: 0 2rem;
 }
 
+/* Contenedor interior */
 .navbar-container {
   display: flex;
   align-items: center;
@@ -13,74 +15,74 @@
   max-width: 1200px;
   margin: 0 auto;
   height: 70px;
-  gap: 1rem;
 }
 
+/* Logo */
 .navbar-logo {
   color: #522C5D;
   text-decoration: none;
-  flex-shrink: 0;
+  font-size: 1.3rem;
+  font-weight: bold; 
 }
 
 .navbar-logo-image {
   margin-top: 10px;
-  height: 60px;
+  height: 160px;
   width: auto;
 }
 
+/* Menú central */
 .navbar-menu {
   display: flex;
   list-style: none;
-  gap: 1.2rem;
+  gap: 2rem;
   margin: 0;
   padding: 0;
-  flex-wrap: wrap;
 }
 
 .navbar-menu a {
   color: #413B61;
   text-decoration: none;
-  font-size: 0.88rem;
+  font-size: 0.95rem;
   transition: color 0.2s;
-  white-space: nowrap;
 }
 
 .navbar-menu a:hover {
   color: #E91E8C;
 }
 
+/* Contenedor botones derecha */
 .navbar-icons {
   display: flex;
   align-items: center;
-  gap: 0.7rem;
-  flex-shrink: 0;
+  gap: 1rem;
 }
 
+/* Botón Acceder */
 .navbar-btn-acceder {
   background-color: #2D6A4F;
   color: #FAF7F5;
   text-decoration: none;
-  padding: 0.4rem 1rem;
+  padding: 0.5rem 1.2rem;
   border-radius: 20px;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   transition: background-color 0.2s;
-  white-space: nowrap;
 }
 
 .navbar-btn-acceder:hover {
   background-color: #E91E8C;
 }
 
+/* Botón Panel admin */
 .navbar-panel-btn {
   color: #E91E8C;
   text-decoration: none;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 600;
   border: 2px solid #E91E8C;
   border-radius: 20px;
-  padding: 0.3rem 0.8rem;
+  padding: 0.35rem 0.9rem;
   transition: all 0.2s;
-  white-space: nowrap;
 }
 
 .navbar-panel-btn:hover {
@@ -88,6 +90,7 @@
   color: #FAF7F5;
 }
 
+/* Mi cuenta — botón con icono y dropdown */
 .navbar-usuario-wrapper {
   position: relative;
 }
@@ -100,11 +103,10 @@
   border: 1px solid #2D6A4F;
   color: #2D6A4F;
   border-radius: 20px;
-  padding: 0.3rem 0.8rem;
+  padding: 0.35rem 0.9rem;
   cursor: pointer;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   transition: all 0.2s;
-  white-space: nowrap;
 }
 
 .navbar-mi-cuenta:hover {
@@ -112,6 +114,7 @@
   color: #FAF7F5;
 }
 
+/* Dropdown */
 .navbar-usuario-dropdown {
   position: absolute;
   top: calc(100% + 0.5rem);
@@ -153,6 +156,7 @@
   color: #E91E8C;
 }
 
+/* Carrito — icono con badge */
 .navbar-carrito {
   position: relative;
   display: flex;
@@ -161,7 +165,6 @@
   text-decoration: none;
   font-size: 1.4rem;
   transition: color 0.2s;
-  flex-shrink: 0;
 }
 
 .navbar-carrito:hover {
@@ -184,13 +187,42 @@
   justify-content: center;
 }
 
-/* Responsive — pantallas pequeñas */
+/* Boton hamburguesa — oculto en desktop */
+.navbar-hamburguesa {
+  display: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #1B4332;
+  font-size: 1.5rem;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
-  .navbar-menu {
-    display: none;
+  .navbar-hamburguesa {
+    display: flex;
+    align-items: center;
   }
 
-  .navbar-logo-image {
-    height: 45px;
+  .navbar-menu {
+    display: none;
+    position: absolute;
+    top: 70px;
+    left: 0;
+    right: 0;
+    background-color: #F1EEE7;
+    flex-direction: column;
+    padding: 1rem 2rem;
+    gap: 1rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    z-index: 99;
+  }
+
+  .navbar-menu.menu-abierto {
+    display: flex;
+  }
+
+  .navbar {
+    position: relative;
   }
 }

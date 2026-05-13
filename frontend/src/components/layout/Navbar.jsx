@@ -12,6 +12,7 @@ const Navbar = () => {
 
   const [mostrarModalSalir, setMostrarModalSalir] = useState(false);
   const [menuUsuario, setMenuUsuario] = useState(false);
+  const [menuAbierto, setMenuAbierto] = useState(false);
 
   const handleLogout = () => {
     setMostrarModalSalir(false);
@@ -29,13 +30,23 @@ const Navbar = () => {
           <img src={logo} alt="Logo Orquideas del Combeima" className="navbar-logo-image" />
         </Link>
 
+        {/* Boton hamburguesa */}
+        <button
+          className="navbar-hamburguesa"
+          onClick={() => setMenuAbierto((v) => !v)}
+        >
+          <span className="material-icons">
+            {menuAbierto ? 'close' : 'menu'}
+          </span>
+        </button>
+
         {/* Menu del centro */}
-        <ul className="navbar-menu">
-          <li><Link to="/">Inicio</Link></li>
-          <li><Link to="/catalogo">Catálogo</Link></li>
-          <li><Link to="/macetas">Macetas</Link></li>
-          <li><Link to="/guia">Guía de Cuidado</Link></li>
-          <li><Link to="/contacto">Contacto</Link></li>
+        <ul className={`navbar-menu ${menuAbierto ? 'menu-abierto' : ''}`}>
+          <li><Link to="/" onClick={() => setMenuAbierto(false)}>Inicio</Link></li>
+          <li><Link to="/catalogo" onClick={() => setMenuAbierto(false)}>Catálogo</Link></li>
+          <li><Link to="/macetas" onClick={() => setMenuAbierto(false)}>Macetas</Link></li>
+          <li><Link to="/guia" onClick={() => setMenuAbierto(false)}>Guía de Cuidado</Link></li>
+          <li><Link to="/contacto" onClick={() => setMenuAbierto(false)}>Contacto</Link></li>
         </ul>
 
         {/* Botones del lado derecho */}
