@@ -201,3 +201,31 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Botón cerrar sesión — solo móvil */
+.mi-cuenta-btn-salir {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mi-cuenta-btn-salir {
+    display: block;
+    width: 100%;
+    margin-top: 1.5rem;
+    margin-bottom: 5rem;
+    padding: 0.8rem;
+    background-color: transparent;
+    color: #E91E8C;
+    border: 2px solid #E91E8C;
+    border-radius: 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .mi-cuenta-btn-salir:hover {
+    background-color: #E91E8C;
+    color: #fff;
+  }
+}
