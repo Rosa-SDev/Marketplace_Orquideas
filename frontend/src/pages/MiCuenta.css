@@ -248,7 +248,7 @@
 }
 
 .btn-confirmar-salir:hover {
-  background-color: #E91E8C;
+  background-color: #E91E8C !important;
 }
 
 .btn-confirmar-salir:active {
