@@ -27,6 +27,7 @@ public class OrquideaDetalleDTO {
     private String tamanio;
     private String nivelCuidado;
     private String tiempoFloracion;
+    private String descripcion;
 
     // Guía de cuidado asociada (puede ser null si todavía no tiene)
     private GuiaCuidadoDTO guiaCuidado;

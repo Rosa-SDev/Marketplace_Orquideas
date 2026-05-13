@@ -26,3 +26,19 @@ body {
 main {
   background: transparent;
 }
+
+.btn-ver-catalogo {
+  background-color: #2D6A4F;
+  color: #FAF7F5;
+  border: none;
+  border-radius: 20px;
+  padding: 0.7rem 1.5rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background-color 0.2s, transform 0.15s;
+}
+
+.btn-ver-catalogo:hover {
+  background-color: #E91E8C;
+  transform: translateY(-1px);
+}

@@ -7,7 +7,7 @@ import api from '../services/api';
 import useLazyAddToCart from '../hooks/useLazyAddToCart';
 
 const MENSAJE_ERROR_CONEXION =
-  'No fue posible conectar con el servidor. Verifica que el backend este encendido e intenta nuevamente.';
+    'No fue posible conectar con el servidor. Verifica que el backend este encendido e intenta nuevamente.';
 
 const DetalleOrquidea = () => {
   const { id } = useParams();
@@ -15,14 +15,10 @@ const DetalleOrquidea = () => {
   const [orquidea, setOrquidea] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-
-  // NUEVOS ESTADOS
   const [imagenActiva, setImagenActiva] = useState(null);
   const [cantidad, setCantidad] = useState(1);
   const [tabActiva, setTabActiva] = useState('descripcion');
-  const [tamanoSeleccionado, setTamanoSeleccionado] = useState('');
 
-  // Agregar con login lazy
   const { agregarConLoginLazy } = useLazyAddToCart();
 
   useEffect(() => {
@@ -32,8 +28,6 @@ const DetalleOrquidea = () => {
         setError('');
         const response = await api.get(`/orquideas/${id}`);
         setOrquidea(response.data);
-
-        // inicializar imagen principal
         setImagenActiva(response.data.imageUrl);
       } catch (err) {
         console.error('Error cargando detalle:', err);
@@ -55,7 +49,6 @@ const DetalleOrquidea = () => {
       setOrquidea(response.data);
       setImagenActiva(response.data.imageUrl);
     } catch (err) {
-      console.error('Error recargando detalle:', err);
       setError(MENSAJE_ERROR_CONEXION);
     } finally {
       setLoading(false);
@@ -66,154 +59,241 @@ const DetalleOrquidea = () => {
   if (error) return <ConnectionError mensaje={error} onRetry={reintentar} />;
   if (!orquidea) return <div>No encontrada</div>;
 
+  const stockDisponible = orquidea.stock - (orquidea.stockReservado || 0);
+
   return (
-    <main style={{ padding: '2rem' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem' }}>
+      <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem' }}>
 
-        {/* IZQUIERDA: GALERÍA */}
-        <div>
-
-          <div style={{
-            height: '400px',
-            background: '#f5f5f5',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: '12px',
-            marginBottom: '1rem'
-          }}>
-            <img
-              src={imagenActiva || 'https://placehold.co/400'}
-              alt={orquidea.nombre}
-              style={{ maxWidth: '100%', maxHeight: '100%' }}
-            />
-          </div>
-
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
-            {[orquidea.imageUrl, orquidea.imageUrl, orquidea.imageUrl].map((img, i) => (
+          {/* IZQUIERDA: GALERÍA */}
+          <div>
+            <div style={{
+              height: '400px',
+              background: '#f5f5f5',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: '12px',
+              marginBottom: '1rem',
+              overflow: 'hidden'
+            }}>
               <img
-                key={i}
-                src={img || 'https://placehold.co/80'}
-                alt="thumb"
-                onClick={() => setImagenActiva(img)}
-                style={{
-                  width: '80px',
-                  height: '80px',
-                  cursor: 'pointer',
-                  border: imagenActiva === img ? '2px solid green' : '1px solid #ddd',
-                  borderRadius: '8px'
-                }}
+                  src={imagenActiva || 'https://placehold.co/400'}
+                  alt={orquidea.nombre}
+                  style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'cover' }}
               />
-            ))}
-          </div>
-
-        </div>
-
-        {/* DERECHA: INFO */}
-        <div>
-
-          <h1>{orquidea.nombre}</h1>
-          <p>${orquidea.precio?.toLocaleString('es-CO')}</p>
-
-          {/* Selector de tamaño */}
-          <div style={{ margin: '1rem 0' }}>
-            <h4>Tamaño</h4>
-
-            {['Pequeña', 'Mediana', 'Grande'].map(t => (
-              <button
-                key={t}
-                onClick={() => setTamanoSeleccionado(t)}
-                style={{
-                  marginRight: '0.5rem',
-                  padding: '0.5rem 1rem',
-                  background: tamanoSeleccionado === t ? '#1B4332' : '#eee',
-                  color: tamanoSeleccionado === t ? '#fff' : '#000',
-                  border: 'none',
-                  borderRadius: '6px',
-                  cursor: 'pointer'
-                }}
-              >
-                {t}
-              </button>
-            ))}
-          </div>
-
-          {/* Cantidad */}
-          <div style={{ margin: '1rem 0' }}>
-            <h4>Cantidad</h4>
-
-            <button onClick={() => setCantidad(Math.max(1, cantidad - 1))}>-</button>
-            <span style={{ margin: '0 1rem' }}>{cantidad}</span>
-            <button onClick={() => setCantidad(Math.min(orquidea.stock, cantidad + 1))}>+</button>
-          </div>
-
-          <Button
-            text="Agregar al carrito"
-            onClick={() => {
-              agregarConLoginLazy(
-                {
-                  id: orquidea.id,
-                  nombre: orquidea.nombre,
-                  precio: orquidea.precio,
-                  imagen: orquidea.imageUrl,
-                  stock: orquidea.stock
-                },
-                cantidad
-              );
-            }}
-          />
-
-          {/* Tabs */}
-          <div style={{ marginTop: '2rem' }}>
-            <div style={{ display: 'flex', gap: '1rem' }}>
-              <button onClick={() => setTabActiva('descripcion')}>
-                Descripción
-              </button>
-              <button onClick={() => setTabActiva('cuidados')}>
-                Cuidados
-              </button>
             </div>
 
-            <div style={{ marginTop: '1rem' }}>
-              {tabActiva === 'descripcion' && (
-                <p>{orquidea.descripcion || 'Sin descripción'}</p>
-              )}
-
-              {tabActiva === 'cuidados' && (
-                <div>
-                  <p>Riego: {orquidea.guiaCuidado?.frecuenciaRiego}</p>
-                  <p>Luz: {orquidea.guiaCuidado?.luzRequerida}</p>
-                  <p>Temperatura: {orquidea.guiaCuidado?.temperaturaIdeal}</p>
-                </div>
-              )}
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              {[orquidea.imageUrl].map((img, i) => (
+                  <img
+                      key={i}
+                      src={img || 'https://placehold.co/80'}
+                      alt="thumb"
+                      onClick={() => setImagenActiva(img)}
+                      style={{
+                        width: '80px',
+                        height: '80px',
+                        cursor: 'pointer',
+                        objectFit: 'cover',
+                        border: imagenActiva === img ? '2px solid #2D6A4F' : '1px solid #ddd',
+                        borderRadius: '8px'
+                      }}
+                  />
+              ))}
             </div>
           </div>
 
-        </div>
-      </div>
+          {/* DERECHA: INFO */}
+          <div>
+            <h1 style={{ color: '#1B4332', marginBottom: '0.5rem' }}>{orquidea.nombre}</h1>
+            <p style={{ color: '#E91E8C', fontSize: '1.4rem', fontWeight: 'bold', marginBottom: '1rem' }}>
+              ${orquidea.precio?.toLocaleString('es-CO')}
+            </p>
 
-      {/* RECOMENDACIONES */}
-      {orquidea.recomendaciones?.length > 0 && (
-        <section style={{ marginTop: '3rem' }}>
-          <h2>Macetas recomendadas</h2>
+            {/* Stock */}
+            <p style={{
+              color: stockDisponible > 0 ? '#2D6A4F' : '#E91E8C',
+              fontSize: '0.9rem',
+              marginBottom: '1.5rem'
+            }}>
+              {stockDisponible > 0 ? `${stockDisponible} unidades disponibles` : 'Agotado'}
+            </p>
 
-          <div style={{ display: 'flex', gap: '1rem' }}>
-            {orquidea.recomendaciones.map((rec, index) => (
-              <div
-                key={rec.maceta?.id ?? rec.macetaId ?? index}
-                style={{ border: '1px solid #ddd', padding: '1rem' }}
-              >
-                <h4>{rec.maceta?.nombre ?? rec.macetaNombre ?? 'Maceta recomendada'}</h4>
-                <p>{rec.descripcion}</p>
-                <p>
-                  ${(rec.maceta?.precio ?? rec.macetaPrecio)?.toLocaleString('es-CO')}
-                </p>
+            {/* Cantidad mejorada */}
+            <div style={{ margin: '1rem 0' }}>
+              <h4 style={{ color: '#1B4332', marginBottom: '0.8rem' }}>Cantidad</h4>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0' }}>
+                <button
+                    onClick={() => setCantidad(Math.max(1, cantidad - 1))}
+                    style={{
+                      width: '36px',
+                      height: '36px',
+                      borderRadius: '8px 0 0 8px',
+                      border: '1px solid #ddd',
+                      backgroundColor: '#f5f5f5',
+                      cursor: 'pointer',
+                      fontSize: '1.2rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                >
+                  −
+                </button>
+                <span style={{
+                  width: '50px',
+                  height: '36px',
+                  border: '1px solid #ddd',
+                  borderLeft: 'none',
+                  borderRight: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '1rem',
+                  fontWeight: 'bold',
+                  color: '#1B4332'
+                }}>
+                {cantidad}
+              </span>
+                <button
+                    onClick={() => setCantidad(Math.min(stockDisponible, cantidad + 1))}
+                    disabled={cantidad >= stockDisponible}
+                    style={{
+                      width: '36px',
+                      height: '36px',
+                      borderRadius: '0 8px 8px 0',
+                      border: '1px solid #ddd',
+                      backgroundColor: cantidad >= stockDisponible ? '#eee' : '#f5f5f5',
+                      cursor: cantidad >= stockDisponible ? 'not-allowed' : 'pointer',
+                      fontSize: '1.2rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                >
+                  +
+                </button>
               </div>
-            ))}
+            </div>
+
+            <div style={{ marginTop: '1.5rem' }}>
+              <Button
+                  text="Agregar al carrito"
+                  disabled={stockDisponible === 0}
+                  onClick={() => {
+                    agregarConLoginLazy(
+                        {
+                          id: orquidea.id,
+                          nombre: orquidea.nombre,
+                          precio: orquidea.precio,
+                          imagen: orquidea.imageUrl,
+                          stock: orquidea.stock
+                        },
+                        cantidad
+                    );
+                  }}
+              />
+            </div>
+
+            {/* Tabs */}
+            <div style={{ marginTop: '2rem' }}>
+              <div style={{ display: 'flex', gap: '0', borderBottom: '2px solid #eee' }}>
+                {['descripcion', 'cuidados'].map((tab) => (
+                    <button
+                        key={tab}
+                        onClick={() => setTabActiva(tab)}
+                        style={{
+                          padding: '0.6rem 1.2rem',
+                          border: 'none',
+                          backgroundColor: 'transparent',
+                          cursor: 'pointer',
+                          fontSize: '0.95rem',
+                          fontWeight: tabActiva === tab ? 'bold' : 'normal',
+                          color: tabActiva === tab ? '#2D6A4F' : '#666',
+                          borderBottom: tabActiva === tab ? '2px solid #2D6A4F' : '2px solid transparent',
+                          marginBottom: '-2px'
+                        }}
+                    >
+                      {tab === 'descripcion' ? 'Descripción' : 'Cuidados'}
+                    </button>
+                ))}
+              </div>
+
+              <div style={{ marginTop: '1rem', color: '#444', lineHeight: '1.6' }}>
+                {tabActiva === 'descripcion' && (
+                    <p>{orquidea.descripcion || 'Sin descripción disponible.'}</p>
+                )}
+
+                {tabActiva === 'cuidados' && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+                      {orquidea.guiaCuidado ? (
+                          <>
+                            {orquidea.guiaCuidado.frecuenciaRiego && (
+                                <p>💧 <strong>Riego:</strong> {orquidea.guiaCuidado.frecuenciaRiego}</p>
+                            )}
+                            {orquidea.guiaCuidado.luzRequerida && (
+                                <p>☀️ <strong>Luz:</strong> {orquidea.guiaCuidado.luzRequerida}</p>
+                            )}
+                            {orquidea.guiaCuidado.temperaturaIdeal && (
+                                <p>🌡️ <strong>Temperatura:</strong> {orquidea.guiaCuidado.temperaturaIdeal}</p>
+                            )}
+                            {orquidea.guiaCuidado.fertilizacion && (
+                                <p>🌱 <strong>Fertilización:</strong> {orquidea.guiaCuidado.fertilizacion}</p>
+                            )}
+                            {orquidea.guiaCuidado.contenido && (
+                                <p style={{ marginTop: '0.5rem' }}>{orquidea.guiaCuidado.contenido}</p>
+                            )}
+                          </>
+                      ) : (
+                          <p>No hay guía de cuidado disponible para esta orquídea.</p>
+                      )}
+                    </div>
+                )}
+              </div>
+            </div>
           </div>
-        </section>
-      )}
-    </main>
+        </div>
+
+        {/* RECOMENDACIONES */}
+        {orquidea.recomendaciones?.length > 0 && (
+            <section style={{ marginTop: '3rem' }}>
+              <h2 style={{ color: '#1B4332', marginBottom: '1.5rem' }}>Macetas recomendadas</h2>
+              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                {orquidea.recomendaciones.map((rec, index) => (
+                    <div
+                        key={rec.maceta?.id ?? rec.macetaId ?? index}
+                        style={{
+                          backgroundColor: '#fff',
+                          border: '1px solid #eee',
+                          borderRadius: '12px',
+                          padding: '1rem',
+                          width: '200px',
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
+                        }}
+                    >
+                      {(rec.maceta?.imageUrl ?? rec.macetaImageUrl) && (
+                          <img
+                              src={rec.maceta?.imageUrl ?? rec.macetaImageUrl}
+                              alt={rec.maceta?.nombre ?? rec.macetaNombre}
+                              style={{ width: '100%', height: '120px', objectFit: 'cover', borderRadius: '8px', marginBottom: '0.8rem' }}
+                          />
+                      )}
+                      <h4 style={{ color: '#1B4332', marginBottom: '0.3rem' }}>
+                        {rec.maceta?.nombre ?? rec.macetaNombre ?? 'Maceta recomendada'}
+                      </h4>
+                      <p style={{ color: '#666', fontSize: '0.85rem', marginBottom: '0.5rem' }}>
+                        {rec.descripcion}
+                      </p>
+                      <p style={{ color: '#E91E8C', fontWeight: 'bold' }}>
+                        ${(rec.maceta?.precio ?? rec.macetaPrecio)?.toLocaleString('es-CO')}
+                      </p>
+                    </div>
+                ))}
+              </div>
+            </section>
+        )}
+      </main>
   );
 };
 

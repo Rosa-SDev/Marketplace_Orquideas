@@ -78,6 +78,7 @@ public class OrquideaService {
         OrquideaDetalleDTO detalle = new OrquideaDetalleDTO();
         detalle.setId(orquidea.getId());
         detalle.setNombre(orquidea.getNombre());
+        detalle.setDescripcion(orquidea.getDescripcion());
         detalle.setPrecio(orquidea.getPrecio());
         detalle.setStock(orquidea.getStock());
         detalle.setImageUrl(orquidea.getImageUrl());

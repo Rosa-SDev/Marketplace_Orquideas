@@ -10,13 +10,15 @@ const Navbar = () => {
   const navigate = useNavigate();
   const totalItems = useCarritoStore((state) => state.totalItems());
 
+  const [mostrarModalSalir, setMostrarModalSalir] = useState(false);
+  const [menuUsuario, setMenuUsuario] = useState(false);
+
   const handleLogout = () => {
     setMostrarModalSalir(false);
+    setMenuUsuario(false);
     logout();
     navigate('/');
   };
-
-  const [mostrarModalSalir, setMostrarModalSalir] = useState(false);
 
   return (
     <nav className="navbar">
@@ -46,40 +48,54 @@ const Navbar = () => {
             </Link>
           )}
 
-          {/* Si SI esta logueado muestra el nombre y boton de cerrar sesion */}
+          {/* Si SI esta logueado */}
           {isLoggedIn && usuario && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               {usuario.rol === 'ADMINISTRADOR' && (
                 <Link to="/admin" className="navbar-panel-btn">
                   Panel
                 </Link>
               )}
-              <Link to="/mi-cuenta" className="navbar-mi-cuenta">
-                Mi cuenta
-              </Link>
-              <span style={{ color: '#1B4332', fontSize: '0.9rem' }}>
-                Hola, {usuario.nombre}
-              </span>
-              <button
-                onClick={() => setMostrarModalSalir(true)}
-                style={{
-                  backgroundColor: 'transparent',
-                  border: '1px solid #2D6A4F',
-                  color: '#2D6A4F',
-                  padding: '0.4rem 1rem',
-                  borderRadius: '20px',
-                  cursor: 'pointer',
-                  fontSize: '0.85rem'
-                }}
-              >
-                Salir
-              </button>
+
+              {/* Botón Mi cuenta con dropdown */}
+              <div className="navbar-usuario-wrapper">
+                <button
+                  className="navbar-mi-cuenta"
+                  onClick={() => setMenuUsuario((v) => !v)}
+                >
+                  <span className="material-icons" style={{ fontSize: '1.3rem' }}>account_circle</span>
+                  {usuario.nombre}
+                </button>
+
+                {menuUsuario && (
+                  <div className="navbar-usuario-dropdown">
+                    <Link
+                      to="/mi-cuenta"
+                      className="navbar-dropdown-item"
+                      onClick={() => setMenuUsuario(false)}
+                    >
+                      <span className="material-icons">manage_accounts</span>
+                      Mi cuenta
+                    </Link>
+                    <button
+                      className="navbar-dropdown-item navbar-dropdown-salir"
+                      onClick={() => { setMenuUsuario(false); setMostrarModalSalir(true); }}
+                    >
+                      <span className="material-icons">logout</span>
+                      Salir
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
           {/* Carrito — siempre visible */}
           <Link to="/carrito" className="navbar-carrito">
-            Carrito ({totalItems})
+            <span className="material-icons">shopping_cart</span>
+            {totalItems > 0 && (
+              <span className="navbar-carrito-badge">{totalItems}</span>
+            )}
           </Link>
 
         </div>
@@ -104,10 +120,10 @@ const Navbar = () => {
             textAlign: 'center',
             width: '90%'
           }}>
-            <h3 style={{color: '#1B4332', marginBottom: '0.5rem'}}>
+            <h3 style={{ color: '#1B4332', marginBottom: '0.5rem' }}>
               Cerrar sesión
             </h3>
-            <p style={{color: '#666', marginBottom: '1.5rem'}}>
+            <p style={{ color: '#666', marginBottom: '1.5rem' }}>
               ¿Estás seguro que quieres cerrar sesión?
             </p>
             <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
@@ -128,7 +144,7 @@ const Navbar = () => {
                 style={{
                   padding: '0.6rem 1.5rem',
                   borderRadius: '20px',
-                  border: 'none', 
+                  border: 'none',
                   cursor: 'pointer',
                   backgroundColor: '#2D6A4F',
                   color: '#fff'

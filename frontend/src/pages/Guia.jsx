@@ -12,30 +12,40 @@ const secciones = [
   {
     id: 1,
     titulo: 'Luz',
+    icono: 'wb_sunny',
+    colorIcono: '#F59E0B',
     descripcion: 'Las orquideas necesitan luz indirecta y brillante. Evita la luz solar directa porque quema las hojas. Un lugar cerca de una ventana con cortina es ideal.',
     consejo: 'Si las hojas se ponen amarillas, puede ser exceso de luz.'
   },
   {
     id: 2,
     titulo: 'Riego',
+    icono: 'water_drop',
+    colorIcono: '#3B82F6',
     descripcion: 'Riega cada 7 a 10 dias en epoca seca y cada 12 a 14 dias en epoca humeda. La raíz debe secarse entre riego y riego. Nunca dejes la maceta con agua acumulada abajo.',
     consejo: 'Mueren más orquídeas por exceso de agua que por falta de esta.'
   },
   {
     id: 3,
     titulo: 'Temperatura',
+    icono: 'thermostat',
+    colorIcono: '#EF4444',
     descripcion: 'La temperatura ideal esta entre 15 y 28 grados centígrados. Evita corrientes de aire frío directo y cambios bruscos de temperatura.',
     consejo: 'En Ibagué el clima es casi perfecto para las orquideas todo el año.'
   },
   {
     id: 4,
     titulo: 'Fertilización',
+    icono: 'science',
+    colorIcono: '#8B5CF6',
     descripcion: 'Usa fertilizante líquido especial para orquideas cada 15 dias durante la epoca de crecimiento. Reduce la fertilización en epoca de descanso.',
     consejo: 'Usa siempre la mitad de la dosis recomendada en el empaque.'
   },
   {
     id: 5,
     titulo: 'Humedad',
+    icono: 'humidity_mid',
+    colorIcono: '#06B6D4',
     descripcion: 'Las orquídeas prefieren una humedad entre 50% y 70%. Si el ambiente es muy seco, puedes poner un plato con piedras y agua debajo de la maceta.',
     consejo: 'No rocíes agua directamente sobre las flores, solo sobre las raíces.'
   },
@@ -85,14 +95,15 @@ const Guia = () => {
               boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
             }}
           >
-            {/* Titulo de la seccion */}
-            <h2 style={{
-              color: '#2D6A4F',
-              marginBottom: '0.8rem',
-              fontSize: '1.2rem'
-            }}>
-              {seccion.titulo}
-            </h2>
+            {/* Titulo de la seccion con icono*/}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '1rem' }}>
+              <span className="material-icons" style={{ fontSize: '1.5rem', color: seccion.colorIcono }}>
+                {seccion.icono}
+              </span>
+              <h2 style={{ color: '#2D6A4F', margin: 0, fontSize: '1.2rem' }}>
+                {seccion.titulo}
+              </h2>
+            </div>
 
             {/* Descripcion */}
             <p style={{
@@ -108,8 +119,14 @@ const Guia = () => {
               backgroundColor: '#FAF7F5',
               borderLeft: '4px solid #E91E8C',
               padding: '0.8rem 1rem',
-              borderRadius: '0 8px 8px 0'
+              borderRadius: '0 8px 8px 0',
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: '0.5rem'
             }}>
+              <span className="material-icons" style={{ fontSize: '1.2rem', color: '#E91E8C', marginTop: '1px', flexShrink: 0 }}>
+                lightbulb
+              </span>
               <p style={{ color: '#1B4332', fontSize: '0.9rem', margin: 0 }}>
                 <strong>Consejo:</strong> {seccion.consejo}
               </p>

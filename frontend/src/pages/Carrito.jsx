@@ -29,15 +29,7 @@ const Carrito = () => {
         <p style={{ color: '#666', marginBottom: '2rem' }}>Agrega productos desde el catálogo</p>
         <button
           onClick={() => navigate('/catalogo')}
-          style={{
-            backgroundColor: '#2D6A4F',
-            color: '#FAF7F5',
-            border: 'none',
-            borderRadius: '20px',
-            padding: '0.7rem 1.5rem',
-            cursor: 'pointer',
-            fontSize: '0.95rem'
-          }}
+          className="btn-ver-catalogo"
         >
           Ver catálogo
         </button>

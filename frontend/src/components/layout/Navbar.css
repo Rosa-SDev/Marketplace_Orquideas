@@ -1,111 +1,79 @@
 /* Estilos del contenedor principal del Navbar */
-/* position: sticky hace que el navbar se quede fijo arriba cuando se hace scroll */
 .navbar {
-  background-color: #F1EEE7; /* Crema claro */
+  background-color: #F1EEE7;
   position: sticky; 
   top: 0;
-  z-index: 100; /* Hace que el navbar quede por encima de todo lo demás */
+  z-index: 100;
   padding: 0 2rem;
 }
 
-/* Contenedor interior que organiza los elementos en fila */
-/* display: flex pone los elementos uno al lado del otro */
+/* Contenedor interior */
 .navbar-container {
   display: flex;
-  align-items: center; /* Centra verticalmente todos los elementos */
-  justify-content: space-between; /* Separa logo, menú e iconos en los extremos */
-  max-width: 1200px; /* Ancho máximo para pantallas grandes */
-  margin: 0 auto; /* Centra el contenedor en la pantalla */
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
   height: 70px;
 }
 
-/* Estilo del logo */
+/* Logo */
 .navbar-logo {
-  color: #522C5D; /* Moradito */
-  text-decoration: none; /* Quita el subrayado del link */
+  color: #522C5D;
+  text-decoration: none;
   font-size: 1.3rem;
   font-weight: bold; 
 }
 
 .navbar-logo-image {
-  margin-top: 10px; /* Ajusta la posición vertical del logo */
-  height: 160px; /* Ajusta el tamaño del logo */
-  width: auto; /* Mantiene la proporción del logo */
-
+  margin-top: 10px;
+  height: 160px;
+  width: auto;
 }
 
-/* Lista del menú - quitamos los puntos de la lista */
+/* Menú central */
 .navbar-menu {
   display: flex;
-  list-style: none; /* Quita los puntos de la lista */
-  gap: 2rem; /* Espacio entre cada item del menú */
+  list-style: none;
+  gap: 2rem;
   margin: 0;
   padding: 0;
 }
 
-/* Estilo de cada link del menú */
 .navbar-menu a {
-  color: #413B61; /* Moradito */
-  text-decoration: none;
-  font-size: 0.95rem;
-  transition: color 0.2s; /* Animación suave al pasar el mouse */
-}
-
-/* Efecto al pasar el mouse por encima de un link */
-.navbar-menu a:hover {
-  color: #E91E8C; /* Rosa de nuestra paleta */
-}
-
-/* Contenedor de los botones de la derecha */
-.navbar-icons {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-/* Botón de Acceder */
-.navbar-btn-acceder {
-  background-color: #2D6A4F; /* Verde principal */
-  color: #FAF7F5;
-  text-decoration: none;
-  padding: 0.5rem 1.2rem;
-  border-radius: 20px; /* Bordes redondeados */
-  font-size: 0.9rem;
-  transition: background-color 0.2s;
-}
-
-/* Efecto hover del botón Acceder */
-.navbar-btn-acceder:hover {
-  background-color: #E91E8C; /* Cambia a rosa al pasar el mouse */
-}
-
-/* Botón del carrito */
-.navbar-carrito {
   color: #413B61;
   text-decoration: none;
   font-size: 0.95rem;
   transition: color 0.2s;
 }
 
-.navbar-carrito:hover {
+.navbar-menu a:hover {
   color: #E91E8C;
 }
 
-.navbar-mi-cuenta {
-  color: #2D6A4F;
-  text-decoration: none;
-  font-size: 0.9rem;
-  border: 1px solid #2D6A4F;
-  border-radius: 20px;
-  padding: 0.35rem 0.9rem;
-  transition: all 0.2s;
+/* Contenedor botones derecha */
+.navbar-icons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
-.navbar-mi-cuenta:hover {
+/* Botón Acceder */
+.navbar-btn-acceder {
   background-color: #2D6A4F;
   color: #FAF7F5;
+  text-decoration: none;
+  padding: 0.5rem 1.2rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
 }
 
+.navbar-btn-acceder:hover {
+  background-color: #E91E8C;
+}
+
+/* Botón Panel admin */
 .navbar-panel-btn {
   color: #E91E8C;
   text-decoration: none;
@@ -120,4 +88,101 @@
 .navbar-panel-btn:hover {
   background-color: #E91E8C;
   color: #FAF7F5;
+}
+
+/* Mi cuenta — botón con icono y dropdown */
+.navbar-usuario-wrapper {
+  position: relative;
+}
+
+.navbar-mi-cuenta {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: transparent;
+  border: 1px solid #2D6A4F;
+  color: #2D6A4F;
+  border-radius: 20px;
+  padding: 0.35rem 0.9rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.navbar-mi-cuenta:hover {
+  background-color: #2D6A4F;
+  color: #FAF7F5;
+}
+
+/* Dropdown */
+.navbar-usuario-dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  min-width: 160px;
+  z-index: 200;
+  overflow: hidden;
+}
+
+.navbar-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.7rem 1rem;
+  color: #1B4332;
+  text-decoration: none;
+  font-size: 0.9rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.navbar-dropdown-item:hover {
+  background-color: #f1f5f2;
+}
+
+.navbar-dropdown-salir:hover {
+  background-color: #fff0f6;
+  color: #E91E8C;
+}
+
+.navbar-dropdown-salir .material-icons {
+  color: #E91E8C;
+}
+
+/* Carrito — icono con badge */
+.navbar-carrito {
+  position: relative;
+  display: flex;
+  align-items: center;
+  color: #413B61;
+  text-decoration: none;
+  font-size: 1.4rem;
+  transition: color 0.2s;
+}
+
+.navbar-carrito:hover {
+  color: #E91E8C;
+}
+
+.navbar-carrito-badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background: #E91E8C;
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
