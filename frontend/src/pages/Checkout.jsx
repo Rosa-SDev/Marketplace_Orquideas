@@ -6,12 +6,6 @@ import api from '../services/api';
 import { getDepartamentos, getCiudades } from '../data/colombiaData';
 import './Checkout.css';
 
-const METODOS_PAGO = [
-  { value: 'tarjeta', label: 'Tarjeta débito/crédito' },
-  { value: 'transferencia', label: 'Transferencia bancaria' },
-  { value: 'contraentrega', label: 'Contraentrega' },
-];
-
 const DEPARTAMENTOS = getDepartamentos();
 
 const Checkout = () => {
@@ -26,7 +20,6 @@ const Checkout = () => {
     ciudad: '',
     direccion: '',
   });
-  const [metodoPago, setMetodoPago] = useState('tarjeta');
   const [errors, setErrors] = useState({});
   const [isOpeningWompi, setIsOpeningWompi] = useState(false);
 
@@ -66,7 +59,6 @@ const Checkout = () => {
     if (!formData.departamento.trim()) nextErrors.departamento = 'El departamento es obligatorio.';
     if (!formData.ciudad.trim()) nextErrors.ciudad = 'La ciudad es obligatoria.';
     if (!formData.direccion.trim()) nextErrors.direccion = 'La dirección es obligatoria.';
-    if (!metodoPago) nextErrors.metodoPago = 'Selecciona un método de pago.';
     return nextErrors;
   };
 
@@ -153,11 +145,7 @@ const Checkout = () => {
     const nextErrors = validate();
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
-    if (metodoPago === 'tarjeta') {
-      await abrirWompi();
-      return;
-    }
-    navigate('/carrito');
+    await abrirWompi();
   };
 
   if (items.length === 0) {
@@ -231,22 +219,6 @@ const Checkout = () => {
             <textarea id="direccion" name="direccion" rows={4} value={formData.direccion} onChange={handleChange} className="checkout-input checkout-textarea" placeholder="Dirección completa de entrega" />
             {errors.direccion && <p className="checkout-error">{errors.direccion}</p>}
 
-            <h2 className="checkout-subtitle">Método de pago</h2>
-            <div className="checkout-methods">
-              {METODOS_PAGO.map((metodo) => (
-                  <label key={metodo.value} className="checkout-method">
-                    <input type="radio" name="metodoPago" value={metodo.value} checked={metodoPago === metodo.value} onChange={(event) => setMetodoPago(event.target.value)} />
-                    <span>{metodo.label}</span>
-                  </label>
-              ))}
-            </div>
-            {errors.metodoPago && <p className="checkout-error">{errors.metodoPago}</p>}
-            {metodoPago === 'tarjeta' && (
-                <p className="checkout-payment-helper">
-                  Al continuar, se abrirá el widget oficial de Wompi para completar el pago.
-                </p>
-            )}
-            {errors.payment && <p className="checkout-error">{errors.payment}</p>}
           </section>
 
           <aside className="checkout-card">
@@ -283,8 +255,10 @@ const Checkout = () => {
             </div>
 
             <button type="submit" className="checkout-btn" disabled={isOpeningWompi}>
-              {isOpeningWompi ? 'Abriendo Wompi...' : metodoPago === 'tarjeta' ? 'Pagar con Wompi' : 'Realizar pedido'}
+              {isOpeningWompi ? 'Abriendo Wompi...' : 'Pagar con Wompi'}
             </button>
+            <p className="checkout-payment-note">El método de pago es por medio de tarjeta débito/crédito</p>
+            {errors.payment && <p className="checkout-error">{errors.payment}</p>}
           </aside>
         </form>
       </main>
