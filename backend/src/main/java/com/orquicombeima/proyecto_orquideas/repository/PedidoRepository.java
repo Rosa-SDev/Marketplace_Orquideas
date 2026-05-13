@@ -33,4 +33,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
 
     // Metodo para encontrar los ultimmos 5 pedidos
     List<Pedido> findTop5ByOrderByFechaPedidoDesc();
+
+    // Metodo para listar todos los pedidos
+    List<Pedido> findAllByOrderByFechaPedidoAsc();
 }
