@@ -9,7 +9,7 @@ const useLazyAddToCart = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const agregarConLoginLazy = (producto, cantidad = 1) => {
+  const agregarConLoginLazy = async (producto, cantidad = 1) => {
     const hasSession = isLoggedIn || Boolean(localStorage.getItem('token'));
 
     if (!hasSession) {
@@ -19,9 +19,7 @@ const useLazyAddToCart = () => {
       return false;
     }
 
-    for (let i = 0; i < cantidad; i += 1) {
-      agregar(producto);
-    }
+    await agregar(producto, cantidad);
 
     return true;
   };

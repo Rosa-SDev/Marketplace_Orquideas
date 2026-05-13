@@ -162,4 +162,23 @@ public class StockReservaService {
             reservaCarritoRepository.save(reserva);
         }
     }
+
+    // Cancelar la reserva de un producto específico del carrito
+    @Transactional
+    public void cancelarReservaProducto(Long idCarrito, Long idProducto) {
+        List<ReservaCarrito> reservas = reservaCarritoRepository
+                .findByCarritoIdAndEstado(idCarrito, EstadoReserva.ACTIVA);
+
+        for (ReservaCarrito reserva : reservas) {
+            if (reserva.getProducto().getId().equals(idProducto)) {
+                Producto producto = reserva.getProducto();
+                producto.setStockReservado(producto.getStockReservado() - reserva.getCantidadReservada());
+                productoRepository.save(producto);
+
+                reserva.setEstado(EstadoReserva.CANCELADA);
+                reservaCarritoRepository.save(reserva);
+                break;
+            }
+        }
+    }
 }

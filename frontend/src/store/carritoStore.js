@@ -25,16 +25,20 @@ const useCarritoStore = create((set, get) => ({
   },
 
   // Agrega un producto al carrito
-  agregar: async (producto) => {
+  agregar: async (producto, cantidad = 1) => {
+    if (get().cargando) return;
     try {
+      set({ cargando: true });
       await api.post('/carrito/agregar', {
         idProducto: producto.id,
-        cantidad: 1,
+        cantidad: cantidad,
       });
       // Recargamos el carrito del backend para tener datos frescos
       await get().cargarCarrito();
     } catch (err) {
       console.error('Error agregando al carrito:', err);
+    } finally {
+      set({ cargando: false });
     }
   },
 

@@ -137,6 +137,7 @@ public class CarritoService {
         }
 
         Carrito carrito = item.getCarrito();
+        stockReservaService.cancelarReservaProducto(carrito.getId(), item.getProducto().getId());
         carrito.getItems().remove(item);
         itemCarritoRepository.delete(item);
 
@@ -149,6 +150,7 @@ public class CarritoService {
         Carrito carrito = carritoRepository.findByUsuarioEmail(emailUsuario)
                 .orElseThrow(() -> new RuntimeException("No se encontró carrito para el usuario con correo: " + emailUsuario));
 
+        stockReservaService.cancelarReservaCarrito(carrito.getId());
         carrito.getItems().clear();
         carritoRepository.save(carrito);
     }

@@ -112,15 +112,25 @@ const DetalleOrquidea = () => {
             </p>
 
             {/* Stock */}
-            <p style={{
-              color: stockDisponible > 0 ? '#2D6A4F' : '#E91E8C',
-              fontSize: '0.9rem',
-              marginBottom: '1.5rem'
-            }}>
-              {stockDisponible > 0 ? `${stockDisponible} unidades disponibles` : 'Agotado'}
-            </p>
+              <p style={{
+                  color: stockDisponible === 0 ? '#E91E8C' : stockDisponible === 1 ? '#E65100' : '#2D6A4F',
+                  fontSize: '0.9rem',
+                  fontWeight: stockDisponible === 1 ? 'bold' : 'normal',
+                  marginBottom: '1.5rem',
+                  backgroundColor: stockDisponible === 1 ? '#FFF3E0' : 'transparent',
+                  padding: stockDisponible === 1 ? '0.4rem 0.8rem' : '0',
+                  borderRadius: stockDisponible === 1 ? '8px' : '0',
+                  display: 'inline-block'
+              }}>
+                  {stockDisponible === 0
+                      ? 'Agotado'
+                      : stockDisponible === 1
+                          ? '¡Última unidad disponible!'
+                          : `${stockDisponible} ${stockDisponible === 1 ? 'unidad disponible' : 'unidades disponibles'}`
+                  }
+              </p>
 
-            {/* Cantidad mejorada */}
+            {/* Cantidad */}
             <div style={{ margin: '1rem 0' }}>
               <h4 style={{ color: '#1B4332', marginBottom: '0.8rem' }}>Cantidad</h4>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0' }}>
