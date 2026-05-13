@@ -37,7 +37,7 @@ const MiCuenta = () => {
         )}
       </div>
 
-      <div className="mi-cuenta-contenido">
+      <div className="mi-cuenta-contenido" style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
 
         <section className="mi-cuenta-card">
           <h2>Mis datos</h2>
@@ -52,6 +52,7 @@ const MiCuenta = () => {
 
         <section className="mi-cuenta-card">
           <h2>Historial de pedidos</h2>
+          <hr style={{ border: 'none', borderTop: '1px solid #eee', margin: '0.5rem 0 1rem' }} />
 
           {loading && <Loading mensaje="Cargando pedidos..." />}
 

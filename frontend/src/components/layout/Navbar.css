@@ -186,3 +186,121 @@
   align-items: center;
   justify-content: center;
 }
+
+/* Boton hamburguesa — oculto en desktop */
+.navbar-hamburguesa {
+  display: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #1B4332;
+  font-size: 1.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  /* CAMBIO: centrar el logo en móvil */
+  .navbar-container {
+    justify-content: center;
+  }
+
+  .navbar-hamburguesa {
+    display: flex;
+    align-items: center;
+  }
+
+  .navbar-menu {
+    display: none;
+    position: absolute;
+    top: 70px;
+    left: 0;
+    right: 0;
+    background-color: #F1EEE7;
+    flex-direction: column;
+    padding: 1rem 2rem;
+    gap: 1rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    z-index: 99;
+  }
+
+  .navbar-menu.menu-abierto {
+    display: flex;
+  }
+
+  .navbar {
+    position: relative;
+  }
+}
+
+/* Barra inferior movil */
+.navbar-bottom-mobile {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .navbar-bottom-mobile {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background-color: #F1EEE7;
+    border-top: 1px solid #e0ddd6;
+    z-index: 100;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .navbar-bottom-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.1rem;
+    color: #413B61;
+    text-decoration: none;
+    font-size: 0.65rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    flex: 1;
+    padding: 0.3rem 0;
+    transition: color 0.2s;
+  }
+
+  .navbar-bottom-item:hover {
+    color: #E91E8C;
+  }
+
+  .navbar-bottom-item .material-icons {
+    font-size: 1.5rem;
+  }
+
+  .navbar-bottom-badge {
+    position: absolute;
+    top: 0;
+    right: calc(50% - 20px);
+    background: #E91E8C;
+    color: #fff;
+    font-size: 0.6rem;
+    font-weight: 700;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Ocultar menu hamburguesa del navbar en movil */
+  .navbar-hamburguesa {
+    display: none;
+  }
+
+  /* Ocultar iconos de la derecha en movil */
+  .navbar-icons {
+    display: none;
+  }
+}

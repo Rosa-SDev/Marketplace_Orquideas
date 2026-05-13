@@ -26,3 +26,11 @@
     height: 28px;
     display: block;
 }
+
+/* Móvil: sube sobre la barra inferior */
+@media (max-width: 768px) {
+    .whatsapp-boton {
+        bottom: calc(60px + 1rem); /* justo encima de la barra */
+        right: 1rem;
+    }
+}
