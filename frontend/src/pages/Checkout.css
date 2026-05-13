@@ -44,6 +44,21 @@
   font-size: 0.95rem;
 }
 
+.checkout-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%231b4332' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.9rem center;
+  padding-right: 2.2rem;
+  cursor: pointer;
+}
+
+.checkout-select:disabled {
+  background-color: #f5f5f5;
+  color: #aaa;
+  cursor: not-allowed;
+}
+
 .checkout-textarea {
   resize: vertical;
   min-height: 100px;
@@ -149,14 +164,6 @@
 .checkout-btn:disabled {
   background-color: #999;
   cursor: not-allowed;
-}
-
-.checkout-payment-note {
-  margin-top: 0.6rem;
-  text-align: center;
-  color: #64748b;
-  font-size: 0.86rem;
-  opacity: 0.82;
 }
 
 .checkout-btn-whatsapp {
