@@ -42,8 +42,12 @@ const CONTENT = {
 };
 
 const formatearMoneda = (valor) => `$${Number(valor || 0).toLocaleString('es-CO')}`;
+const formatearNumeroConComas = (valor) => {
+  if (valor === '' || valor === null || valor === undefined) return '';
+  return Number(valor).toLocaleString('en-US');
+};
 const asegurarArreglo = (valor) => (Array.isArray(valor) ? valor : []);
-const REGEX_SOLO_LETRAS = /^[A-Za-zÁÉÍÓÚáéíóúÑñ]+$/;
+const REGEX_SOLO_LETRAS_Y_ESPACIOS = /^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$/;
 const REGEX_SIN_NUMEROS = /^[^\d]+$/;
 const VARIEDADES_ORQUIDEA = ['Cattleya', 'Phalaenopsis', 'Dendrobium'];
 
@@ -336,7 +340,7 @@ const AdminPanel = () => {
     });
   };
 
-  const sanitizarNombre = (valor) => valor.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ]/g, '');
+  const sanitizarNombre = (valor) => valor.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ ]/g, '');
   const sanitizarTextoSinNumeros = (valor) => valor.replace(/\d/g, '');
   const sanitizarSoloDigitos = (valor) => valor.replace(/\D/g, '');
 
@@ -383,14 +387,15 @@ const AdminPanel = () => {
   const validarFormularioAgregar = () => {
     const errores = {};
     const formulario = tipoFormulario === 'orquidea' ? orquideaForm : macetaForm;
-    const nombre = formulario.nombre?.trim() || '';
+    const nombre = formulario.nombre || '';
+    const nombreLimpio = nombre.trim();
     const precio = formulario.precio;
     const stock = formulario.stock;
 
-    if (!nombre) {
+    if (!nombreLimpio) {
       errores.nombre = 'El nombre es obligatorio.';
-    } else if (!REGEX_SOLO_LETRAS.test(nombre)) {
-      errores.nombre = 'El nombre solo permite letras (sin espacios ni números).';
+    } else if (!REGEX_SOLO_LETRAS_Y_ESPACIOS.test(nombreLimpio)) {
+      errores.nombre = 'El nombre solo permite letras y espacios.';
     }
 
     if (precio === '' || precio === null || precio === undefined) {
@@ -418,8 +423,8 @@ const AdminPanel = () => {
 
       if (!tamanio) {
         errores.tamanio = 'El tamaño es obligatorio.';
-      } else if (!REGEX_SIN_NUMEROS.test(tamanio)) {
-        errores.tamanio = 'El tamaño no puede incluir números.';
+      } else if (!REGEX_SOLO_LETRAS_Y_ESPACIOS.test(tamanio)) {
+        errores.tamanio = 'El tamaño solo permite letras y espacios.';
       }
 
       if (colorFlor && !REGEX_SIN_NUMEROS.test(colorFlor)) {
@@ -805,13 +810,15 @@ const AdminPanel = () => {
                   Precio
                   <input
                     type="text"
-                    inputMode="decimal"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     min="0"
-                    value={formularioActivo.precio}
-                    onKeyDown={bloquearSignoNegativo}
-                    onChange={(e) =>
-                      actualizarNumeroNoNegativo(tipoFormulario, 'precio', e.target.value, true)
-                    }
+                    value={formatearNumeroConComas(formularioActivo.precio)}
+                    onChange={(e) => {
+                      const valorLimpio = sanitizarSoloDigitos(e.target.value);
+                      actualizarFormulario(tipoFormulario, 'precio', valorLimpio);
+                      limpiarErrorCampo('precio');
+                    }}
                   />
                   {erroresCampos.precio && <span className="admin-form-field-error">{erroresCampos.precio}</span>}
                 </label>
@@ -881,7 +888,7 @@ const AdminPanel = () => {
                           actualizarFormulario(
                             'orquidea',
                             'tamanio',
-                            sanitizarTextoSinNumeros(e.target.value)
+                            sanitizarNombre(e.target.value)
                           );
                           limpiarErrorCampo('tamanio');
                         }}
@@ -913,7 +920,7 @@ const AdminPanel = () => {
                         }
                       >
                         <option value="Alto">Alto</option>
-                        <option value="Medido">Medido</option>
+                        <option value="Medio">Medio</option>
                         <option value="Bajo">Bajo</option>
                       </select>
                     </label>
