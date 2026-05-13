@@ -52,6 +52,7 @@ const MiCuenta = () => {
 
         <section className="mi-cuenta-card">
           <h2>Historial de pedidos</h2>
+          <hr style={{ border: 'none', borderTop: '1px solid #eee', margin: '0.5rem 0 1rem' }} />
 
           {loading && <Loading mensaje="Cargando pedidos..." />}
 
