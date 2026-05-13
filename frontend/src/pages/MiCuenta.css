@@ -235,3 +235,22 @@
     color: #fff;
   }
 }
+
+.btn-confirmar-salir {
+  padding: 0.6rem 1.5rem;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  background-color: #2D6A4F;
+  color: #fff;
+  font-size: 0.95rem;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn-confirmar-salir:hover {
+  background-color: #E91E8C;
+}
+
+.btn-confirmar-salir:active {
+  transform: scale(0.97);
+}

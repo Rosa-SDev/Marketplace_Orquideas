@@ -144,8 +144,10 @@ const MiCuenta = () => {
               >Cancelar</button>
               <button
                 onClick={handleLogout}
-                style={{ padding: '0.6rem 1.5rem', borderRadius: '20px', border: 'none', cursor: 'pointer', backgroundColor: '#2D6A4F', color: '#fff' }}
-              >Cerrar sesión</button>
+                className="btn-confirmar-salir"
+              >
+                Cerrar sesión
+              </button>
             </div>
           </div>
         </div>
