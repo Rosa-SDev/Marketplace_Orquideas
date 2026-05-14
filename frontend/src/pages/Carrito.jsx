@@ -70,6 +70,9 @@ const Carrito = () => {
               <p style={{ color: '#E91E8C', margin: '0.3rem 0' }}>
                 ${item.precio?.toLocaleString('es-CO')}
               </p>
+
+                <p style={{ fontSize: '0.75rem', color: '#888', margin: 0 }} > {item.stockDisponible} disponibles </p>
+
             </div>
 
             {/* Controles de cantidad */}
@@ -83,6 +86,7 @@ const Carrito = () => {
               <span style={{ minWidth: '20px', textAlign: 'center' }}>{item.cantidad}</span>
               <button
                 onClick={() => cambiarCantidad(item.idItemCarrito, item.cantidad + 1)}
+                disabled={item.cantidad >= item.stockDisponible}
                 style={{ width: '30px', height: '30px', borderRadius: '50%', border: '1px solid #ddd', cursor: 'pointer', backgroundColor: '#fff' }}
               >
                 +
