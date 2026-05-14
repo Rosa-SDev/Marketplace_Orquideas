@@ -250,7 +250,11 @@ const AdminPanel = () => {
       const endpoint = tipoProductoEditando === 'orquideas'
         ? `/admin/orquideas/${productoEditando.id}`
         : `/admin/macetas/${productoEditando.id}`;
-      await api.put(endpoint, productoEditando);
+      const formData = crearFormData(productoEditando, null);
+
+      await api.put(endpoint, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
       setProductoEditando(null);
       setTipoProductoEditando(null);
       await cargarProductos();
@@ -1414,7 +1418,7 @@ const AdminPanel = () => {
               </button>
               <button
                 onClick={ejecutarEliminar}
-                style={{  
+                style={{
                   padding: '0.6rem 1.5rem',
                   borderRadius: '20px',
                   border: 'none',
