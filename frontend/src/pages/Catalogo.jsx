@@ -26,7 +26,7 @@ const coincidePorPalabras = (nombre, busqueda) => {
 };
 
 const Catalogo = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [orquideas, setOrquideas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -61,25 +61,6 @@ const Catalogo = () => {
   useEffect(() => {
     cargarOrquideas();
   }, [/*Esto tiene que queda vacio, NO TOCAR*/]);
-
-  // Recarga el stock cuando el usuario vuelve a la pestaña (ej: después de pagar)
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
-        cargarOrquideas();
-      }
-    };
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
-  }, [cargarOrquideas]);
-
-  // Si viene de un pago exitoso, recarga el stock
-  useEffect(() => {
-    if (sessionStorage.getItem('stockDesactualizado')) {
-      sessionStorage.removeItem('stockDesactualizado');
-      cargarOrquideas();
-    }
-  }, [cargarOrquideas]);
 
   const handlePrecioChange = (campo, valor) => {
     if (valor === '') {
@@ -226,8 +207,25 @@ const Catalogo = () => {
             </p>
 
             {busquedaHero && (
-              <p style={{ color: '#2D6A4F', marginBottom: '1rem' }}>
+              <p style={{ color: '#2D6A4F', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 Resultados para: <strong>{busquedaHero}</strong>
+                <button
+                  onClick={() => setSearchParams({})}
+                  style={{
+                    background: 'transparent',
+                    border: '1px solid #2D6A4F',
+                    borderRadius: '20px',
+                    color: '#2D6A4F',
+                    padding: '0.15rem 0.6rem',
+                    cursor: 'pointer',
+                    fontSize: '0.8rem',
+                    transition: 'all 0.2s'
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#2D6A4F'; e.currentTarget.style.color = '#fff'; }}
+                  onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#2D6A4F'; }}
+                >
+                  ✕ Quitar filtro
+                </button>
               </p>
             )}
 
@@ -246,7 +244,6 @@ const Catalogo = () => {
                   precio={orquidea.precio}
                   imagen={orquidea.imageUrl}
                   stock={orquidea.stock}
-                  stockReservado={orquidea.stockReservado}
                   badge={orquidea.activo ? null : 'Inactivo'}
                 />
               ))}
