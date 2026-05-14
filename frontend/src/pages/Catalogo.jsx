@@ -246,6 +246,7 @@ const Catalogo = () => {
                   precio={orquidea.precio}
                   imagen={orquidea.imageUrl}
                   stock={orquidea.stock}
+                  stockReservado={orquidea.stockReservado}
                   badge={orquidea.activo ? null : 'Inactivo'}
                 />
               ))}

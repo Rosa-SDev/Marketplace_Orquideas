@@ -81,6 +81,7 @@ public class OrquideaService {
         detalle.setDescripcion(orquidea.getDescripcion());
         detalle.setPrecio(orquidea.getPrecio());
         detalle.setStock(orquidea.getStock());
+        detalle.setStockReservado(orquidea.getStockReservado());
         detalle.setImageUrl(orquidea.getImageUrl());
         detalle.setActivo(orquidea.getActivo());
         detalle.setVariedad(orquidea.getVariedad());
@@ -115,6 +116,7 @@ public class OrquideaService {
         dto.setNombre(o.getNombre());
         dto.setPrecio(o.getPrecio());
         dto.setStock(o.getStock());
+        dto.setStockReservado(o.getStockReservado());
         dto.setImageUrl(o.getImageUrl());
         dto.setActivo(o.getActivo());
         dto.setVariedad(o.getVariedad());
