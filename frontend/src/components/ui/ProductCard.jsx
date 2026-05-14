@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import useLazyAddToCart from '../../hooks/useLazyAddToCart';
 
 const ProductCard = ({ id, nombre, precio, imagen, badge, stock, tipo = 'orquidea' }) => {
+    const stockDisponible = stock - stockReservado;
 
   // Agregar al carrito con login lazy
   const { agregarConLoginLazy } = useLazyAddToCart();
@@ -31,12 +32,13 @@ const ProductCard = ({ id, nombre, precio, imagen, badge, stock, tipo = 'orquide
           ${precio?.toLocaleString('es-CO')}
         </p>
 
-        <p className={`product-card-stock ${stock > 0 ? 'disponible' : 'agotado'}`}>
-          {stock > 0 ? `${stock} disponibles` : 'Agotado'}
+        <p className={`product-card-stock ${stockDisponible > 0 ? 'disponible' : 'agotado'}`}>
+          {stockDisponible > 0 ? `${stockDisponible} disponibles` : 'Agotado'}
         </p>
 
         <Button
           text="Agregar al carrito"
+          disabled={stockDisponible === 0}
           onClick={(event) => {
             const hasSession = Boolean(localStorage.getItem('token'));
             const isDetailLink = Boolean(id && tipo === 'orquidea');
