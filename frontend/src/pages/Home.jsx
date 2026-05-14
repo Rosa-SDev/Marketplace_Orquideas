@@ -135,6 +135,7 @@ const Home = () => {
               precio={orquidea.precio}
               imagen={orquidea.imageUrl}
               stock={orquidea.stock}
+              stockReservado={orquidea.stockReservado}
             />
           ))}
         </div>
