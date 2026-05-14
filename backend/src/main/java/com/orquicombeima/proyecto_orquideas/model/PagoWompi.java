@@ -2,9 +2,7 @@ package com.orquicombeima.proyecto_orquideas.model;
 
 import com.orquicombeima.proyecto_orquideas.model.enums.EstadoPago;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -20,6 +18,8 @@ public class PagoWompi {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pedido_id", nullable = false)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Pedido pedido;
 
     @Column(unique = true)

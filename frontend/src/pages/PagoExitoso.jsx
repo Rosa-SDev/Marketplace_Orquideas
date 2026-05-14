@@ -1,8 +1,14 @@
+import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const PagoExitoso = () => {
   const location = useLocation();
   const navigate = useNavigate();
+
+  // Marca que el stock debe recargarse cuando el usuario vuelva al catálogo
+  useEffect(() => {
+    sessionStorage.setItem('stockDesactualizado', 'true');
+  }, []);
 
   // Recibimos los datos de la transaccion desde el Checkout
   const { referencia, transactionId, status, items, total, nombre, direccion } = location.state || {};

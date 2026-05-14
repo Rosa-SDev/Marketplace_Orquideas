@@ -16,6 +16,7 @@ const useCarritoStore = create((set, get) => ({
         precio: item.precioUnitario,
         imagen: item.imagenUrl,
         cantidad: Number(item.cantidad),
+        stockDisponible: item.stockDisponible,
       }));
       set({ items: itemsBackend });
     } catch (err) {

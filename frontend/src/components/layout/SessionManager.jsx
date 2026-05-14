@@ -5,6 +5,7 @@ import api from '../../services/api';
 import { getJwtExpirationMs } from '../../utils/sessionJwt';
 import SessionExpiryWarning from '../ui/SessionExpiryWarning';
 import { savePostLoginRedirect } from '../../utils/authFlowStorage';
+import useCarritoStore from '../../store/carritoStore';
 
 const WARNING_SECONDS = 5 * 60;
 
@@ -12,6 +13,15 @@ const SessionManager = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const cargarCarrito = useCarritoStore((state) => state.cargarCarrito);
+
+  // Carga el carrito desde el backend al iniciar si hay sesión activa
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      cargarCarrito();
+    }
+  }, [cargarCarrito]);
 
   const [secondsLeft, setSecondsLeft] = useState(null);
   const [tokenKey, setTokenKey] = useState('');

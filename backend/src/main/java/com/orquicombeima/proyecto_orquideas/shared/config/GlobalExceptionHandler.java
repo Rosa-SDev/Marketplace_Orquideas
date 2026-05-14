@@ -1,5 +1,7 @@
 package com.orquicombeima.proyecto_orquideas.shared.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -9,33 +11,44 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import java.util.HashMap;
 import java.util.Map;
 
-// Esta clase atrapa los errores que ocurren en cualquier controlador de la app
-// En lugar de mostrar un error técnico feo, devuelve un JSON limpio con el mensaje del error
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // Atrapa errores 404: cuando no se encuentra un recurso (orquídea, maceta, etc.)
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+    // Errores de negocio esperados (recurso no encontrado, stock insuficiente, etc.)
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<Map<String, String>> handleNotFound(RuntimeException ex) {
+    public ResponseEntity<Map<String, String>> handleRuntimeException(RuntimeException ex) {
+        log.error("RuntimeException capturada: {}", ex.getMessage(), ex);
         Map<String, String> error = new HashMap<>();
         error.put("error", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 
-    // Atrapa errores 400: cuando el id que llega en la URL no es un número válido
-    // Por ejemplo: /api/orquideas/abc en vez de /api/orquideas/1
+    // Errores de parámetros en URL inválidos
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<Map<String, String>> handleBadRequest(MethodArgumentTypeMismatchException ex) {
+        log.error("Parámetro inválido '{}': {}", ex.getName(), ex.getValue(), ex);
         Map<String, String> error = new HashMap<>();
         error.put("error", "El parámetro '" + ex.getName() + "' tiene un valor inválido: " + ex.getValue());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
-    // Atrapa errores 500: cualquier error inesperado que no fue manejado antes
+    // Cualquier error inesperado no capturado antes
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleGeneral(Exception ex) {
+        log.error("Excepción no manejada (500): {}", ex.getMessage(), ex);
         Map<String, String> error = new HashMap<>();
         error.put("error", "Ocurrió un error interno en el servidor");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    }
+
+    // Atrapa StackOverflowError y otros Errors que no son Exception
+    @ExceptionHandler(Throwable.class)
+    public ResponseEntity<Map<String, String>> handleThrowable(Throwable ex) {
+        log.error("ERROR GRAVE (Throwable): tipo={}, mensaje={}", ex.getClass().getName(), ex.getMessage(), ex);
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Error interno del servidor: " + ex.getClass().getSimpleName());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 }

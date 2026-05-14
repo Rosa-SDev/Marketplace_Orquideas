@@ -3,9 +3,7 @@ package com.orquicombeima.proyecto_orquideas.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "items_carrito")
@@ -20,10 +18,14 @@ public class ItemCarrito {
 
     @ManyToOne
     @JoinColumn(name = "carrito_id", nullable = false)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Carrito carrito;
 
     @ManyToOne
     @JoinColumn(name = "producto_id", nullable = false)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Producto producto;
 
     @Min(1)

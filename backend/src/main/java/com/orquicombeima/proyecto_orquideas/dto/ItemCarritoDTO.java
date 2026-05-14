@@ -18,5 +18,6 @@ public class ItemCarritoDTO {
     private double precioUnitario;
     private int cantidad;
     private double subtotal;
+    private int stockDisponible;
 
 }
