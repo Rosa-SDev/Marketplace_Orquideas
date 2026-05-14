@@ -22,6 +22,13 @@ const ProductCard = ({ id, nombre, precio, imagen, badge, stock, stockReservado 
         {badge && (
           <span className="product-card-badge">{badge}</span>
         )}
+
+          {stockDisponible === 0 && (
+              <div className="product-card-overlay-agotado">
+                  <span className="material-icons product-card-overlay-icono">remove_shopping_cart</span>
+                  <span className="product-card-overlay-texto">AGOTADO</span>
+              </div>
+          )}
       </div>
 
       <div className="product-card-info">
