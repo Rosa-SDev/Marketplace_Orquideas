@@ -4,9 +4,7 @@ import com.orquicombeima.proyecto_orquideas.model.enums.EstadoReserva;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -28,12 +26,14 @@ public class ReservaCarrito {
     // @ManyToOne porque un carrito puede tener varias reservas (una por producto)
     @ManyToOne
     @JoinColumn(name = "carrito_id", nullable = false)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Carrito carrito;
 
-    // Qué producto está siendo reservado
-    @NotNull
     @ManyToOne
     @JoinColumn(name = "producto_id", nullable = false)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Producto producto;
 
     // Cuántas unidades se están reservando
