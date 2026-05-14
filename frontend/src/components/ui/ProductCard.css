@@ -71,6 +71,14 @@
   margin: 0;
 }
 
+.product-card-stock.disponible {
+  color: #2D6A4F;
+}
+
+.product-card-stock.agotado {
+  color: #E91E8C;
+}
+
 .product-card.agotado {
   opacity: 0.85;
   cursor: default;
