@@ -20,6 +20,7 @@ public class OrquideaDTO {
     private String nombre;
     private Double precio;
     private Integer stock;
+    private Integer stockReservado;
     private String imageUrl;
     private Boolean activo;
 
