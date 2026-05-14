@@ -75,27 +75,38 @@
 .product-card-stock.disponible { color: #2D6A4F; }
 .product-card-stock.agotado    { color: #999; }
 
-/* Overlay de agotado sobre la imagen */
-.product-card-imagen-wrapper.agotado::after {
-  content: 'Agotado';
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-color: rgba(0, 0, 0, 0.45);
-  color: white;
-  font-weight: bold;
-  font-size: 1.1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  letter-spacing: 1px;
-}
-
-/* Tarjeta completa más apagada cuando está agotada */
+/* Tarjeta apagada cuando agotada */
 .product-card.agotado {
-  opacity: 0.75;
+  opacity: 0.85;
   cursor: default;
 }
 .product-card.agotado:hover {
   transform: none;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10);
+}
+
+/* Imagen en blanco y negro */
+.product-card.agotado .product-card-imagen {
+  filter: grayscale(80%);
+}
+
+/* Sello AGOTADO encima de la imagen */
+.product-card-imagen-wrapper.agotado::after {
+  content: 'AGOTADO';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-25deg);
+  background-color: transparent;
+  color: #CC0000;
+  font-size: 1.6rem;
+  font-weight: 900;
+  letter-spacing: 3px;
+  border: 4px solid #CC0000;
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+  opacity: 0.9;
+  white-space: nowrap;
+  text-transform: uppercase;
+  box-shadow: inset 0 0 0 2px rgba(204,0,0,0.15);
 }
