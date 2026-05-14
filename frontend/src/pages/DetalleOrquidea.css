@@ -222,3 +222,15 @@
     width: 100%;
   }
 }
+
+/* Banner de agotado */
+.detalle-agotado-banner {
+  background-color: #f5f5f5;
+  color: #999;
+  text-align: center;
+  padding: 0.8rem;
+  border-radius: 8px;
+  font-weight: bold;
+  border: 1px dashed #ddd;
+  font-size: 0.95rem;
+}

@@ -10,9 +10,9 @@ const ProductCard = ({ id, nombre, precio, imagen, badge, stock, stockReservado 
   const { agregarConLoginLazy } = useLazyAddToCart();
 
   const cardContent = (
-    <div className="product-card">
+    <div className={`product-card ${stockDisponible === 0 ? 'agotado' : ''}`}>
 
-      <div className="product-card-imagen-wrapper">
+      <div className={`product-card-imagen-wrapper ${stockDisponible === 0 ? 'agotado' : ''}`}>
         <img
           src={imagen || 'https://placehold.co/240x200?text=Orquidea'}
           alt={nombre}

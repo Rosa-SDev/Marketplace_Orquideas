@@ -93,25 +93,33 @@ const DetalleOrquidea = () => {
           <p className="detalle-precio">${orquidea.precio?.toLocaleString('es-CO')}</p>
           <p className={`detalle-stock ${stockClase}`}>{stockTexto}</p>
 
-          <div>
-            <h4 className="detalle-cantidad-label">Cantidad</h4>
-            <div className="detalle-cantidad-controles">
-              <button className="detalle-btn-cantidad" onClick={() => setCantidad(Math.max(1, cantidad - 1))}>−</button>
-              <span className="detalle-cantidad-valor">{cantidad}</span>
-              <button
-                className="detalle-btn-cantidad"
-                onClick={() => setCantidad(Math.min(stockDisponible, cantidad + 1))}
-                disabled={cantidad >= stockDisponible}
-              >+</button>
-            </div>
-          </div>
+          {stockDisponible > 0 && (
+              <div>
+                <h4 className="detalle-cantidad-label">Cantidad</h4>
+                <div className="detalle-cantidad-controles">
+                  <button className="detalle-btn-cantidad" onClick={() => setCantidad(Math.max(1, cantidad - 1))}>−</button>
+                  <span className="detalle-cantidad-valor">{cantidad}</span>
+                  <button
+                      className="detalle-btn-cantidad"
+                      onClick={() => setCantidad(Math.min(stockDisponible, cantidad + 1))}
+                      disabled={cantidad >= stockDisponible}
+                  >+</button>
+                </div>
+              </div>
+          )}
 
           <div className="detalle-agregar">
-            <Button
-              text="Agregar al carrito"
-              disabled={stockDisponible === 0}
-              onClick={() => agregarConLoginLazy({ id: orquidea.id, nombre: orquidea.nombre, precio: orquidea.precio, imagen: orquidea.imageUrl, stock: orquidea.stock }, cantidad)}
-            />
+            {stockDisponible === 0 ? (
+                <div className="detalle-agotado-banner">
+                  Producto agotado
+                </div>
+            ) : (
+                <Button
+                    text="Agregar al carrito"
+                    disabled={stockDisponible === 0}
+                    onClick={() => agregarConLoginLazy({ id: orquidea.id, nombre: orquidea.nombre, precio: orquidea.precio, imagen: orquidea.imageUrl, stock: orquidea.stock }, cantidad)}
+                />
+            )}
           </div>
 
           {/* Tabs */}
