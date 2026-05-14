@@ -659,7 +659,7 @@ const AdminPanel = () => {
                             <td>{formatearMoneda(item.precio)}</td>
                             <td>{item.stock}</td>
                             <td>{item.activo ? 'Activo' : 'Inactivo'}</td>
-                            <td style={{ display: 'flex', gap: '0.5rem' }}>
+                            <td style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                               <button
                                 type="button"
                                 className="admin-table-action"
@@ -716,7 +716,7 @@ const AdminPanel = () => {
                             <td>{formatearMoneda(item.precio)}</td>
                             <td>{item.stock}</td>
                             <td>{item.activo ? 'Activo' : 'Inactivo'}</td>
-                            <td style={{ display: 'flex', gap: '0.5rem' }}>
+                            <td style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                               <button
                                 type="button"
                                 className="admin-table-action"

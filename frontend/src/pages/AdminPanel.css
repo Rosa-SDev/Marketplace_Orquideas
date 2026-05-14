@@ -163,6 +163,7 @@
   text-align: left;
   color: #334155;
   font-size: 0.9rem;
+   vertical-align: middle; 
 }
 
 .admin-table th {
