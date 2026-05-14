@@ -5,9 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 // Esta clase representa a los usuarios del sistema que pueden ser clientes o administradores según su rol
 @Entity
@@ -41,5 +39,7 @@ public class Usuario {
     // cascade = ALL: si se elimina el usuario, se elimina su carrito también
     // fetch = LAZY: el carrito NO se carga automáticamente, solo cuando se pide explícitamente
     @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Carrito carrito;
 }
