@@ -23,6 +23,24 @@ import PagoExitoso from './pages/PagoExitoso';
 import PagoRechazado from './pages/PagoRechazado';
 
 const App = () => {
+  const { cargarCarrito } = useCarritoStore();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    cargarCarrito();
+
+    const intervalo = setInterval(() => {
+      const tokenActual = localStorage.getItem('token');
+      if (tokenActual) {
+        cargarCarrito();
+      }
+    }, 30000);
+
+    return () => clearInterval(intervalo);
+  }, []);
+
   return (
     <BrowserRouter>
       {/* Gestor de sesión */}
