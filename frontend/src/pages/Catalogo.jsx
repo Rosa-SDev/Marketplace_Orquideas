@@ -62,6 +62,25 @@ const Catalogo = () => {
     cargarOrquideas();
   }, [/*Esto tiene que queda vacio, NO TOCAR*/]);
 
+  // Recarga el stock cuando el usuario vuelve a la pestaña (ej: después de pagar)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        cargarOrquideas();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [cargarOrquideas]);
+
+  // Si viene de un pago exitoso, recarga el stock
+  useEffect(() => {
+    if (sessionStorage.getItem('stockDesactualizado')) {
+      sessionStorage.removeItem('stockDesactualizado');
+      cargarOrquideas();
+    }
+  }, [cargarOrquideas]);
+
   const handlePrecioChange = (campo, valor) => {
     if (valor === '') {
       setFiltros(prev => ({ ...prev, [campo]: '' }));
