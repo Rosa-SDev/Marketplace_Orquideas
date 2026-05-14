@@ -42,18 +42,25 @@ const CONTENT = {
 };
 
 const formatearMoneda = (valor) => `$${Number(valor || 0).toLocaleString('es-CO')}`;
+const formatearNumeroConComas = (valor) => {
+  if (valor === '' || valor === null || valor === undefined) return '';
+  return Number(valor).toLocaleString('en-US');
+};
 const asegurarArreglo = (valor) => (Array.isArray(valor) ? valor : []);
+const REGEX_SOLO_LETRAS_Y_ESPACIOS = /^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$/;
+const REGEX_SIN_NUMEROS = /^[^\d]+$/;
+const VARIEDADES_ORQUIDEA = ['Cattleya', 'Phalaenopsis', 'Dendrobium'];
 
 const ORQUIDEA_INICIAL = {
   nombre: '',
   descripcion: '',
   precio: '',
   stock: '',
-  variedad: '',
+  variedad: 'Cattleya',
   colorFlor: '',
   tamanio: '',
-  nivelCuidado: '',
-  tiempoFloracion: '',
+  nivelCuidado: 'Alto',
+  tiempoFloracion: '1 mes/es',
   activo: true,
 };
 
@@ -129,6 +136,9 @@ const AdminPanel = () => {
   const [formularioCargando, setFormularioCargando] = useState(false);
   const [formularioMensaje, setFormularioMensaje] = useState('');
   const [formularioError, setFormularioError] = useState('');
+  const [erroresCampos, setErroresCampos] = useState({});
+  const [tiempoFloracionValor, setTiempoFloracionValor] = useState('1');
+  const [tiempoFloracionUnidad, setTiempoFloracionUnidad] = useState('mes/es');
   const [cargandoSidebar, setCargandoSidebar] = useState(false);
   const [pedidosSidebar, setPedidosSidebar] = useState([]);
   const [productoEditando, setProductoEditando] = useState(null);
@@ -321,16 +331,164 @@ const AdminPanel = () => {
     setMacetaForm((prev) => ({ ...prev, [campo]: valor }));
   };
 
+  const limpiarErrorCampo = (campo) => {
+    setErroresCampos((prev) => {
+      if (!prev[campo]) return prev;
+      const next = { ...prev };
+      delete next[campo];
+      return next;
+    });
+  };
+
+  const sanitizarNombre = (valor) => valor.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ ]/g, '');
+  const sanitizarTextoSinNumeros = (valor) => valor.replace(/\d/g, '');
+  const sanitizarSoloDigitos = (valor) => valor.replace(/\D/g, '');
+
+  const actualizarNumeroNoNegativo = (tipo, campo, valor, permitirDecimal = false) => {
+    const valorNormalizado = valor.replace(',', '.');
+    const regexNumero = permitirDecimal ? /^\d*(\.\d*)?$/ : /^\d*$/;
+
+    if (!regexNumero.test(valorNormalizado)) return;
+
+    if (valor === '') {
+      actualizarFormulario(tipo, campo, '');
+      limpiarErrorCampo(campo);
+      return;
+    }
+
+    const numero = Number(valorNormalizado);
+    if (Number.isNaN(numero) || numero < 0) return;
+
+    actualizarFormulario(tipo, campo, valorNormalizado);
+    limpiarErrorCampo(campo);
+  };
+
+  const actualizarTiempoFloracion = (valor, unidad) => {
+    if (valor === '') {
+      setTiempoFloracionValor('1');
+      setTiempoFloracionUnidad(unidad);
+      actualizarFormulario('orquidea', 'tiempoFloracion', `1 ${unidad}`);
+      limpiarErrorCampo('tiempoFloracion');
+      return;
+    }
+
+    if (valor.startsWith('-')) return;
+
+    const numero = Number(valor);
+    if (Number.isNaN(numero) || numero < 1) return;
+
+    const valorNormalizado = String(Math.floor(numero));
+    setTiempoFloracionValor(valorNormalizado);
+    setTiempoFloracionUnidad(unidad);
+    actualizarFormulario('orquidea', 'tiempoFloracion', `${valorNormalizado} ${unidad}`);
+    limpiarErrorCampo('tiempoFloracion');
+  };
+
+  const validarFormularioAgregar = () => {
+    const errores = {};
+    const formulario = tipoFormulario === 'orquidea' ? orquideaForm : macetaForm;
+    const nombre = formulario.nombre || '';
+    const nombreLimpio = nombre.trim();
+    const precio = formulario.precio;
+    const stock = formulario.stock;
+
+    if (!nombreLimpio) {
+      errores.nombre = 'El nombre es obligatorio.';
+    } else if (!REGEX_SOLO_LETRAS_Y_ESPACIOS.test(nombreLimpio)) {
+      errores.nombre = 'El nombre solo permite letras y espacios.';
+    }
+
+    if (precio === '' || precio === null || precio === undefined) {
+      errores.precio = 'El precio es obligatorio.';
+    } else if (Number(precio) < 0) {
+      errores.precio = 'El precio no puede ser negativo.';
+    }
+
+    if (stock === '' || stock === null || stock === undefined) {
+      errores.stock = 'El stock es obligatorio.';
+    } else if (Number(stock) < 0) {
+      errores.stock = 'El stock no puede ser negativo.';
+    }
+
+    if (tipoFormulario === 'orquidea') {
+      const variedad = orquideaForm.variedad?.trim() || '';
+      const tamanio = orquideaForm.tamanio?.trim() || '';
+      const colorFlor = orquideaForm.colorFlor?.trim() || '';
+
+      if (!variedad) {
+        errores.variedad = 'La variedad es obligatoria.';
+      } else if (!REGEX_SIN_NUMEROS.test(variedad)) {
+        errores.variedad = 'La variedad no puede incluir números.';
+      }
+
+      if (!tamanio) {
+        errores.tamanio = 'El tamaño es obligatorio.';
+      } else if (!REGEX_SOLO_LETRAS_Y_ESPACIOS.test(tamanio)) {
+        errores.tamanio = 'El tamaño solo permite letras y espacios.';
+      }
+
+      if (colorFlor && !REGEX_SIN_NUMEROS.test(colorFlor)) {
+        errores.colorFlor = 'El color de flor no puede incluir números.';
+      }
+
+      if (Number(tiempoFloracionValor) < 1) {
+        errores.tiempoFloracion = 'El tiempo de floración debe iniciar desde 1.';
+      }
+    } else {
+      const material = macetaForm.material?.trim() || '';
+      const diametroCm = macetaForm.diametroCm;
+      const color = macetaForm.color?.trim() || '';
+      const estilo = macetaForm.estilo?.trim() || '';
+
+      if (material && !REGEX_SIN_NUMEROS.test(material)) {
+        errores.material = 'El material no puede incluir números.';
+      }
+
+      if (diametroCm !== '' && diametroCm !== null && diametroCm !== undefined) {
+        const valorDiametro = Number(diametroCm);
+        if (Number.isNaN(valorDiametro)) {
+          errores.diametroCm = 'El diámetro debe ser numérico.';
+        }
+      }
+
+      if (color && !REGEX_SIN_NUMEROS.test(color)) {
+        errores.color = 'El color no puede incluir números.';
+      }
+
+      if (estilo && !REGEX_SIN_NUMEROS.test(estilo)) {
+        errores.estilo = 'El estilo no puede incluir números.';
+      }
+    }
+
+    return errores;
+  };
+
+  const bloquearSignoNegativo = (event) => {
+    if (
+      event.key === '-'
+      || event.key === 'Minus'
+      || event.key === 'e'
+      || event.key === 'E'
+      || event.key === '+'
+    ) {
+      event.preventDefault();
+    }
+  };
+
   const reiniciarPlantilla = (tipo) => {
     if (tipo === 'orquidea') {
       setOrquideaForm(ORQUIDEA_INICIAL);
+      setTiempoFloracionValor('1');
+      setTiempoFloracionUnidad('mes/es');
       setImagenOrquidea(null);
       setOrquideaFileKey((prev) => prev + 1);
+      setErroresCampos({});
       return;
     }
     setMacetaForm(MACETA_INICIAL);
     setImagenMaceta(null);
     setMacetaFileKey((prev) => prev + 1);
+    setErroresCampos({});
   };
 
   const crearFormData = (valores, imagen) => {
@@ -347,6 +505,15 @@ const AdminPanel = () => {
   const subirProducto = async () => {
     setFormularioError('');
     setFormularioMensaje('');
+    const erroresValidacion = validarFormularioAgregar();
+    setErroresCampos(erroresValidacion);
+
+    if (Object.keys(erroresValidacion).length > 0) {
+      setFormularioError('Revisa los campos resaltados antes de continuar.');
+      return;
+    }
+
+    setErroresCampos({});
     setFormularioCargando(true);
 
     try {
@@ -599,6 +766,7 @@ const AdminPanel = () => {
                     setTipoFormulario('orquidea');
                     setFormularioError('');
                     setFormularioMensaje('');
+                    setErroresCampos({});
                   }}
                 >
                   Nueva orquídea
@@ -610,6 +778,7 @@ const AdminPanel = () => {
                     setTipoFormulario('maceta');
                     setFormularioError('');
                     setFormularioMensaje('');
+                    setErroresCampos({});
                   }}
                 >
                   Nueva maceta
@@ -625,28 +794,50 @@ const AdminPanel = () => {
                   <input
                     type="text"
                     value={formularioActivo.nombre}
-                    onChange={(e) => actualizarFormulario(tipoFormulario, 'nombre', e.target.value)}
+                    onChange={(e) => {
+                      actualizarFormulario(
+                        tipoFormulario,
+                        'nombre',
+                        sanitizarNombre(e.target.value)
+                      );
+                      limpiarErrorCampo('nombre');
+                    }}
                   />
+                  {erroresCampos.nombre && <span className="admin-form-field-error">{erroresCampos.nombre}</span>}
                 </label>
 
                 <label className="admin-form-field">
                   Precio
                   <input
-                    type="number"
-                    min="1"
-                    value={formularioActivo.precio}
-                    onChange={(e) => actualizarFormulario(tipoFormulario, 'precio', e.target.value)}
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    min="0"
+                    value={formatearNumeroConComas(formularioActivo.precio)}
+                    onChange={(e) => {
+                      const valorLimpio = sanitizarSoloDigitos(e.target.value);
+                      actualizarFormulario(tipoFormulario, 'precio', valorLimpio);
+                      limpiarErrorCampo('precio');
+                    }}
                   />
+                  {erroresCampos.precio && <span className="admin-form-field-error">{erroresCampos.precio}</span>}
                 </label>
 
                 <label className="admin-form-field">
                   Stock
                   <input
-                    type="number"
-                    min="0"
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     value={formularioActivo.stock}
-                    onChange={(e) => actualizarFormulario(tipoFormulario, 'stock', e.target.value)}
+                    onKeyDown={bloquearSignoNegativo}
+                    onChange={(e) => {
+                      const valorLimpio = sanitizarSoloDigitos(e.target.value);
+                      actualizarFormulario(tipoFormulario, 'stock', valorLimpio);
+                      limpiarErrorCampo('stock');
+                    }}
                   />
+                  {erroresCampos.stock && <span className="admin-form-field-error">{erroresCampos.stock}</span>}
                 </label>
 
                 <label className="admin-form-field">
@@ -675,47 +866,84 @@ const AdminPanel = () => {
                   <>
                     <label className="admin-form-field">
                       Variedad
-                      <input
-                        type="text"
+                      <select
                         value={orquideaForm.variedad}
-                        onChange={(e) => actualizarFormulario('orquidea', 'variedad', e.target.value)}
-                      />
+                        onChange={(e) => {
+                          actualizarFormulario('orquidea', 'variedad', e.target.value);
+                          limpiarErrorCampo('variedad');
+                        }}
+                      >
+                        <option value="Cattleya">Cattleya</option>
+                        <option value="Phalaenopsis">Phalaenopsis</option>
+                        <option value="Dendrobium">Dendrobium</option>
+                      </select>
+                      {erroresCampos.variedad && <span className="admin-form-field-error">{erroresCampos.variedad}</span>}
                     </label>
                     <label className="admin-form-field">
                       Tamaño
                       <input
                         type="text"
                         value={orquideaForm.tamanio}
-                        onChange={(e) => actualizarFormulario('orquidea', 'tamanio', e.target.value)}
+                        onChange={(e) => {
+                          actualizarFormulario(
+                            'orquidea',
+                            'tamanio',
+                            sanitizarNombre(e.target.value)
+                          );
+                          limpiarErrorCampo('tamanio');
+                        }}
                       />
+                      {erroresCampos.tamanio && <span className="admin-form-field-error">{erroresCampos.tamanio}</span>}
                     </label>
                     <label className="admin-form-field">
                       Color de flor
                       <input
                         type="text"
                         value={orquideaForm.colorFlor}
-                        onChange={(e) => actualizarFormulario('orquidea', 'colorFlor', e.target.value)}
+                        onChange={(e) => {
+                          actualizarFormulario(
+                            'orquidea',
+                            'colorFlor',
+                            sanitizarTextoSinNumeros(e.target.value)
+                          );
+                          limpiarErrorCampo('colorFlor');
+                        }}
                       />
+                      {erroresCampos.colorFlor && <span className="admin-form-field-error">{erroresCampos.colorFlor}</span>}
                     </label>
                     <label className="admin-form-field">
                       Nivel de cuidado
-                      <input
-                        type="text"
+                      <select
                         value={orquideaForm.nivelCuidado}
                         onChange={(e) =>
                           actualizarFormulario('orquidea', 'nivelCuidado', e.target.value)
                         }
-                      />
+                      >
+                        <option value="Alto">Alto</option>
+                        <option value="Medio">Medio</option>
+                        <option value="Bajo">Bajo</option>
+                      </select>
                     </label>
                     <label className="admin-form-field">
                       Tiempo de floración
-                      <input
-                        type="text"
-                        value={orquideaForm.tiempoFloracion}
-                        onChange={(e) =>
-                          actualizarFormulario('orquidea', 'tiempoFloracion', e.target.value)
-                        }
-                      />
+                      <div className="admin-inline-time-fields">
+                        <input
+                          type="number"
+                          min="1"
+                          step="1"
+                          value={tiempoFloracionValor}
+                          onKeyDown={bloquearSignoNegativo}
+                          onChange={(e) => actualizarTiempoFloracion(e.target.value, tiempoFloracionUnidad)}
+                        />
+                        <select
+                          value={tiempoFloracionUnidad}
+                          onChange={(e) => actualizarTiempoFloracion(tiempoFloracionValor, e.target.value)}
+                        >
+                          <option value="mes/es">mes/es</option>
+                          <option value="día/s">día/s</option>
+                        </select>
+                      </div>
+                      {erroresCampos.tiempoFloracion && <span className="admin-form-field-error">{erroresCampos.tiempoFloracion}</span>}
                     </label>
                     <label className="admin-form-field admin-form-field--full">
                       Imagen (opcional)
@@ -734,34 +962,51 @@ const AdminPanel = () => {
                       <input
                         type="text"
                         value={macetaForm.material}
-                        onChange={(e) => actualizarFormulario('maceta', 'material', e.target.value)}
+                        onChange={(e) => {
+                          actualizarFormulario('maceta', 'material', sanitizarTextoSinNumeros(e.target.value));
+                          limpiarErrorCampo('material');
+                        }}
                       />
+                      {erroresCampos.material && <span className="admin-form-field-error">{erroresCampos.material}</span>}
                     </label>
                     <label className="admin-form-field">
                       Diámetro (cm)
                       <input
-                        type="number"
+                        type="text"
+                        inputMode="decimal"
                         min="1"
                         step="0.1"
                         value={macetaForm.diametroCm}
-                        onChange={(e) => actualizarFormulario('maceta', 'diametroCm', e.target.value)}
+                        onKeyDown={bloquearSignoNegativo}
+                        onChange={(e) =>
+                          actualizarNumeroNoNegativo('maceta', 'diametroCm', e.target.value, true)
+                        }
                       />
+                      {erroresCampos.diametroCm && <span className="admin-form-field-error">{erroresCampos.diametroCm}</span>}
                     </label>
                     <label className="admin-form-field">
                       Color
                       <input
                         type="text"
                         value={macetaForm.color}
-                        onChange={(e) => actualizarFormulario('maceta', 'color', e.target.value)}
+                        onChange={(e) => {
+                          actualizarFormulario('maceta', 'color', sanitizarTextoSinNumeros(e.target.value));
+                          limpiarErrorCampo('color');
+                        }}
                       />
+                      {erroresCampos.color && <span className="admin-form-field-error">{erroresCampos.color}</span>}
                     </label>
                     <label className="admin-form-field">
                       Estilo
                       <input
                         type="text"
                         value={macetaForm.estilo}
-                        onChange={(e) => actualizarFormulario('maceta', 'estilo', e.target.value)}
+                        onChange={(e) => {
+                          actualizarFormulario('maceta', 'estilo', sanitizarTextoSinNumeros(e.target.value));
+                          limpiarErrorCampo('estilo');
+                        }}
                       />
+                      {erroresCampos.estilo && <span className="admin-form-field-error">{erroresCampos.estilo}</span>}
                     </label>
                     <label className="admin-form-field admin-form-field--full">
                       Imagen (opcional)
@@ -1169,7 +1414,7 @@ const AdminPanel = () => {
               </button>
               <button
                 onClick={ejecutarEliminar}
-                style={{
+                style={{  
                   padding: '0.6rem 1.5rem',
                   borderRadius: '20px',
                   border: 'none',

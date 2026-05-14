@@ -24,7 +24,7 @@ const Contacto = () => {
             href="https://wa.me/573014791094"
             target="_blank"
             rel="noreferrer"
-            style={{ backgroundColor: '#2D6A4F', color: '#FAF7F5', padding: '0.6rem 1.4rem', borderRadius: '20px', textDecoration: 'none', display: 'inline-block' }}
+            className="btn-whatsapp-contacto"
             >
             Escríbenos por WhatsApp
           </a>

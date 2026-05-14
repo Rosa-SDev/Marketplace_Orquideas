@@ -9,7 +9,7 @@ import './Checkout.css';
 const DEPARTAMENTOS = getDepartamentos();
 
 const Checkout = () => {
-  const { items } = useCarritoStore();
+  const { items, vaciar } = useCarritoStore();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -87,7 +87,7 @@ const Checkout = () => {
         customerEmail: formData.correo.trim(),
         customerFullName: formData.nombre.trim(),
         firmaIntegridad: pedido.firmaIntegridad,
-        onResult: (result) => {
+        onResult: async (result) => {
           const transaction = result?.transaction;
           if (!transaction?.status) {
             setErrors((prev) => ({
@@ -98,6 +98,7 @@ const Checkout = () => {
           }
 
           if (transaction.status === 'APPROVED' || transaction.status === 'PENDING') {
+            await vaciar();
             navigate('/pago-exitoso', {
               state: {
                 referencia: transaction.reference || pedido.referenciaPago,
