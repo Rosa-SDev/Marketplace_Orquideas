@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
@@ -6,6 +7,7 @@ import ChatbotWidget from './components/ui/ChatbotWidget';
 import ProtectedRoute from './components/layout/ProtectedRoute';
 import SessionManager from './components/layout/SessionManager';
 import MiCuenta from './pages/MiCuenta';
+import useCarritoStore from './store/carritoStore';
 
 import Home from './pages/Home';
 import Macetas from './pages/Macetas';
@@ -23,6 +25,24 @@ import PagoExitoso from './pages/PagoExitoso';
 import PagoRechazado from './pages/PagoRechazado';
 
 const App = () => {
+  const { cargarCarrito } = useCarritoStore();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    cargarCarrito();
+
+    const intervalo = setInterval(() => {
+      const tokenActual = localStorage.getItem('token');
+      if (tokenActual) {
+        cargarCarrito();
+      }
+    }, 30000);
+
+    return () => clearInterval(intervalo);
+  }, []);
+
   return (
     <BrowserRouter>
       {/* Gestor de sesión */}
