@@ -43,8 +43,8 @@ const Carrito = () => {
             <div className="carrito-item-info">
               <p className="carrito-item-nombre">{item.nombre}</p>
               <p className="carrito-item-precio">${item.precio?.toLocaleString('es-CO')}</p>
-              <p style={{ color: '#E91E8C', margin: '0.3rem 0' }}>
-                ${item.precio?.toLocaleString('es-CO')}
+              <p style={{ fontSize: '0.75rem', color: '#888', margin: 0 }}>
+                  {item.stockDisponible} disponibles
               </p>
             </div>
 
