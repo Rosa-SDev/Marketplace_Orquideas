@@ -124,6 +124,10 @@ public class StockReservaService {
 
             reserva.setEstado(EstadoReserva.EXPIRADA);
             reservaCarritoRepository.save(reserva);
+
+            Carrito carrito = reserva.getCarrito();
+            carrito.getItems().removeIf(item -> item.getProducto().getId().equals(producto.getId()));
+            carritoRepository.save(carrito);
         }
     }
 

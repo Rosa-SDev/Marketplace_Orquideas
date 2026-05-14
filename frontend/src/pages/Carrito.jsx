@@ -43,6 +43,9 @@ const Carrito = () => {
             <div className="carrito-item-info">
               <p className="carrito-item-nombre">{item.nombre}</p>
               <p className="carrito-item-precio">${item.precio?.toLocaleString('es-CO')}</p>
+              <p style={{ color: '#E91E8C', margin: '0.3rem 0' }}>
+                ${item.precio?.toLocaleString('es-CO')}
+              </p>
             </div>
 
             <div className="carrito-item-controles">
@@ -54,7 +57,11 @@ const Carrito = () => {
               <button
                 className="carrito-btn-cantidad"
                 onClick={() => cambiarCantidad(item.idItemCarrito, item.cantidad + 1)}
-              >+</button>
+                disabled={item.cantidad >= item.stockDisponible}
+                style={{ width: '30px', height: '30px', borderRadius: '50%', border: '1px solid #ddd', cursor: 'pointer', backgroundColor: '#fff' }}
+              >
+                +
+              </button>
             </div>
 
             <p className="carrito-item-total">
