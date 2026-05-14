@@ -71,6 +71,46 @@
   margin: 0;
 }
 
-/* Verde si hay stock, gris si está agotado */
-.product-card-stock.disponible { color: #2D6A4F; }
-.product-card-stock.agotado    { color: #999; }
+.product-card-stock.disponible {
+  color: #2D6A4F;
+}
+
+.product-card-stock.agotado {
+  color: #E91E8C;
+}
+
+.product-card.agotado {
+  opacity: 0.85;
+  cursor: default;
+}
+.product-card.agotado:hover {
+  transform: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10);
+}
+
+.product-card.agotado .product-card-imagen {
+  filter: grayscale(70%) brightness(0.85);
+}
+
+.product-card-overlay-agotado {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(80, 80, 80, 0.75);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.product-card-overlay-icono {
+  font-size: 40px;
+  color: white;
+}
+
+.product-card-overlay-texto {
+  color: white;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 2px;
+}
