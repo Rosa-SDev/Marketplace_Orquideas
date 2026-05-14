@@ -42,4 +42,13 @@ public class GlobalExceptionHandler {
         error.put("error", "Ocurrió un error interno en el servidor");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
+
+    // Atrapa StackOverflowError y otros Errors que no son Exception
+    @ExceptionHandler(Throwable.class)
+    public ResponseEntity<Map<String, String>> handleThrowable(Throwable ex) {
+        log.error("ERROR GRAVE (Throwable): tipo={}, mensaje={}", ex.getClass().getName(), ex.getMessage(), ex);
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Error interno del servidor: " + ex.getClass().getSimpleName());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    }
 }
