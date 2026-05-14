@@ -31,8 +31,9 @@ const Contacto = () => {
         </div>
 
         <div style={{ backgroundColor: '#FFFFFF', borderRadius: '12px', padding: '1.5rem', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
-          <h2 style={{ color: '#2D6A4F', marginBottom: '0.8rem' }}>Correo electrónico</h2>
+          <h2 style={{ color: '#2D6A4F', marginBottom: '0.8rem' }}>Correo electrónico y teléfono</h2>
           <p style={{ color: '#1B4332' }}>admin.orquicombeima@gmail.com</p>
+          <p style={{ color: '#1B4332' }}>+57 301 479 1094</p>
         </div>
 
         <div style={{ backgroundColor: '#FFFFFF', borderRadius: '12px', padding: '1.5rem', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
