@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
@@ -6,6 +7,7 @@ import ChatbotWidget from './components/ui/ChatbotWidget';
 import ProtectedRoute from './components/layout/ProtectedRoute';
 import SessionManager from './components/layout/SessionManager';
 import MiCuenta from './pages/MiCuenta';
+import useCarritoStore from './store/carritoStore';
 
 import Home from './pages/Home';
 import Macetas from './pages/Macetas';
