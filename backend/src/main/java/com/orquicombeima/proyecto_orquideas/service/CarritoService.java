@@ -178,6 +178,7 @@ public class CarritoService {
     private ItemCarritoDTO convertirAItemDTO(ItemCarrito item) {
         double precio = item.getProducto().getPrecio();
         double subtotal = precio * item.getCantidad();
+        int stockDisponible = item.getProducto().getStock() - item.getProducto().getStockReservado();
 
         return ItemCarritoDTO.builder()
                 .id(item.getId())
@@ -187,6 +188,7 @@ public class CarritoService {
                 .precioUnitario(precio)
                 .cantidad(item.getCantidad())
                 .subtotal(subtotal)
+                .stockDisponible(stockDisponible)
                 .build();
     }
 }
