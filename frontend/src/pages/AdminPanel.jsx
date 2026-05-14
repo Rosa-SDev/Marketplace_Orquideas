@@ -1414,7 +1414,7 @@ const AdminPanel = () => {
               </button>
               <button
                 onClick={ejecutarEliminar}
-                style={{
+                style={{  
                   padding: '0.6rem 1.5rem',
                   borderRadius: '20px',
                   border: 'none',
