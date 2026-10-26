@@ -6,6 +6,8 @@ Marketplace web full-stack para **Orquídeas del Combeima**, un emprendimiento f
 
 > **Estado del despliegue:** el frontend estuvo desplegado en Vercel y el backend en Railway. El backend está fuera de línea porque terminó el plan gratuito; el proyecto puede ejecutarse localmente siguiendo las instrucciones de este README.
 
+> **Mi rol:** desarrolladora backend: autenticación OAuth2/JWT, reservas de stock, pagos con Wompi, panel de administración y pruebas. Detalle en [Mi contribución](#mi-contribución-rosa-peña).
+
 ---
 
 ## Tabla de contenido
