@@ -1,8 +1,12 @@
 # 🌸 Marketplace de Orquídeas del Combeima
 
-Plataforma web de comercio electrónico para el emprendimiento familiar **Orquídeas del Combeima**, ubicado en Ibagué, Tolima. Permite explorar y comprar orquídeas y macetas, gestionar pedidos con pago en línea y administrar el catálogo completo desde un panel de administración.
+Marketplace web full-stack para **Orquídeas del Combeima**, un emprendimiento familiar de Ibagué (Tolima). Backend REST en **Java 21 + Spring Boot 3** (Spring Security, OAuth2/JWT, JPA, MySQL) y SPA en **React + Vite**, con carrito con reserva de stock, pagos en línea con Wompi y panel de administración.
 
-**Sitio en producción:** https://marketplace-orquideas.vercel.app
+<!-- Capturas pendientes: inicio, catálogo, detalle, carrito y panel admin en docs/img/ -->
+
+> **Estado del despliegue:** el frontend estuvo desplegado en Vercel y el backend en Railway. El backend está fuera de línea porque terminó el plan gratuito; el proyecto puede ejecutarse localmente siguiendo las instrucciones de este README.
+
+> **Mi rol:** desarrolladora backend: autenticación OAuth2/JWT, reservas de stock, pagos con Wompi, panel de administración y pruebas. Detalle en [Mi contribución](#mi-contribución-rosa-peña).
 
 ---
 
@@ -17,6 +21,7 @@ Plataforma web de comercio electrónico para el emprendimiento familiar **Orquí
 - [Endpoints de la API](#endpoints-de-la-api)
 - [Datos semilla](#datos-semilla)
 - [Equipo](#equipo)
+- [Mi contribución (Rosa Peña)](#mi-contribución-rosa-peña)
 
 ---
 
@@ -328,3 +333,17 @@ Proyecto académico desarrollado en la **Universidad de Ibagué** — Ingenierí
 | Matthew Habib Corzo Torres | Frontend |
 
 **Wiki completo del proyecto:** https://github.com/Rosa-SDev/Marketplace_Orquideas/wiki
+
+---
+
+## Mi contribución (Rosa Peña)
+
+Como desarrolladora backend, diseñé e implementé:
+
+- **Modelo de dominio con JPA:** entidades `Producto` (herencia `JOINED`), `Orquidea`, `Maceta`, `Usuario`, `Carrito`, `ItemCarrito` y `ReservaCarrito`.
+- **Autenticación:** Spring Security con login de Google (OAuth2), emisión y validación de JWT, filtro de autenticación y endpoint `/api/auth/me`.
+- **Carrito con reserva temporal de stock:** `StockReservaService` y una tarea programada (`@Scheduled`) que libera las reservas expiradas cada 5 minutos.
+- **Pedidos y pagos:** `PedidoService` / `PedidoController` e integración con Wompi (generación del enlace de pago con firma de integridad y verificación de transacciones).
+- **Panel de administración:** CRUD de orquídeas y guías de cuidado con imágenes en Cloudinary, protegido por rol `ADMINISTRADOR`.
+- **Manejo global de errores** (`GlobalExceptionHandler`) y corrección de un `StackOverflowError` causado por `@Data` de Lombok en relaciones bidireccionales JPA.
+- **Pruebas unitarias** (JUnit 5 + Mockito) y **de controladores** (`@WebMvcTest`) para servicios de administración, estadísticas, Cloudinary, WhatsApp y el webhook de Wompi.
