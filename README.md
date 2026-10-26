@@ -1,8 +1,10 @@
 # 🌸 Marketplace de Orquídeas del Combeima
 
-Plataforma web de comercio electrónico para el emprendimiento familiar **Orquídeas del Combeima**, ubicado en Ibagué, Tolima. Permite explorar y comprar orquídeas y macetas, gestionar pedidos con pago en línea y administrar el catálogo completo desde un panel de administración.
+Marketplace web full-stack para **Orquídeas del Combeima**, un emprendimiento familiar de Ibagué (Tolima). Backend REST en **Java 21 + Spring Boot 3** (Spring Security, OAuth2/JWT, JPA, MySQL) y SPA en **React + Vite**, con carrito con reserva de stock, pagos en línea con Wompi y panel de administración.
 
-**Sitio en producción:** https://marketplace-orquideas.vercel.app
+<!-- Capturas pendientes: inicio, catálogo, detalle, carrito y panel admin en docs/img/ -->
+
+> **Estado del despliegue:** el frontend estuvo desplegado en Vercel y el backend en Railway. El backend está fuera de línea porque terminó el plan gratuito; el proyecto puede ejecutarse localmente siguiendo las instrucciones de este README.
 
 ---
 
