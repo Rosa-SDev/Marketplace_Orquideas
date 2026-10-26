@@ -19,6 +19,7 @@ Marketplace web full-stack para **Orquídeas del Combeima**, un emprendimiento f
 - [Endpoints de la API](#endpoints-de-la-api)
 - [Datos semilla](#datos-semilla)
 - [Equipo](#equipo)
+- [Mi contribución (Rosa Peña)](#mi-contribución-rosa-peña)
 
 ---
 
