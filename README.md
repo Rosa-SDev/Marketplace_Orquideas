@@ -330,3 +330,17 @@ Proyecto académico desarrollado en la **Universidad de Ibagué** — Ingenierí
 | Matthew Habib Corzo Torres | Frontend |
 
 **Wiki completo del proyecto:** https://github.com/Rosa-SDev/Marketplace_Orquideas/wiki
+
+---
+
+## Mi contribución (Rosa Peña)
+
+Como desarrolladora backend, diseñé e implementé:
+
+- **Modelo de dominio con JPA:** entidades `Producto` (herencia `JOINED`), `Orquidea`, `Maceta`, `Usuario`, `Carrito`, `ItemCarrito` y `ReservaCarrito`.
+- **Autenticación:** Spring Security con login de Google (OAuth2), emisión y validación de JWT, filtro de autenticación y endpoint `/api/auth/me`.
+- **Carrito con reserva temporal de stock:** `StockReservaService` y una tarea programada (`@Scheduled`) que libera las reservas expiradas cada 5 minutos.
+- **Pedidos y pagos:** `PedidoService` / `PedidoController` e integración con Wompi (generación del enlace de pago con firma de integridad y verificación de transacciones).
+- **Panel de administración:** CRUD de orquídeas y guías de cuidado con imágenes en Cloudinary, protegido por rol `ADMINISTRADOR`.
+- **Manejo global de errores** (`GlobalExceptionHandler`) y corrección de un `StackOverflowError` causado por `@Data` de Lombok en relaciones bidireccionales JPA.
+- **Pruebas unitarias** (JUnit 5 + Mockito) y **de controladores** (`@WebMvcTest`) para servicios de administración, estadísticas, Cloudinary, WhatsApp y el webhook de Wompi.
