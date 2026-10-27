@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 public abstract class Producto {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)     // el id lo genera MySQL automáticamente
+    @GeneratedValue(strategy = GenerationType.IDENTITY)     // el id lo genera PostgreSQL automáticamente
     private Long id;
 
     @Column(nullable = false)
