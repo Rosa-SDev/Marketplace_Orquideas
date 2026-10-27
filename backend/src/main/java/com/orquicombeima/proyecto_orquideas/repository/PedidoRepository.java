@@ -22,13 +22,14 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     List<Pedido> findByEstado(EstadoPedido estado);
 
     // Metodo para encontrar el total de ventas por mes de los ultimos 6 meses
-    @Query("SELECT FUNCTION('MONTH', p.fechaPedido) as mes, " +
-            "FUNCTION('YEAR', p.fechaPedido) as anio, " +
+    // Se usa EXTRACT (estándar HQL) en lugar de MONTH()/YEAR() nativos de MySQL para que funcione en PostgreSQL
+    @Query("SELECT EXTRACT(MONTH FROM p.fechaPedido) as mes, " +
+            "EXTRACT(YEAR FROM p.fechaPedido) as anio, " +
             "SUM(p.total) as total " +
             "FROM Pedido p " +
             "WHERE p.fechaPedido >= :fechaInicio AND p.estado = 'PAGADO' " +
-            "GROUP BY FUNCTION('YEAR', p.fechaPedido), FUNCTION('MONTH', p.fechaPedido) " +
-            "ORDER BY FUNCTION('YEAR', p.fechaPedido) ASC, FUNCTION('MONTH', p.fechaPedido) ASC")
+            "GROUP BY EXTRACT(YEAR FROM p.fechaPedido), EXTRACT(MONTH FROM p.fechaPedido) " +
+            "ORDER BY EXTRACT(YEAR FROM p.fechaPedido) ASC, EXTRACT(MONTH FROM p.fechaPedido) ASC")
     List<Object[]> findVentasPorMes(@Param("fechaInicio") LocalDateTime fechaInicio);
 
     // Metodo para encontrar los ultimmos 5 pedidos
